@@ -33,12 +33,17 @@ public class MainWindow {
     @FXML private TextField addressField;
 
     @FXML
+    private void initialize() {
+        
+    }
+
+    @FXML
     private void exit() {
         System.exit(0);
     }
 
     @FXML
     private void addressEnterPressed() {
-        
+
     }
 }
