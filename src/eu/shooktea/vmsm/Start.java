@@ -24,13 +24,24 @@ SOFTWARE.
 package eu.shooktea.vmsm;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.net.URL;
 
 public class Start extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        
+        URL location = Start.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
+        FXMLLoader loader = new FXMLLoader(location);
+        VBox vbox = loader.load();
+        primaryStage.setScene(new Scene(vbox));
+        primaryStage.setMaximized(true);
+        primaryStage.setTitle("VMSM");
+        primaryStage.show();
     }
 
     public static void main(String[] args) {
