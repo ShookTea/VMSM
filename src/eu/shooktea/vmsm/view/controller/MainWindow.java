@@ -47,6 +47,7 @@ public class MainWindow {
 
     @FXML
     private void addressEnterPressed() {
-
+        String address = addressField.getText();
+        webEngine.load(address);
     }
 }
