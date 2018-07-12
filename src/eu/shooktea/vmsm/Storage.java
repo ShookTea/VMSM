@@ -85,6 +85,15 @@ public class Storage {
         pw.close();
     }
 
+    public static void loadAll() {
+        try {
+            tryLoadAll();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
     private static void tryLoadAll() throws IOException {
         String config = new String(Files.readAllBytes(vmsmFile.toPath()));
         JSONObject obj = new JSONObject(config);
