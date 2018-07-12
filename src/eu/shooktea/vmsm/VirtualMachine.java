@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.net.URL;
 
@@ -31,6 +33,14 @@ public class VirtualMachine {
         this.name = name;
         this.mainPath = mainPath;
         this.pageRoot = pageRoot;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject obj = new JSONObject();
+        obj.put("name", name);
+        obj.put("path", mainPath.getAbsolutePath());
+        obj.put("url", pageRoot.toString());
+        return obj;
     }
 
     private String name;
