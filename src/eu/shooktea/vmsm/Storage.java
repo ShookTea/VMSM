@@ -32,6 +32,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,6 +83,20 @@ public class Storage {
         PrintWriter pw = new PrintWriter(vmsmFile);
         pw.println(root.toString());
         pw.close();
+    }
+
+    private static void tryLoadAll() throws IOException {
+        String config = new String(Files.readAllBytes(vmsmFile.toPath()));
+        JSONObject obj = new JSONObject(config);
+
+        VmList.clear();
+        if (obj.has("VMs")) {
+            for (Object o : obj.getJSONArray("VMs")) {
+                JSONObject json = (JSONObject) o;
+                VirtualMachine vm = VirtualMachine.fromJSON(json);
+                VmList.add(vm);
+            }
+        }
     }
 
     private static File getVmsmFile() {
