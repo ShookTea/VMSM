@@ -48,6 +48,9 @@ public class MainWindow {
     @FXML
     private void addressEnterPressed() {
         String address = addressField.getText();
+        if (!address.startsWith("http://") || !address.startsWith("https://")) {
+            address = "http://" + address;
+        }
         webEngine.load(address);
     }
 }
