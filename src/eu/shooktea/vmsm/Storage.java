@@ -35,6 +35,20 @@ public class Storage {
         vms.add(vm);
     }
 
+    public static void saveAll() {
+        try {
+            trySaveAll();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    private static void trySaveAll() throws IOException {
+        vmsmFile.delete();
+        vmsmFile.createNewFile();
+    }
+
     public static File getVmsmFile() {
         if (vmsmFile == null) {
             String homePath = System.getProperty("user.home");
