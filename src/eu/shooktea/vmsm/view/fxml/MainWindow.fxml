@@ -33,7 +33,11 @@
           <Button mnemonicParsing="false" text="Button" />
         </items>
       </ToolBar>
-      <TextField fx:id="addressField" onAction="#addressEnterPressed" />
+      <VBox prefWidth="100.0" VBox.vgrow="NEVER">
+         <children>
+            <TextField fx:id="addressField" onAction="#addressEnterPressed" />
+         </children>
+      </VBox>
       <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
    </children>
 </VBox>
