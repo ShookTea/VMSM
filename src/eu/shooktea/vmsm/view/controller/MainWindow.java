@@ -23,7 +23,9 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -32,12 +34,15 @@ public class MainWindow {
 
     @FXML private WebView webView;
     @FXML private TextField addressField;
+    @FXML private ProgressBar progressBar;
 
     private WebEngine webEngine;
 
     @FXML
     private void initialize() {
         webEngine = webView.getEngine();
+        Worker worker = webEngine.getLoadWorker();
+        progressBar.progressProperty().bind(worker.progressProperty());
     }
 
     @FXML

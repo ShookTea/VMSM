@@ -37,7 +37,7 @@
       <VBox prefWidth="100.0" VBox.vgrow="NEVER">
          <children>
             <TextField fx:id="addressField" onAction="#addressEnterPressed" />
-            <ProgressBar maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="600.0" progress="0.0" VBox.vgrow="NEVER" />
+            <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="600.0" progress="0.0" VBox.vgrow="NEVER" />
          </children>
       </VBox>
       <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
