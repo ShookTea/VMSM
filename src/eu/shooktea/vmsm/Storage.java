@@ -23,18 +23,23 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Storage {
     private Storage() {}
 
     public static void registerVM(VirtualMachine vm) {
-        vms.add(vm);
+        VmList.add(vm);
     }
 
     public static void saveAll() {
@@ -66,6 +71,17 @@ public class Storage {
     private static void trySaveAll() throws IOException {
         vmsmFile.delete();
         vmsmFile.createNewFile();
+        JSONObject root = new JSONObject();
+
+        List<JSONObject> list = VmList.stream()
+                .map(VirtualMachine::toJSON)
+                .collect(Collectors.toList());
+        JSONArray vms = new JSONArray(list);
+        root.put("VMs", vms);
+
+        PrintWriter pw = new PrintWriter(vmsmFile);
+        pw.println(root.toString());
+        pw.close();
     }
 
     private static File getVmsmFile() {
@@ -85,5 +101,5 @@ public class Storage {
     }
 
     private static File vmsmFile = getVmsmFile();
-    private static final List<VirtualMachine> vms = new ArrayList<>();
+    private static final List<VirtualMachine> VmList = new ArrayList<>();
 }
