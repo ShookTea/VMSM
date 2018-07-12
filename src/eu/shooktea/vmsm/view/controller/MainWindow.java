@@ -23,12 +23,21 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
+
 
 public class MainWindow {
 
@@ -41,6 +50,9 @@ public class MainWindow {
     @FXML
     private void initialize() {
         webEngine = webView.getEngine();
+        webEngine.locationProperty().addListener((observable, oldValue, newValue) -> {
+            addressField.setText(newValue);
+        });
         Worker worker = webEngine.getLoadWorker();
         progressBar.progressProperty().bind(worker.progressProperty());
     }
