@@ -26,6 +26,7 @@ package eu.shooktea.vmsm;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +38,27 @@ public class Storage {
     }
 
     public static void saveAll() {
+        File backup = new File(vmsmFile.getParentFile(), vmsmFile.getName() + ".backup");
+        try {
+            Files.copy(vmsmFile.toPath(), backup.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.err.println("Failed to created backup");
+            e.printStackTrace();
+            System.exit(1);
+        }
         try {
             trySaveAll();
         } catch (IOException e) {
+            System.err.println("Failed to save; try for restoring backup");
             e.printStackTrace();
+            try {
+                Files.copy(backup.toPath(), vmsmFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                backup.delete();
+                System.err.println("Backup restored and deleted.");
+            } catch (IOException e1) {
+                System.err.println("Failed restoring backup.");
+                e1.printStackTrace();
+            }
             System.exit(1);
         }
     }
@@ -53,7 +71,7 @@ public class Storage {
     private static File getVmsmFile() {
         String homePath = System.getProperty("user.home");
         File home = new File(homePath);
-        File file = new File(home, ".vmsm/config.json");
+        File file = new File(home, ".vmsm" + File.separator + "config.json");
         if (!file.exists()) {
             try {
                 file.getParentFile().mkdirs();
