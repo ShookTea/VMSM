@@ -26,6 +26,7 @@ package eu.shooktea.vmsm;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class VirtualMachine {
@@ -46,4 +47,11 @@ public class VirtualMachine {
     private String name;
     private File mainPath;
     private URL pageRoot;
+
+    public static VirtualMachine fromJSON(JSONObject json) throws MalformedURLException {
+        String name = json.getString("name");
+        File path = new File(json.getString("path"));
+        URL url = new URL(json.getString("url"));
+        return new VirtualMachine(name, path, url);
+    }
 }
