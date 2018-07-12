@@ -23,5 +23,12 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
+import javafx.fxml.FXML;
+
 public class MainWindow {
+
+    @FXML
+    private void exit() {
+        System.exit(0);
+    }
 }
