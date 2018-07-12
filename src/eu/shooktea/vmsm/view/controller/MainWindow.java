@@ -21,30 +21,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package eu.shooktea.vmsm;
+package eu.shooktea.vmsm.view.controller;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import javafx.fxml.FXML;
 
-import java.net.URL;
+public class MainWindow {
 
-public class Start extends Application {
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        URL location = Start.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
-        FXMLLoader loader = new FXMLLoader(location);
-        VBox vbox = loader.load();
-        primaryStage.setScene(new Scene(vbox));
-        primaryStage.setMaximized(true);
-        primaryStage.setTitle("VMSM");
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
+    @FXML
+    private void exit() {
+        System.exit(0);
     }
 }
