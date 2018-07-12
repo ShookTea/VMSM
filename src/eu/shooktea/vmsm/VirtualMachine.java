@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import eu.shooktea.vmsm.vmtype.VMType;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -30,10 +31,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class VirtualMachine {
-    public VirtualMachine(String name, File mainPath, URL pageRoot) {
+    public VirtualMachine(String name, File mainPath, URL pageRoot, VMType type) {
         this.name = name;
         this.mainPath = mainPath;
         this.pageRoot = pageRoot;
+        this.type = type;
     }
 
     public JSONObject toJSON() {
@@ -41,17 +43,20 @@ public class VirtualMachine {
         obj.put("name", name);
         obj.put("path", mainPath.getAbsolutePath());
         obj.put("url", pageRoot.toString());
+        obj.put("type", type.getTypeName());
         return obj;
     }
 
     private String name;
     private File mainPath;
     private URL pageRoot;
+    private VMType type;
 
     public static VirtualMachine fromJSON(JSONObject json) throws MalformedURLException {
         String name = json.getString("name");
         File path = new File(json.getString("path"));
         URL url = new URL(json.getString("url"));
-        return new VirtualMachine(name, path, url);
+        VMType type = VMType.getByName(json.getString("type"));
+        return new VirtualMachine(name, path, url, type);
     }
 }
