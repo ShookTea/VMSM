@@ -21,19 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package eu.shooktea.vmsm;
+package eu.shooktea.vmsm.view.controller;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
-
-public class Start extends Application {
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+public class MainWindow {
 }
