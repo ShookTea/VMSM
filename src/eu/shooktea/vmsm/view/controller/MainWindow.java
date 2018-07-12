@@ -24,11 +24,13 @@ SOFTWARE.
 package eu.shooktea.vmsm.view.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.web.WebView;
 
 public class MainWindow {
 
     @FXML private WebView webView;
+    @FXML private TextField addressField;
 
     @FXML
     private void exit() {
