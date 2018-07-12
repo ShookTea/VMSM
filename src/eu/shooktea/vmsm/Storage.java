@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,5 +35,24 @@ public class Storage {
         vms.add(vm);
     }
 
-    private static List<VirtualMachine> vms = new ArrayList<>();
+    public static File getVmsmFile() {
+        if (vmsmFile == null) {
+            String homePath = System.getProperty("user.home");
+            File home = new File(homePath);
+            vmsmFile = new File(home, ".vmsm/config.json");
+            if (!vmsmFile.exists()) {
+                try {
+                    vmsmFile.getParentFile().mkdirs();
+                    vmsmFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+            }
+        }
+        return vmsmFile;
+    }
+
+    private static File vmsmFile = null;
+    private static final List<VirtualMachine> vms = new ArrayList<>();
 }
