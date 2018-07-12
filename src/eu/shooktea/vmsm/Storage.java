@@ -25,6 +25,7 @@ package eu.shooktea.vmsm;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,24 +50,22 @@ public class Storage {
         vmsmFile.createNewFile();
     }
 
-    public static File getVmsmFile() {
-        if (vmsmFile == null) {
-            String homePath = System.getProperty("user.home");
-            File home = new File(homePath);
-            vmsmFile = new File(home, ".vmsm/config.json");
-            if (!vmsmFile.exists()) {
-                try {
-                    vmsmFile.getParentFile().mkdirs();
-                    vmsmFile.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.exit(1);
-                }
+    private static File getVmsmFile() {
+        String homePath = System.getProperty("user.home");
+        File home = new File(homePath);
+        File file = new File(home, ".vmsm/config.json");
+        if (!file.exists()) {
+            try {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(1);
             }
         }
-        return vmsmFile;
+        return file;
     }
 
-    private static File vmsmFile = null;
+    private static File vmsmFile = getVmsmFile();
     private static final List<VirtualMachine> vms = new ArrayList<>();
 }
