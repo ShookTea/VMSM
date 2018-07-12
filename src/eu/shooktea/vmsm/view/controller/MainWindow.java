@@ -36,4 +36,9 @@ public class MainWindow {
     private void exit() {
         System.exit(0);
     }
+
+    @FXML
+    private void addressEnterPressed() {
+        
+    }
 }
