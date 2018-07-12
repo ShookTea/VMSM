@@ -25,6 +25,7 @@ package eu.shooktea.vmsm.view.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 public class MainWindow {
@@ -32,9 +33,11 @@ public class MainWindow {
     @FXML private WebView webView;
     @FXML private TextField addressField;
 
+    private WebEngine webEngine;
+
     @FXML
     private void initialize() {
-        
+        webEngine = webView.getEngine();
     }
 
     @FXML
