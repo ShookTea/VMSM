@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 public class Start extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        App.init(primaryStage);
+        
     }
 
     public static void main(String[] args) {
