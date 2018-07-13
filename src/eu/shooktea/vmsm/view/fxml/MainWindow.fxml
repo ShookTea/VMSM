@@ -4,12 +4,12 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
-
 
 <VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.MainWindow">
    <children>
@@ -34,7 +34,12 @@
           <Button mnemonicParsing="false" text="Button" />
         </items>
       </ToolBar>
-      <TextField />
-      <WebView prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+      <VBox prefWidth="100.0" VBox.vgrow="NEVER">
+         <children>
+            <TextField fx:id="addressField" onAction="#addressEnterPressed" />
+            <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="600.0" progress="0.0" VBox.vgrow="NEVER" />
+         </children>
+      </VBox>
+      <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
    </children>
 </VBox>
