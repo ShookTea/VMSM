@@ -27,16 +27,20 @@ import javafx.application.Application;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class Start extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Start.primaryStage = primaryStage;
         URL location = Start.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
         FXMLLoader loader = new FXMLLoader(location);
         VBox vbox = loader.load();
@@ -46,9 +50,33 @@ public class Start extends Application {
         primaryStage.show();
     }
 
+    private static Stage primaryStage;
+
     public static void main(String[] args) {
         launch(args);
     }
 
     public static Property<VirtualMachine> virtualMachineProperty = new SimpleObjectProperty<>();
+
+    public static <T extends Parent>void createNewWindow(String fxmlPath, String title, boolean isModal) {
+        try {
+            URL location = Start.class.getResource(fxmlPath);
+            FXMLLoader loader = new FXMLLoader(location);
+            T element = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(element, 640, 400));
+            stage.setTitle(title);
+            if (isModal) {
+                stage.initOwner(primaryStage);
+                stage.initModality(Modality.WINDOW_MODAL);
+                stage.showAndWait();
+            }
+            else {
+                stage.show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
 }
