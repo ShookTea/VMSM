@@ -37,6 +37,7 @@ public class NewVM {
     @FXML private TextField vmName;
     @FXML private ChoiceBox<VMType> vmType;
     @FXML private TextField vmPath;
+    @FXML private TextField vmAddress;
 
     @FXML
     private void initialize() {
