@@ -23,10 +23,8 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public abstract class VMType {
     public abstract String getTypeName();
@@ -42,9 +40,7 @@ public abstract class VMType {
                 .findAny().get();
     }
 
-    public static List<VMType> getAllTypes() {
-        return types;
-    }
-
-    private static List<VMType> types = Collections.singletonList(new Vagrant());
+    public static final ObservableList<VMType> types = FXCollections.observableArrayList(
+            new Vagrant()
+    );
 }

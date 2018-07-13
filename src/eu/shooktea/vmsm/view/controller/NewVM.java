@@ -31,4 +31,10 @@ import javafx.scene.control.TextField;
 public class NewVM {
     @FXML private TextField vmName;
     @FXML private ChoiceBox<VMType> vmType;
+
+    @FXML
+    private void initialize() {
+        vmType.setItems(VMType.types);
+        vmType.getSelectionModel().selectFirst();
+    }
 }

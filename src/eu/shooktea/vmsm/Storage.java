@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -31,8 +33,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +40,7 @@ public class Storage {
     private Storage() {}
 
     public static void registerVM(VirtualMachine vm) {
-        VmList.add(vm);
+        vmList.add(vm);
     }
 
     public static void saveAll() {
@@ -74,7 +74,7 @@ public class Storage {
         vmsmFile.createNewFile();
         JSONObject root = new JSONObject();
 
-        List<JSONObject> list = VmList.stream()
+        List<JSONObject> list = vmList.stream()
                 .map(VirtualMachine::toJSON)
                 .collect(Collectors.toList());
         JSONArray vms = new JSONArray(list);
@@ -98,12 +98,12 @@ public class Storage {
         String config = new String(Files.readAllBytes(vmsmFile.toPath()));
         JSONObject obj = new JSONObject(config);
 
-        VmList.clear();
+        vmList.clear();
         if (obj.has("VMs")) {
             for (Object o : obj.getJSONArray("VMs")) {
                 JSONObject json = (JSONObject) o;
                 VirtualMachine vm = VirtualMachine.fromJSON(json);
-                VmList.add(vm);
+                vmList.add(vm);
             }
         }
     }
@@ -125,5 +125,5 @@ public class Storage {
     }
 
     private static File vmsmFile = getVmsmFile();
-    private static final List<VirtualMachine> VmList = new ArrayList<>();
+    public static final ObservableList<VirtualMachine> vmList = FXCollections.emptyObservableList();
 }
