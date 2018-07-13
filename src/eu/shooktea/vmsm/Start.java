@@ -27,8 +27,8 @@ import javafx.application.Application;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -58,13 +58,13 @@ public class Start extends Application {
 
     public static Property<VirtualMachine> virtualMachineProperty = new SimpleObjectProperty<>();
 
-    public static <T extends Parent>void createNewWindow(String fxmlPath, String title, boolean isModal) {
+    public static <T extends Region>void createNewWindow(String fxmlPath, String title, boolean isModal) {
         try {
             URL location = Start.class.getResource(fxmlPath);
             FXMLLoader loader = new FXMLLoader(location);
             T element = loader.load();
             Stage stage = new Stage();
-            stage.setScene(new Scene(element, 640, 400));
+            stage.setScene(new Scene(element, element.getWidth(), element.getHeight()));
             stage.setTitle(title);
             if (isModal) {
                 stage.initOwner(primaryStage);
