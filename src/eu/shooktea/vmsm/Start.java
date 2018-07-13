@@ -24,6 +24,8 @@ SOFTWARE.
 package eu.shooktea.vmsm;
 
 import javafx.application.Application;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -47,4 +49,6 @@ public class Start extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    public static Property<VirtualMachine> virtualMachineProperty = new SimpleObjectProperty<>();
 }
