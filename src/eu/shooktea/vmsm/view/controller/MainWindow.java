@@ -59,7 +59,7 @@ public class MainWindow {
 
     @FXML
     private void createNewVM() {
-        System.out.println("Create new VM");
+        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/NewVM.fxml", "New VM", true);
     }
 
     @FXML
