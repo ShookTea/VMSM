@@ -31,6 +31,7 @@ import javafx.scene.control.TextField;
 public class NewVM {
     @FXML private TextField vmName;
     @FXML private ChoiceBox<VMType> vmType;
+    @FXML private TextField vmPath;
 
     @FXML
     private void initialize() {
