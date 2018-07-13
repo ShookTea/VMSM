@@ -23,7 +23,8 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
-import javafx.beans.value.ChangeListener;
+import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
@@ -32,12 +33,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.events.Event;
-import org.w3c.dom.events.EventListener;
-import org.w3c.dom.events.EventTarget;
 
 
 public class MainWindow {
@@ -51,12 +46,15 @@ public class MainWindow {
 
     @FXML
     private void initialize() {
+        Start.virtualMachineProperty.addListener(this::reloadGUI);
         webEngine = webView.getEngine();
-        webEngine.locationProperty().addListener((observable, oldValue, newValue) -> {
-            addressField.setText(newValue);
-        });
+        webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
         Worker worker = webEngine.getLoadWorker();
         progressBar.progressProperty().bind(worker.progressProperty());
+    }
+
+    private void reloadGUI() {
+        System.out.println("GUI reloaded");
     }
 
     @FXML
@@ -71,5 +69,9 @@ public class MainWindow {
             address = "http://" + address;
         }
         webEngine.load(address);
+    }
+
+    private void reloadGUI(ObservableValue<? extends VirtualMachine> observable, VirtualMachine oldValue, VirtualMachine newValue) {
+        reloadGUI();
     }
 }
