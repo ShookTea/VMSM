@@ -42,6 +42,7 @@ public class NewVM {
     private void initialize() {
         vmType.setItems(VMType.types);
         vmType.getSelectionModel().selectFirst();
+        vmPath.setPromptText(System.getProperty("user.home"));
     }
 
     @FXML
