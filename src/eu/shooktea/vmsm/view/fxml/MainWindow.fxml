@@ -15,9 +15,9 @@
    <children>
       <MenuBar>
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="VMSM">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#exit" text="Close">
+              <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit">
                      <accelerator>
                         <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
@@ -29,7 +29,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <ToolBar prefHeight="40.0" prefWidth="200.0">
+      <ToolBar fx:id="toolBar" prefHeight="40.0" prefWidth="200.0">
         <items>
           <Button mnemonicParsing="false" text="Button" />
         </items>
