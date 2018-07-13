@@ -23,28 +23,10 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-public abstract class VMType {
-    public abstract String getTypeName();
+public class Vagrant extends VMType {
 
     @Override
-    public String toString() {
-        return getTypeName();
+    public String getTypeName() {
+        return "Vagrant";
     }
-
-    public static VMType getByName(String name) {
-        return types.stream()
-                .filter(type -> type.getTypeName().equals(name))
-                .findAny().get();
-    }
-
-    public static List<VMType> getAllTypes() {
-        return types;
-    }
-
-    private static List<VMType> types = Collections.singletonList(new Vagrant());
 }
