@@ -64,7 +64,7 @@ public class Start extends Application {
             FXMLLoader loader = new FXMLLoader(location);
             T element = loader.load();
             Stage stage = new Stage();
-            stage.setScene(new Scene(element, element.getWidth(), element.getHeight()));
+            stage.setScene(new Scene(element));
             stage.setTitle(title);
             if (isModal) {
                 stage.initOwner(primaryStage);
