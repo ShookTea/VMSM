@@ -58,6 +58,11 @@ public class MainWindow {
     }
 
     @FXML
+    private void createNewVM() {
+        System.out.println("Create new VM");
+    }
+
+    @FXML
     private void exit() {
         System.exit(0);
     }
