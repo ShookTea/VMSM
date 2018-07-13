@@ -34,6 +34,15 @@ public abstract class VMType {
         return getTypeName();
     }
 
+    /**
+     * Gives information about whether this VM type requires directory as it's main path. It influences
+     * the input file window.
+     * @return {@code true } if that VM requires directory, {@code false} if it requires file.
+     */
+    public boolean isMainPathDirectory() {
+        return true;
+    }
+
     public static VMType getByName(String name) {
         return types.stream()
                 .filter(type -> type.getTypeName().equals(name))

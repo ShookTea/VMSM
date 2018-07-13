@@ -29,6 +29,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
 import java.io.File;
 
@@ -45,9 +46,19 @@ public class NewVM {
 
     @FXML
     private void openPathWindow() {
-        DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setTitle("Choose VM path");
-        File file = fileChooser.showDialog(Start.primaryStage);
+        File file;
+        String dialogTitle = "Choose VM path";
+        if (vmType.getSelectionModel().getSelectedItem().isMainPathDirectory()) {
+            DirectoryChooser fileChooser = new DirectoryChooser();
+            fileChooser.setTitle(dialogTitle);
+            file = fileChooser.showDialog(Start.primaryStage);
+        }
+        else {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle(dialogTitle);
+            file = fileChooser.showOpenDialog(Start.primaryStage);
+        }
+
         vmPath.setText(file.getAbsolutePath());
     }
 }
