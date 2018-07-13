@@ -23,5 +23,12 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
+import eu.shooktea.vmsm.vmtype.VMType;
+import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+
 public class NewVM {
+    @FXML private TextField vmName;
+    @FXML private ChoiceBox<VMType> vmType;
 }
