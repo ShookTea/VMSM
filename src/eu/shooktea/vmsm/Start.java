@@ -50,7 +50,7 @@ public class Start extends Application {
         primaryStage.show();
     }
 
-    private static Stage primaryStage;
+    public static Stage primaryStage;
 
     public static void main(String[] args) {
         launch(args);

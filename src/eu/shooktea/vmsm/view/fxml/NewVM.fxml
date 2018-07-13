@@ -74,7 +74,7 @@
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
                   <TextField fx:id="vmPath" prefHeight="30.0" prefWidth="399.0" promptText="Path to VM main directory" HBox.hgrow="ALWAYS" />
-                  <ImageView fitHeight="30.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
+                  <ImageView fitHeight="30.0" fitWidth="29.0" onMouseClicked="#openPathWindow" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
                      <image>
                         <Image url="@/eu/shooktea/vmsm/resources/sekkyumu/Document.png" />
                      </image>

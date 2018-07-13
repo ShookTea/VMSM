@@ -23,10 +23,14 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
+import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.stage.DirectoryChooser;
+
+import java.io.File;
 
 public class NewVM {
     @FXML private TextField vmName;
@@ -37,5 +41,13 @@ public class NewVM {
     private void initialize() {
         vmType.setItems(VMType.types);
         vmType.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    private void openPathWindow() {
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        fileChooser.setTitle("Choose VM path");
+        File file = fileChooser.showDialog(Start.primaryStage);
+        vmPath.setText(file.getAbsolutePath());
     }
 }
