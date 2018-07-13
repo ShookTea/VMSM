@@ -21,30 +21,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package eu.shooktea.vmsm;
+package eu.shooktea.vmsm.vmtype;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.net.URL;
-
-public class Start extends Application {
+public abstract class VMType {
+    public abstract String getTypeName();
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        URL location = Start.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
-        FXMLLoader loader = new FXMLLoader(location);
-        VBox vbox = loader.load();
-        primaryStage.setScene(new Scene(vbox));
-        primaryStage.setMaximized(true);
-        primaryStage.setTitle("VMSM");
-        primaryStage.show();
+    public String toString() {
+        return getTypeName();
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public static VMType getByName(String name) {
+        return types.stream()
+                .filter(type -> type.getTypeName().equals(name))
+                .findAny().get();
     }
+
+    public static List<VMType> getAllTypes() {
+        return types;
+    }
+
+    private static List<VMType> types = new ArrayList<>();
 }

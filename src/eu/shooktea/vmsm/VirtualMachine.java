@@ -23,28 +23,40 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import eu.shooktea.vmsm.vmtype.VMType;
+import org.json.JSONObject;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Start extends Application {
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        URL location = Start.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
-        FXMLLoader loader = new FXMLLoader(location);
-        VBox vbox = loader.load();
-        primaryStage.setScene(new Scene(vbox));
-        primaryStage.setMaximized(true);
-        primaryStage.setTitle("VMSM");
-        primaryStage.show();
+public class VirtualMachine {
+    public VirtualMachine(String name, File mainPath, URL pageRoot, VMType type) {
+        this.name = name;
+        this.mainPath = mainPath;
+        this.pageRoot = pageRoot;
+        this.type = type;
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public JSONObject toJSON() {
+        JSONObject obj = new JSONObject();
+        obj.put("name", name);
+        obj.put("path", mainPath.getAbsolutePath());
+        obj.put("url", pageRoot.toString());
+        obj.put("type", type.getTypeName());
+        return obj;
+    }
+
+    private String name;
+    private File mainPath;
+    private URL pageRoot;
+    private VMType type;
+
+    public static VirtualMachine fromJSON(JSONObject json) throws MalformedURLException {
+        String name = json.getString("name");
+        File path = new File(json.getString("path"));
+        URL url = new URL(json.getString("url"));
+        VMType type = VMType.getByName(json.getString("type"));
+        return new VirtualMachine(name, path, url, type);
     }
 }
