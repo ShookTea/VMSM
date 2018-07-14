@@ -23,15 +23,12 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class Vagrant extends VMType {
-
-    @Override
-    public String getTypeName() {
-        return "Vagrant";
-    }
-
-    @Override
-    public String createVmInfo() {
-        return "Main path contains .vagrant/machines directory.";
+    public Vagrant() {
+        super();
+        this.typeName = new SimpleStringProperty("Vagrant");
+        this.creationInfo = new SimpleStringProperty("Main path contains .vagrant/machines directory.");
     }
 }

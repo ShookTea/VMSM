@@ -23,33 +23,45 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public abstract class VMType {
-    public abstract String getTypeName();
+
+    public VMType() {
+        typeName = new SimpleStringProperty("typeName");
+        creationInfo = new SimpleStringProperty("");
+    }
+
+    public String getTypeName() {
+        return typeName.getValue();
+    }
+
+    public ReadOnlyStringProperty typeNameProperty() {
+        return typeName;
+    }
+
+    public String getCreationInfo() {
+        return creationInfo.getValue();
+    }
+
+    public ReadOnlyStringProperty creationInfoProperty() {
+        return creationInfo;
+    }
 
     @Override
     public String toString() {
         return getTypeName();
     }
 
-    /**
-     * Gives information about whether this VM type requires directory as it's main path. It influences
-     * the input file window.
-     * @return {@code true } if that VM requires directory, {@code false} if it requires file.
-     */
     public boolean isMainPathDirectory() {
         return true;
     }
 
-    /**
-     * Gives information to display in VM creation window. If empty, displays nothing.
-     * @return information for create VM window.
-     */
-    public String createVmInfo() {
-        return "";
-    }
+    protected ReadOnlyStringProperty typeName;
+    protected ReadOnlyStringProperty creationInfo;
 
     public static VMType getByName(String name) {
         return types.stream()

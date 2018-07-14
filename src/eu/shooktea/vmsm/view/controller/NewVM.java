@@ -25,6 +25,8 @@ package eu.shooktea.vmsm.view.controller;
 
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.vmtype.VMType;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.When;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -46,18 +48,14 @@ public class NewVM implements StageController {
     @FXML
     private void initialize() {
         vmType.setItems(VMType.types);
-        vmType.getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> updateInfo(newValue));
         vmType.getSelectionModel().selectFirst();
         vmPath.setPromptText(System.getProperty("user.home"));
-    }
 
-    private void updateInfo(VMType newVmType) {
-        String info = newVmType.createVmInfo();
-        if (info == null) info = "";
-        info = info.trim();
-        infoLabel.setText(info);
-        infoLabel.getParent().setOpacity(info.isEmpty() ? 0.0 : 1.0);
+        infoLabel.textProperty().bind(Bindings.select(vmType.valueProperty(), "creationInfo"));
+        infoLabel.getParent().opacityProperty().bind(
+                new When(infoLabel.textProperty().isEmpty())
+                        .then(0.0)
+                        .otherwise(1.0));
     }
 
     @FXML
