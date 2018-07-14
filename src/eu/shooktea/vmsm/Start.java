@@ -50,6 +50,9 @@ public class Start extends Application {
         primaryStage.setMaximized(true);
         primaryStage.setTitle("VMSM");
         primaryStage.show();
+        if (Storage.vmList.size() > 0) {
+            Start.virtualMachineProperty.setValue(Storage.vmList.get(0));
+        }
     }
 
     public static Stage primaryStage;

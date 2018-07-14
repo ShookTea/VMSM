@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
+<?import javafx.scene.control.SeparatorMenuItem?>
 <VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.MainWindow">
    <children>
       <MenuBar>
@@ -27,8 +28,9 @@
                   <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
                </accelerator>
           </Menu>
-            <Menu mnemonicParsing="false" text="Virtual machines">
+            <Menu fx:id="vmListMenu" mnemonicParsing="false" text="Virtual machines">
               <items>
+              <SeparatorMenuItem/>
                 <MenuItem mnemonicParsing="false" onAction="#createNewVM" text="New VM">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />

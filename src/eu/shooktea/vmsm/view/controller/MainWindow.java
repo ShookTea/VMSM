@@ -28,6 +28,7 @@ import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.scene.control.Menu;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
@@ -41,6 +42,7 @@ public class MainWindow {
     @FXML private TextField addressField;
     @FXML private ProgressBar progressBar;
     @FXML private ToolBar toolBar;
+    @FXML private Menu vmListMenu;
 
     private WebEngine webEngine;
 
@@ -54,7 +56,7 @@ public class MainWindow {
     }
 
     private void reloadGUI() {
-        System.out.println("GUI reloaded");
+        
     }
 
     @FXML
