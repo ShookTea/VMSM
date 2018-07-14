@@ -91,8 +91,8 @@
       <Separator opacity="0.0" orientation="VERTICAL" prefHeight="12.0" prefWidth="98.0" />
       <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
          <children>
-            <Button cancelButton="true" mnemonicParsing="false" text="Cancel" />
-            <Button defaultButton="true" mnemonicParsing="false" text="Create">
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#create" text="Create">
                <HBox.margin>
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>

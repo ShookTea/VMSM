@@ -63,4 +63,14 @@ public class NewVM {
 
         vmPath.setText(file.getAbsolutePath());
     }
+
+    @FXML
+    private void create() {
+        
+    }
+
+    @FXML
+    private void cancel() {
+
+    }
 }
