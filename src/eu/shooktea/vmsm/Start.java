@@ -41,6 +41,7 @@ public class Start extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Storage.loadAll();
         Start.primaryStage = primaryStage;
         URL location = Start.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
         FXMLLoader loader = new FXMLLoader(location);

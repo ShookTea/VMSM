@@ -41,6 +41,7 @@ public class Storage {
 
     public static void registerVM(VirtualMachine vm) {
         vmList.add(vm);
+        saveAll();
     }
 
     public static void saveAll() {
@@ -95,7 +96,8 @@ public class Storage {
     }
 
     private static void tryLoadAll() throws IOException {
-        String config = new String(Files.readAllBytes(vmsmFile.toPath()));
+        String config = new String(Files.readAllBytes(vmsmFile.toPath())).trim();
+        if (config.isEmpty()) return;
         JSONObject obj = new JSONObject(config);
 
         vmList.clear();
@@ -125,5 +127,5 @@ public class Storage {
     }
 
     private static File vmsmFile = getVmsmFile();
-    public static final ObservableList<VirtualMachine> vmList = FXCollections.emptyObservableList();
+    public static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
 }

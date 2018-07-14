@@ -24,6 +24,8 @@ SOFTWARE.
 package eu.shooktea.vmsm.view.controller;
 
 import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.When;
@@ -36,6 +38,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class NewVM implements StageController {
     @FXML private TextField vmName;
@@ -95,7 +99,26 @@ public class NewVM implements StageController {
             errorLabel.setText(VM_NAME_IS_REQUIRED);
             return;
         }
-
+        String name = vmName.getText().trim();
+        String urlText = vmAddress.getText().trim();
+        if (!urlText.startsWith("http://") && !urlText.startsWith("https://")) {
+            urlText = "http://" + urlText;
+        }
+        URL url;
+        try {
+            url = new URL(urlText);
+        } catch (MalformedURLException e) {
+            if (vmAddress.getText().trim().isEmpty()) {
+                url = null;
+            }
+            else {
+                errorLabel.setText(VM_URL_IS_INCORRECT);
+                return;
+            }
+        }
+        File file = new File(vmPath.getText().trim());
+        VirtualMachine machine = new VirtualMachine(name, file, url, vmType.getValue());
+        Storage.registerVM(machine);
     }
 
     @FXML
@@ -116,4 +139,5 @@ public class NewVM implements StageController {
     }
 
     private final String VM_NAME_IS_REQUIRED = "VM name is required.";
+    private final String VM_URL_IS_INCORRECT = "VM address is incorrect.";
 }

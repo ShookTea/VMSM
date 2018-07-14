@@ -42,7 +42,7 @@ public class VirtualMachine {
         JSONObject obj = new JSONObject();
         obj.put("name", name);
         obj.put("path", mainPath.getAbsolutePath());
-        obj.put("url", pageRoot.toString());
+        if (pageRoot != null) obj.put("url", pageRoot.toString());
         obj.put("type", type.getTypeName());
         return obj;
     }
@@ -55,7 +55,7 @@ public class VirtualMachine {
     public static VirtualMachine fromJSON(JSONObject json) throws MalformedURLException {
         String name = json.getString("name");
         File path = new File(json.getString("path"));
-        URL url = new URL(json.getString("url"));
+        URL url = json.has("url") ? new URL(json.getString("url")) : null;
         VMType type = VMType.getByName(json.getString("type"));
         return new VirtualMachine(name, path, url, type);
     }
