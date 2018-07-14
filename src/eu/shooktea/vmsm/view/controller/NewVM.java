@@ -119,6 +119,7 @@ public class NewVM implements StageController {
         File file = new File(vmPath.getText().trim());
         VirtualMachine machine = new VirtualMachine(name, file, url, vmType.getValue());
         Storage.registerVM(machine);
+        stage.close();
     }
 
     @FXML
