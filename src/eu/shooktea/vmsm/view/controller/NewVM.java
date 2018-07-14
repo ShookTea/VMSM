@@ -92,10 +92,17 @@ public class NewVM implements StageController {
             return;
         }
         if (vmName.getText().trim().isEmpty()) {
-            errorLabel.setText("VM name is required.");
+            errorLabel.setText(VM_NAME_IS_REQUIRED);
             return;
         }
 
+    }
+
+    @FXML
+    private void onNameInput() {
+        if (errorLabel.getText().equals(VM_NAME_IS_REQUIRED)) {
+            errorLabel.setText("");
+        }
     }
 
     @FXML
@@ -107,4 +114,6 @@ public class NewVM implements StageController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
+    private final String VM_NAME_IS_REQUIRED = "VM name is required.";
 }

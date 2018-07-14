@@ -60,7 +60,7 @@
                      <Insets right="10.0" />
                  </GridPane.margin>
              </Label>
-             <TextField fx:id="vmName" promptText="Name of new virtual machine" GridPane.columnIndex="1" />
+             <TextField fx:id="vmName" promptText="Name of new virtual machine" GridPane.columnIndex="1" onKeyTyped="#onNameInput"/>
             <ChoiceBox fx:id="vmType" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
