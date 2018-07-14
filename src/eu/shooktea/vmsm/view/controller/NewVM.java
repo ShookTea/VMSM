@@ -84,7 +84,12 @@ public class NewVM implements StageController {
 
     @FXML
     private void create() {
+        File rootFile = new File(vmPath.getText());
+        VMType type = vmType.getValue();
+        type.checkVmRootFile(rootFile);
+        if (!type.getCreationError().isEmpty()) {
 
+        }
     }
 
     @FXML

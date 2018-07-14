@@ -25,10 +25,32 @@ package eu.shooktea.vmsm.vmtype;
 
 import javafx.beans.property.SimpleStringProperty;
 
+import java.io.File;
+import java.util.Objects;
+
 public class Vagrant extends VMType {
     public Vagrant() {
         super();
         this.typeName = new SimpleStringProperty("Vagrant");
         this.creationInfo = new SimpleStringProperty("Main path contains .vagrant/machines directory.");
+    }
+
+    @Override
+    protected String checkRootFile(File file) {
+        if (!file.exists()) {
+            return "Path does not exist.";
+        }
+        if (!file.isDirectory()) {
+            return "Path is not a directory.";
+        }
+        String notCorrect = "Path is not a correct Vagrant root directory.";
+        if (file.listFiles(f -> f.getName().equals(".vagrant")).length == 0) {
+            return notCorrect;
+        }
+        File dotVagrant = file.listFiles(f -> f.getName().equals(".vagrant"))[0];
+        if (dotVagrant.listFiles(f -> f.getName().equals("machines")).length == 0) {
+            return notCorrect;
+        }
+        return "";
     }
 }
