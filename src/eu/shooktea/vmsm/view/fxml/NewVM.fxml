@@ -11,28 +11,17 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <VBox prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.NewVM">
    <children>
-      <Pane VBox.vgrow="NEVER">
-         <children>
-            <Label text="New virtual machine">
-               <font>
-                  <Font size="22.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <padding>
-            <Insets bottom="2.0" />
-         </padding>
-      </Pane>
+      <Label maxWidth="1.7976931348623157E308" text="New virtual machine">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
       <Separator prefWidth="200.0" />
       <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="VM Settings">
          <font>
@@ -88,9 +77,28 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </GridPane>
-      <Separator opacity="0.0" orientation="VERTICAL" prefHeight="12.0" prefWidth="98.0" />
-      <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
+      <HBox maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
          <children>
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <Label maxWidth="1.7976931348623157E308" text="Error">
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Label maxWidth="1.7976931348623157E308" text="Info">
+                     <VBox.margin>
+                        <Insets left="10.0" top="2.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
             <Button cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
             <Button defaultButton="true" mnemonicParsing="false" onAction="#create" text="Create">
                <HBox.margin>
