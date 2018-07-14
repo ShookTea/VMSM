@@ -82,36 +82,42 @@
          <children>
             <VBox HBox.hgrow="ALWAYS">
                <children>
-                  <Label maxWidth="1.7976931348623157E308" text="Error">
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <image>
-                              <Image url="@../../resources/Warning_small.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Label>
-                  <Label layoutX="20.0" layoutY="10.0" maxWidth="1.7976931348623157E308" text="Info">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <image>
-                              <Image url="@../../resources/sekkyumu/Get%20Info%20Blue%20Button.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                  </Label>
+                   <HBox VBox.vgrow="NEVER">
+                       <Label maxWidth="1.7976931348623157E308" style="-fx-font-weight: bold" text="Error: " textFill="RED">
+                           <VBox.margin>
+                               <Insets left="10.0" />
+                           </VBox.margin>
+                           <graphic>
+                               <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                   <viewport>
+                                       <Rectangle2D />
+                                   </viewport>
+                                   <image>
+                                       <Image url="@../../resources/Warning_small.png" />
+                                   </image>
+                               </ImageView>
+                           </graphic>
+                       </Label>
+                       <Label fx:id="errorLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                   </HBox>
+                   <HBox VBox.vgrow="NEVER">
+                       <Label layoutX="20.0" layoutY="10.0" maxWidth="1.7976931348623157E308" style="-fx-font-weight: bold" text="Info: " textFill="BLUE">
+                           <graphic>
+                               <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                   <viewport>
+                                       <Rectangle2D />
+                                   </viewport>
+                                   <image>
+                                       <Image url="@../../resources/sekkyumu/Get_Info_Blue_Button.png" />
+                                   </image>
+                               </ImageView>
+                           </graphic>
+                           <VBox.margin>
+                               <Insets left="10.0" />
+                           </VBox.margin>
+                       </Label>
+                       <Label fx:id="infoLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                   </HBox>
                </children>
             </VBox>
             <VBox>

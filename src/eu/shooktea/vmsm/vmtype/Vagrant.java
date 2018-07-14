@@ -29,4 +29,9 @@ public class Vagrant extends VMType {
     public String getTypeName() {
         return "Vagrant";
     }
+
+    @Override
+    public String createVmInfo() {
+        return "Main path contains .vagrant/machines directory.";
+    }
 }

@@ -43,6 +43,14 @@ public abstract class VMType {
         return true;
     }
 
+    /**
+     * Gives information to display in VM creation window. If empty, displays nothing.
+     * @return information for create VM window.
+     */
+    public String createVmInfo() {
+        return "";
+    }
+
     public static VMType getByName(String name) {
         return types.stream()
                 .filter(type -> type.getTypeName().equals(name))
