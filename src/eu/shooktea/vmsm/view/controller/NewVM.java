@@ -120,6 +120,7 @@ public class NewVM implements StageController {
         VirtualMachine machine = new VirtualMachine(name, file, url, vmType.getValue());
         Storage.registerVM(machine);
         stage.close();
+        Start.virtualMachineProperty.setValue(machine);
     }
 
     @FXML
