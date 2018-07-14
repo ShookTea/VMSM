@@ -24,14 +24,13 @@ SOFTWARE.
 package eu.shooktea.vmsm.view.controller;
 
 import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
-import javafx.scene.control.Menu;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
@@ -45,6 +44,7 @@ public class MainWindow {
     @FXML private Menu vmListMenu;
 
     private WebEngine webEngine;
+    private ToggleGroup chooseVmToggleGroup = new ToggleGroup();
 
     @FXML
     private void initialize() {
@@ -56,7 +56,22 @@ public class MainWindow {
     }
 
     private void reloadGUI() {
-        
+        reloadMenu();
+    }
+
+    private void reloadMenu() {
+        chooseVmToggleGroup = new ToggleGroup();
+        ObservableList<MenuItem> items = vmListMenu.getItems();
+        while (!(items.get(0) instanceof SeparatorMenuItem)) {
+            items.remove(0);
+        }
+        for (int i = 0; i < Storage.vmList.size(); i++) {
+            VirtualMachine vm = Storage.vmList.get(i);
+            RadioMenuItem item = new RadioMenuItem(vm.getName());
+            item.setToggleGroup(chooseVmToggleGroup);
+            item.setSelected(Start.virtualMachineProperty.getValue()  == vm);
+            items.add(i, item);
+        }
     }
 
     @FXML

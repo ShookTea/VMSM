@@ -47,6 +47,10 @@ public class VirtualMachine {
         return obj;
     }
 
+    public String getName() {
+        return name;
+    }
+
     private String name;
     private File mainPath;
     private URL pageRoot;
