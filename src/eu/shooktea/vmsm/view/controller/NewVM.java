@@ -53,8 +53,6 @@ public class NewVM implements StageController {
         vmPath.setPromptText(System.getProperty("user.home"));
 
         infoLabel.textProperty().bind(Bindings.select(vmType.valueProperty(), "creationInfo"));
-        errorLabel.textProperty().bind(Bindings.select(vmType.valueProperty(), "creationError"));
-
         infoLabel.getParent().opacityProperty().bind(
                 new When(infoLabel.textProperty().isEmpty())
                         .then(0.0)
@@ -69,7 +67,7 @@ public class NewVM implements StageController {
     private void openPathWindow() {
         File file;
         String dialogTitle = "Choose VM path";
-        if (vmType.getSelectionModel().getSelectedItem().isMainPathDirectory()) {
+        if (vmType.getValue().isMainPathDirectory()) {
             DirectoryChooser fileChooser = new DirectoryChooser();
             fileChooser.setTitle(dialogTitle);
             file = fileChooser.showDialog(Start.primaryStage);
@@ -80,6 +78,8 @@ public class NewVM implements StageController {
             file = fileChooser.showOpenDialog(Start.primaryStage);
         }
         if (file != null) vmPath.setText(file.getAbsolutePath());
+        vmType.getValue().checkVmRootFile(file);
+        errorLabel.setText(vmType.getValue().getCreationError());
     }
 
     @FXML
@@ -87,6 +87,7 @@ public class NewVM implements StageController {
         File rootFile = new File(vmPath.getText());
         VMType type = vmType.getValue();
         type.checkVmRootFile(rootFile);
+        errorLabel.setText(type.getCreationError());
         if (!type.getCreationError().isEmpty()) {
 
         }
