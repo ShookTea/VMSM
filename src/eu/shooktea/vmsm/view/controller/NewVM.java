@@ -30,14 +30,16 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 
-public class NewVM {
+public class NewVM implements StageController {
     @FXML private TextField vmName;
     @FXML private ChoiceBox<VMType> vmType;
     @FXML private TextField vmPath;
     @FXML private TextField vmAddress;
+    private Stage stage;
 
     @FXML
     private void initialize() {
@@ -70,6 +72,11 @@ public class NewVM {
 
     @FXML
     private void cancel() {
+        stage.close();
+    }
 
+    @Override
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }
