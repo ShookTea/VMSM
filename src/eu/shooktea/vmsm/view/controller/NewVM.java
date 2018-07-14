@@ -60,13 +60,12 @@ public class NewVM {
             fileChooser.setTitle(dialogTitle);
             file = fileChooser.showOpenDialog(Start.primaryStage);
         }
-
-        vmPath.setText(file.getAbsolutePath());
+        if (file != null) vmPath.setText(file.getAbsolutePath());
     }
 
     @FXML
     private void create() {
-        
+
     }
 
     @FXML
