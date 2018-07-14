@@ -43,6 +43,7 @@ public class NewVM implements StageController {
     @FXML private TextField vmPath;
     @FXML private TextField vmAddress;
     @FXML private Label infoLabel;
+    @FXML private Label errorLabel;
     private Stage stage;
 
     @FXML
@@ -52,8 +53,14 @@ public class NewVM implements StageController {
         vmPath.setPromptText(System.getProperty("user.home"));
 
         infoLabel.textProperty().bind(Bindings.select(vmType.valueProperty(), "creationInfo"));
+        errorLabel.textProperty().bind(Bindings.select(vmType.valueProperty(), "creationError"));
+
         infoLabel.getParent().opacityProperty().bind(
                 new When(infoLabel.textProperty().isEmpty())
+                        .then(0.0)
+                        .otherwise(1.0));
+        errorLabel.getParent().opacityProperty().bind(
+                new When(errorLabel.textProperty().isEmpty())
                         .then(0.0)
                         .otherwise(1.0));
     }

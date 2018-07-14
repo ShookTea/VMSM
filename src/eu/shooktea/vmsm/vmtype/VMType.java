@@ -25,8 +25,11 @@ package eu.shooktea.vmsm.vmtype;
 
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.io.File;
 
 public abstract class VMType {
 
@@ -51,6 +54,31 @@ public abstract class VMType {
         return creationInfo;
     }
 
+    public String getCreationError() {
+        return creationError.getValue();
+    }
+
+    public void setCreationError(String err) {
+        creationError.setValue(err);
+    }
+
+    public StringProperty creationErrorProperty() {
+        return creationError;
+    }
+
+    public final void checkVmRootFile(File file) {
+        setCreationError(checkRootFile(file));
+    }
+
+    /**
+     * Check whether this file can be correct root file for VM.
+     * @param file root file choosen by user.
+     * @return empty string or {@code null} if file is correct, error information otherwise.
+     */
+    protected String checkRootFile(File file) {
+        return "";
+    }
+
     @Override
     public String toString() {
         return getTypeName();
@@ -62,6 +90,7 @@ public abstract class VMType {
 
     protected ReadOnlyStringProperty typeName;
     protected ReadOnlyStringProperty creationInfo;
+    private final StringProperty creationError = new SimpleStringProperty("");
 
     public static VMType getByName(String name) {
         return types.stream()
