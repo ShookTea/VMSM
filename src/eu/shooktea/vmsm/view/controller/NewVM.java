@@ -89,8 +89,13 @@ public class NewVM implements StageController {
         type.checkVmRootFile(rootFile);
         errorLabel.setText(type.getCreationError());
         if (!type.getCreationError().isEmpty()) {
-
+            return;
         }
+        if (vmName.getText().isEmpty()) {
+            errorLabel.setText("VM name is required.");
+            return;
+        }
+
     }
 
     @FXML
