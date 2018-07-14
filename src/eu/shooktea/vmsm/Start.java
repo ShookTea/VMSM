@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.application.Application;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -58,12 +59,17 @@ public class Start extends Application {
 
     public static Property<VirtualMachine> virtualMachineProperty = new SimpleObjectProperty<>();
 
-    public static <T extends Region>void createNewWindow(String fxmlPath, String title, boolean isModal) {
+    public static <T extends Region, C>void createNewWindow(String fxmlPath, String title, boolean isModal) {
         try {
             URL location = Start.class.getResource(fxmlPath);
             FXMLLoader loader = new FXMLLoader(location);
             T element = loader.load();
+            C controller = loader.getController();
             Stage stage = new Stage();
+            if (controller instanceof StageController) {
+                StageController sc = (StageController)controller;
+                sc.setStage(stage);
+            }
             stage.setScene(new Scene(element));
             stage.setTitle(title);
             if (isModal) {
