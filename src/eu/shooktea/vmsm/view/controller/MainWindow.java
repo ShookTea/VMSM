@@ -31,6 +31,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
@@ -53,6 +54,16 @@ public class MainWindow {
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
         Worker worker = webEngine.getLoadWorker();
         progressBar.progressProperty().bind(worker.progressProperty());
+
+        chooseVmToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
+            RadioMenuItem item = (RadioMenuItem)newValue;
+            String name = item.getText();
+            VirtualMachine choosenMachine = Storage.vmList.stream()
+                    .filter(vm -> vm.getName().equals(name))
+                    .findFirst()
+                    .get();
+            Start.virtualMachineProperty.setValue(choosenMachine);
+        }));
     }
 
     private void reloadGUI() {
@@ -60,18 +71,20 @@ public class MainWindow {
     }
 
     private void reloadMenu() {
-        chooseVmToggleGroup = new ToggleGroup();
         ObservableList<MenuItem> items = vmListMenu.getItems();
-        while (!(items.get(0) instanceof SeparatorMenuItem)) {
-            items.remove(0);
-        }
-        for (int i = 0; i < Storage.vmList.size(); i++) {
-            VirtualMachine vm = Storage.vmList.get(i);
+        items.clear();
+        for (VirtualMachine vm : Storage.vmList) {
             RadioMenuItem item = new RadioMenuItem(vm.getName());
             item.setToggleGroup(chooseVmToggleGroup);
-            item.setSelected(Start.virtualMachineProperty.getValue()  == vm);
-            items.add(i, item);
+            item.setSelected(Start.virtualMachineProperty.getValue() == vm);
+            items.add(item);
         }
+        items.add(new SeparatorMenuItem());
+
+        MenuItem createNewVM = new MenuItem("New VM");
+        createNewVM.setAccelerator(KeyCombination.valueOf("Ctrl+N"));
+        createNewVM.setOnAction(e -> createNewVM());
+        items.add(createNewVM);
     }
 
     @FXML
