@@ -67,6 +67,10 @@ public class MainWindow {
     }
 
     private void reloadGUI() {
+        Start.primaryStage.setTitle(
+                Start.virtualMachineProperty.getValue() == null ?
+                        "VMSM" :
+                        "VMSM - " + Start.virtualMachineProperty.getValue().getName());
         reloadMenu();
     }
 
