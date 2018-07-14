@@ -91,7 +91,7 @@ public class NewVM implements StageController {
         if (!type.getCreationError().isEmpty()) {
             return;
         }
-        if (vmName.getText().isEmpty()) {
+        if (vmName.getText().trim().isEmpty()) {
             errorLabel.setText("VM name is required.");
             return;
         }
