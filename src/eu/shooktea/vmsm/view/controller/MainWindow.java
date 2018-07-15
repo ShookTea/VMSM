@@ -42,6 +42,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import org.reactfx.value.Val;
 
 
 public class MainWindow {
@@ -63,7 +64,6 @@ public class MainWindow {
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
         Worker worker = webEngine.getLoadWorker();
         progressBar.progressProperty().bind(worker.progressProperty());
-
         bindHomeButton();
 
         chooseVmToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
@@ -79,12 +79,10 @@ public class MainWindow {
 
     private void bindHomeButton() {
         ColorAdjust effect = (ColorAdjust)homeButton.getEffect();
-        BooleanBinding isUrlNotNull = Start.virtualMachineProperty.isNotNull()
-                .and(Bindings.select(Start.virtualMachineProperty, "pageRoot").isNotNull());
         effect.saturationProperty().bind(
-                new When(isUrlNotNull)
-                        .then(0.0)
-                        .otherwise(-1.0)
+                Val.flatMap(Start.virtualMachineProperty, VirtualMachine::pageRootProperty)
+                .map(url -> url == null ? -1.0 : 0.0)
+                .orElseConst(-1.0)
         );
     }
 

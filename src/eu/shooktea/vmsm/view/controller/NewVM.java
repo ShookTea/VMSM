@@ -104,14 +104,11 @@ public class NewVM implements StageController {
         if (!urlText.startsWith("http://") && !urlText.startsWith("https://")) {
             urlText = "http://" + urlText;
         }
-        URL url;
-        try {
-            url = new URL(urlText);
-        } catch (MalformedURLException e) {
-            if (vmAddress.getText().trim().isEmpty()) {
-                url = null;
-            }
-            else {
+        URL url = null;
+        if (!vmAddress.getText().trim().isEmpty()) {
+            try {
+                url = new URL(urlText);
+            } catch (MalformedURLException e) {
                 errorLabel.setText(VM_URL_IS_INCORRECT);
                 return;
             }
