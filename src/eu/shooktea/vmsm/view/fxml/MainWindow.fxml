@@ -8,6 +8,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.input.KeyCodeCombination?>
@@ -52,10 +53,13 @@
          <children>
             <HBox VBox.vgrow="NEVER">
                <children>
-                  <ImageView fitHeight="${addressField.height}" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
+                  <ImageView fx:id="homeButton" fitHeight="${addressField.height}" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
                       <image>
                           <Image url="@../../resources/home.png" />
                       </image>
+                     <effect>
+                        <ColorAdjust saturation="-1.0" />
+                     </effect>
                   </ImageView>
                    <TextField fx:id="addressField" onAction="#addressEnterPressed" HBox.hgrow="ALWAYS" />
                </children>

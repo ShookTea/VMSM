@@ -26,11 +26,19 @@ package eu.shooktea.vmsm.view.controller;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.When;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Effect;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -43,6 +51,7 @@ public class MainWindow {
     @FXML private ProgressBar progressBar;
     @FXML private ToolBar toolBar;
     @FXML private Menu vmListMenu;
+    @FXML private ImageView homeButton;
 
     private WebEngine webEngine;
     private ToggleGroup chooseVmToggleGroup = new ToggleGroup();
@@ -55,6 +64,8 @@ public class MainWindow {
         Worker worker = webEngine.getLoadWorker();
         progressBar.progressProperty().bind(worker.progressProperty());
 
+        bindHomeButton();
+
         chooseVmToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             RadioMenuItem item = (RadioMenuItem)newValue;
             String name = item.getText();
@@ -64,6 +75,17 @@ public class MainWindow {
                     .get();
             Start.virtualMachineProperty.setValue(choosenMachine);
         }));
+    }
+
+    private void bindHomeButton() {
+        ColorAdjust effect = (ColorAdjust)homeButton.getEffect();
+        BooleanBinding isUrlNotNull = Start.virtualMachineProperty.isNotNull()
+                .and(Bindings.select(Start.virtualMachineProperty, "pageRoot").isNotNull());
+        effect.saturationProperty().bind(
+                new When(isUrlNotNull)
+                        .then(0.0)
+                        .otherwise(-1.0)
+        );
     }
 
     private void reloadGUI() {

@@ -24,6 +24,8 @@ SOFTWARE.
 package eu.shooktea.vmsm;
 
 import eu.shooktea.vmsm.vmtype.VMType;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -34,7 +36,7 @@ public class VirtualMachine {
     public VirtualMachine(String name, File mainPath, URL pageRoot, VMType type) {
         this.name = name;
         this.mainPath = mainPath;
-        this.pageRoot = pageRoot;
+        this.pageRoot = new SimpleObjectProperty<>(pageRoot);
         this.type = type;
     }
 
@@ -42,7 +44,7 @@ public class VirtualMachine {
         JSONObject obj = new JSONObject();
         obj.put("name", name);
         obj.put("path", mainPath.getAbsolutePath());
-        if (pageRoot != null) obj.put("url", pageRoot.toString());
+        if (pageRoot.get() != null) obj.put("url", pageRoot.get().toString());
         obj.put("type", type.getTypeName());
         return obj;
     }
@@ -51,9 +53,21 @@ public class VirtualMachine {
         return name;
     }
 
+    public URL getPageRoot() {
+        return pageRoot.get();
+    }
+
+    public void setPageRoot(URL url) {
+        pageRoot.set(url);
+    }
+
+    public ObjectProperty<URL> pageRootProperty() {
+        return pageRoot;
+    }
+
     private String name;
     private File mainPath;
-    private URL pageRoot;
+    private ObjectProperty<URL> pageRoot;
     private VMType type;
 
     public static VirtualMachine fromJSON(JSONObject json) throws MalformedURLException {

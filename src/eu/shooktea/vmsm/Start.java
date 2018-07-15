@@ -25,7 +25,7 @@ package eu.shooktea.vmsm;
 
 import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.application.Application;
-import javafx.beans.property.Property;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -61,7 +61,7 @@ public class Start extends Application {
         launch(args);
     }
 
-    public static Property<VirtualMachine> virtualMachineProperty = new SimpleObjectProperty<>();
+    public static ObjectProperty<VirtualMachine> virtualMachineProperty = new SimpleObjectProperty<>();
 
     public static <T extends Region, C>void createNewWindow(String fxmlPath, String title, boolean isModal) {
         try {
