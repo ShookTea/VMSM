@@ -5,13 +5,16 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
-<?import javafx.scene.control.SeparatorMenuItem?>
 <VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.MainWindow">
    <children>
       <MenuBar>
@@ -30,7 +33,7 @@
           </Menu>
             <Menu fx:id="vmListMenu" mnemonicParsing="false" text="Virtual machines">
               <items>
-              <SeparatorMenuItem/>
+              <SeparatorMenuItem />
                 <MenuItem mnemonicParsing="false" onAction="#createNewVM" text="New VM">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -45,9 +48,18 @@
           <Button mnemonicParsing="false" text="Button" />
         </items>
       </ToolBar>
-      <VBox prefWidth="100.0" VBox.vgrow="NEVER">
+      <VBox prefWidth="100.0">
          <children>
-            <TextField fx:id="addressField" onAction="#addressEnterPressed" />
+            <HBox VBox.vgrow="NEVER">
+               <children>
+                  <ImageView fitHeight="${addressField.height}" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
+                      <image>
+                          <Image url="@../../resources/home.png" />
+                      </image>
+                  </ImageView>
+                   <TextField fx:id="addressField" onAction="#addressEnterPressed" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
             <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="600.0" progress="0.0" VBox.vgrow="NEVER" />
          </children>
       </VBox>
