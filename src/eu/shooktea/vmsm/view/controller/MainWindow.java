@@ -44,6 +44,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.reactfx.value.Val;
 
+import java.net.URL;
+
 
 public class MainWindow {
 
@@ -128,6 +130,16 @@ public class MainWindow {
             address = "http://" + address;
         }
         webEngine.load(address);
+    }
+
+    @FXML
+    private void goToHomeUrl() {
+        if (Start.virtualMachineProperty.isNull().get()) return;
+        VirtualMachine vm = Start.virtualMachineProperty.getValue();
+        if (vm.getPageRoot() == null) return;
+        URL url = vm.getPageRoot();
+        addressField.setText(url.toString());
+        webEngine.load(url.toString());
     }
 
     private void reloadGUI(ObservableValue<? extends VirtualMachine> observable, VirtualMachine oldValue, VirtualMachine newValue) {

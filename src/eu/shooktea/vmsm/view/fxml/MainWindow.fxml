@@ -53,7 +53,7 @@
          <children>
             <HBox VBox.vgrow="NEVER">
                <children>
-                  <ImageView fx:id="homeButton" fitHeight="${addressField.height}" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
+                  <ImageView fx:id="homeButton" fitHeight="${addressField.height}" onMouseClicked="#goToHomeUrl" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
                       <image>
                           <Image url="@../../resources/home.png" />
                       </image>
