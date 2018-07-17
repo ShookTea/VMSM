@@ -5,13 +5,13 @@ import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Optional;
 
 public class VmManager {
     @FXML private TableView<VirtualMachine> table;
@@ -43,9 +43,20 @@ public class VmManager {
         table.setRowFactory(tv -> {
             TableRow<VirtualMachine> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && (!row.isEmpty())) {
                     VirtualMachine vm = row.getItem();
                     NewVM.openNewVmWindow(vm);
+                }
+                else if (event.getButton() == MouseButton.SECONDARY && event.getClickCount() == 1 && (!row.isEmpty())) {
+                    VirtualMachine vm = row.getItem();
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Deleting VM");
+                    alert.setHeaderText(vm.getName());
+                    alert.setContentText("Are you sure you want to delete \"" + vm.getName() + "\" VM?");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        System.out.println(vm.getName() + " DELETE");
+                    }
                 }
             });
             return row;
