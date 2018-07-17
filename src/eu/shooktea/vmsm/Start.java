@@ -34,8 +34,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 
 public class Start extends Application {
 
@@ -47,7 +49,7 @@ public class Start extends Application {
         FXMLLoader loader = new FXMLLoader(location);
         VBox vbox = loader.load();
         primaryStage.setScene(new Scene(vbox));
-        primaryStage.setMaximized(true);
+//        primaryStage.setMaximized(true);
         primaryStage.setTitle("VMSM");
         primaryStage.show();
         if (Storage.vmList.size() > 0) {
@@ -55,9 +57,37 @@ public class Start extends Application {
         }
     }
 
+    private static void turnOffSSL() {
+        TrustManager[] trustAllCerts = new TrustManager[] {
+                new X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+                    public void checkClientTrusted(
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                    public void checkServerTrusted(
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+            HostnameVerifier allcd HostsValid = (s, sslSession) -> true;
+            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
     public static Stage primaryStage;
 
     public static void main(String[] args) {
+        turnOffSSL();
         launch(args);
     }
 

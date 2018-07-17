@@ -26,18 +26,12 @@ package eu.shooktea.vmsm.view.controller;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.When;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.web.WebEngine;
@@ -66,6 +60,8 @@ public class MainWindow {
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
         Worker worker = webEngine.getLoadWorker();
         progressBar.progressProperty().bind(worker.progressProperty());
+        worker.stateProperty().addListener(((observable, oldValue, newValue) -> System.out.println(newValue)));
+        worker.exceptionProperty().addListener((observable, oldValue, newValue) -> ((Throwable)newValue).printStackTrace());
         bindHomeButton();
 
         chooseVmToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
