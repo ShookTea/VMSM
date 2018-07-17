@@ -40,6 +40,8 @@ import javafx.scene.web.WebView;
 import org.reactfx.value.Val;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainWindow {
@@ -139,7 +141,12 @@ public class MainWindow {
                 virtualMachineTypeMenu.setAccelerator(menu.getAccelerator());
                 ObservableList<MenuItem> vmTypeItems = virtualMachineTypeMenu.getItems();
                 vmTypeItems.clear();
-                vmTypeItems.addAll(menu.getItems());
+                ObservableList<MenuItem> newItems = menu.getItems();
+                List<MenuItem> transfer = new ArrayList<>(newItems);
+                for(MenuItem item : transfer) {
+                    newItems.remove(item);
+                    vmTypeItems.add(item);
+                }
                 virtualMachineTypeMenu.setVisible(true);
             }, () -> virtualMachineTypeMenu.setVisible(false));
         }

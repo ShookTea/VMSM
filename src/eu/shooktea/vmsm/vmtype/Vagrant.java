@@ -32,6 +32,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
@@ -162,8 +163,22 @@ public class Vagrant extends VMType {
 
     @Override
     public Optional<Menu> getMenu() {
-        Menu menu = new Menu("Vagrant", createMenuImage("vagrant_icon.png"));
-        menu.setId("menu_vmtype_Vagrant");
+        MenuItem launch = new MenuItem("Start VM", createMenuImage("play.png"));
+        launch.setDisable(true);
+        launch.disableProperty().bind(statusProperty.isEqualTo(Status.RUNNING));
+
+        MenuItem restart = new MenuItem("Restart VM", createMenuImage("play_all.png"));
+        restart.setDisable(true);
+        restart.disableProperty().bind(statusProperty.isEqualTo(Status.STOPPED));
+
+        MenuItem stop = new MenuItem("Stop VM", createMenuImage("stop.png"));
+        stop.setDisable(true);
+        stop.disableProperty().bind(statusProperty.isEqualTo(Status.STOPPED));
+        Menu menu = new Menu(
+                "Vagrant",
+                createMenuImage("vagrant_icon.png"),
+                launch, restart, stop
+        );
         return Optional.of(menu);
     }
 
