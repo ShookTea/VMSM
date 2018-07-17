@@ -20,12 +20,25 @@ java -jar VMSM.jar
 
 ### Download and compile
 
-1. Download source code (`git clone https://github.com/ShookTea/VMSM.git`)
-1. Import to IntelliJ IDEA
-1. Solve all dependencies from Maven
+1. Download source code (`git clone https://github.com/ShookTea/VMSM.git`),
+1. Import to IntelliJ IDEA,
+1. Solve all dependencies from Maven,
     * `org.json:json:20180130`
     * `org.reactfx:reactfx:2.0-M5`
-1. Compile and run 
+1. Compile and run.
+
+### (Windows) pin VMSM to task bar / start screen
+
+*Note: tested on Windows 10 only*
+1. [Download VMSM.jar](https://github.com/ShookTea/VMSM/releases/latest),
+1. Create new shortcut to `.jar` file. It can be located anywhere for now,
+1. Rename shortcut to "VMSM",
+1. Right-click shortcut and select `Properties`,
+1. Edit `target` field by adding `explorer ` (with space) before existing target, i.e. `explorer C:\Users\Norbert\IdeaProjects\VMSM\out\artifacts\VMSM_jar\VMSM.jar`,
+1. (*not required*) Change shortcut icon if you want,
+1. Close Properties dialog,
+1. Right-click shortcut and select `Pin to task bar` and/or `Pin to start screen`,
+1. Delete shortcut.
 
 ## Managing VMs
 
