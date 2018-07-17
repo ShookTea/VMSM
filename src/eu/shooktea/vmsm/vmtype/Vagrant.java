@@ -23,9 +23,17 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class Vagrant extends VMType {
@@ -33,6 +41,12 @@ public class Vagrant extends VMType {
         super();
         this.typeName = new SimpleStringProperty("Vagrant");
         this.creationInfo = new SimpleStringProperty("Main path contains .vagrant/machines directory.");
+        this.toolBarElements = new SimpleListProperty<>(FXCollections.observableArrayList(createToolBarElements()));
+    }
+
+    private List<Node> createToolBarElements() {
+        ImageView vagrantIcon = createToolbarImage("vagrant_icon.png");
+        return Arrays.asList(vagrantIcon);
     }
 
     @Override

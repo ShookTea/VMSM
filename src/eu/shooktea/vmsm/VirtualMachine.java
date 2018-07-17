@@ -37,7 +37,7 @@ public class VirtualMachine {
         this.name = name;
         this.mainPath = mainPath;
         this.pageRoot = new SimpleObjectProperty<>(pageRoot);
-        this.type = type;
+        this.type = new SimpleObjectProperty<>(type);
     }
 
     public JSONObject toJSON() {
@@ -45,7 +45,7 @@ public class VirtualMachine {
         obj.put("name", name);
         obj.put("path", mainPath.getAbsolutePath());
         if (pageRoot.get() != null) obj.put("url", pageRoot.get().toString());
-        obj.put("type", type.getTypeName());
+        obj.put("type", type.get().getTypeName());
         return obj;
     }
 
@@ -65,10 +65,22 @@ public class VirtualMachine {
         return pageRoot;
     }
 
+    public VMType getType() {
+        return type.getValue();
+    }
+
+    public void setType(VMType type) {
+        this.type.setValue(type);
+    }
+
+    public ObjectProperty<VMType> typeProperty() {
+        return type;
+    }
+
     private String name;
     private File mainPath;
     private ObjectProperty<URL> pageRoot;
-    private VMType type;
+    private ObjectProperty<VMType> type;
 
     public static VirtualMachine fromJSON(JSONObject json) throws MalformedURLException {
         String name = json.getString("name");

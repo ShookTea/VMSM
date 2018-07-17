@@ -26,15 +26,10 @@ package eu.shooktea.vmsm.view.controller;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.binding.When;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
@@ -114,6 +109,7 @@ public class MainWindow {
                         "VMSM" :
                         "VMSM - " + Start.virtualMachineProperty.getValue().getName());
         reloadMenu();
+        reloadToolbar();
     }
 
     private void reloadMenu() {
@@ -131,6 +127,14 @@ public class MainWindow {
         createNewVM.setAccelerator(KeyCombination.valueOf("Ctrl+N"));
         createNewVM.setOnAction(e -> createNewVM());
         items.add(createNewVM);
+    }
+
+    private void reloadToolbar() {
+        toolBar.getItems().clear();
+        if (!Start.virtualMachineProperty.isNull().get()) {
+            VirtualMachine vm = Start.virtualMachineProperty.getValue();
+            toolBar.getItems().addAll(vm.getType().getToolBarElements());
+        }
     }
 
     @FXML
