@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.NewVM">
+   <children>
+      <Label fx:id="headerLabel" maxWidth="1.7976931348623157E308" text="New virtual machine">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Separator prefWidth="200.0" />
+      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="VM Settings">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font></Label>
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
+        </rowConstraints>
+         <children>
+            <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="VM name" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+               <GridPane.margin>
+                  <Insets right="10.0" />
+               </GridPane.margin>
+            </Label>
+             <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="VM type" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                 <GridPane.margin>
+                     <Insets right="10.0" />
+                 </GridPane.margin>
+             </Label>
+             <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="VM path" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                 <GridPane.margin>
+                     <Insets right="10.0" />
+                 </GridPane.margin>
+             </Label>
+             <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Address to VM HTTP server" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                 <GridPane.margin>
+                     <Insets right="10.0" />
+                 </GridPane.margin>
+             </Label>
+             <TextField fx:id="vmName" onKeyTyped="#onNameInput" promptText="Name of new virtual machine" GridPane.columnIndex="1" />
+            <ChoiceBox fx:id="vmType" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <TextField fx:id="vmPath" prefHeight="30.0" prefWidth="399.0" promptText="Path to VM main directory" HBox.hgrow="ALWAYS" />
+                  <ImageView fitHeight="30.0" fitWidth="29.0" onMouseClicked="#openPathWindow" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
+                     <image>
+                        <Image url="@/eu/shooktea/vmsm/resources/sekkyumu/Document.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+            <TextField fx:id="vmAddress" promptText="192.168.1.1" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
+      </GridPane>
+      <HBox maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
+         <children>
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                   <HBox VBox.vgrow="NEVER">
+                       <Label maxWidth="1.7976931348623157E308" style="-fx-font-weight: bold" text="Error: " textFill="RED">
+                           <VBox.margin>
+                               <Insets left="10.0" />
+                           </VBox.margin>
+                           <graphic>
+                               <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                   <viewport>
+                                       <Rectangle2D />
+                                   </viewport>
+                                   <image>
+                                       <Image url="@../../resources/Warning_small.png" />
+                                   </image>
+                               </ImageView>
+                           </graphic>
+                       </Label>
+                       <Label fx:id="errorLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                   </HBox>
+                   <HBox VBox.vgrow="NEVER">
+                       <Label layoutX="20.0" layoutY="10.0" maxWidth="1.7976931348623157E308" style="-fx-font-weight: bold" text="Info: " textFill="BLUE">
+                           <graphic>
+                               <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                   <viewport>
+                                       <Rectangle2D />
+                                   </viewport>
+                                   <image>
+                                       <Image url="@../../resources/sekkyumu/Get_Info_Blue_Button.png" />
+                                   </image>
+                               </ImageView>
+                           </graphic>
+                           <VBox.margin>
+                               <Insets left="10.0" />
+                           </VBox.margin>
+                       </Label>
+                       <Label fx:id="infoLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                   </HBox>
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Button cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+                        <Button fx:id="createButton" defaultButton="true" mnemonicParsing="false" onAction="#create" text="Create">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

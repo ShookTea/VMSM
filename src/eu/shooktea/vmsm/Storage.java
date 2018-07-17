@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -31,8 +33,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +40,13 @@ public class Storage {
     private Storage() {}
 
     public static void registerVM(VirtualMachine vm) {
-        VmList.add(vm);
+        vmList.add(vm);
+        saveAll();
+    }
+
+    public static void removeVM(VirtualMachine vm) {
+        vmList.remove(vm);
+        saveAll();
     }
 
     public static void saveAll() {
@@ -74,11 +80,14 @@ public class Storage {
         vmsmFile.createNewFile();
         JSONObject root = new JSONObject();
 
-        List<JSONObject> list = VmList.stream()
+        List<JSONObject> list = vmList.stream()
                 .map(VirtualMachine::toJSON)
                 .collect(Collectors.toList());
         JSONArray vms = new JSONArray(list);
         root.put("VMs", vms);
+        if (Start.virtualMachineProperty.isNotNull().get()) {
+            root.put("current_vm", Start.virtualMachineProperty.getValue().getName());
+        }
 
         PrintWriter pw = new PrintWriter(vmsmFile);
         pw.println(root.toString());
@@ -95,15 +104,26 @@ public class Storage {
     }
 
     private static void tryLoadAll() throws IOException {
-        String config = new String(Files.readAllBytes(vmsmFile.toPath()));
+        String config = new String(Files.readAllBytes(vmsmFile.toPath())).trim();
+        if (config.isEmpty()) return;
         JSONObject obj = new JSONObject(config);
 
-        VmList.clear();
+        vmList.clear();
         if (obj.has("VMs")) {
             for (Object o : obj.getJSONArray("VMs")) {
                 JSONObject json = (JSONObject) o;
                 VirtualMachine vm = VirtualMachine.fromJSON(json);
-                VmList.add(vm);
+                vmList.add(vm);
+            }
+        }
+        if (obj.has("current_vm")) {
+            String currentVmName = obj.getString("current_vm");
+            List<VirtualMachine> filtered = Storage.vmList.filtered(vm -> vm.getName().equals(currentVmName));
+            if (filtered.size() == 1) {
+                Start.virtualMachineProperty.setValue(filtered.get(0));
+            }
+            else if (vmList.size() > 0) {
+                Start.virtualMachineProperty.setValue(vmList.get(0));
             }
         }
     }
@@ -125,5 +145,5 @@ public class Storage {
     }
 
     private static File vmsmFile = getVmsmFile();
-    private static final List<VirtualMachine> VmList = new ArrayList<>();
+    public static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
 }

@@ -23,16 +23,98 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
-import java.util.ArrayList;
-import java.util.List;
+import eu.shooktea.vmsm.VirtualMachine;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.control.Menu;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.io.File;
+import java.util.Optional;
 
 public abstract class VMType {
-    public abstract String getTypeName();
+
+    public VMType() {
+        typeName = new SimpleStringProperty("typeName");
+        creationInfo = new SimpleStringProperty("");
+        toolBarElements = new SimpleListProperty<>();
+    }
+
+    public String getTypeName() {
+        return typeName.getValue();
+    }
+
+    public ReadOnlyStringProperty typeNameProperty() {
+        return typeName;
+    }
+
+    public String getCreationInfo() {
+        return creationInfo.getValue();
+    }
+
+    public ReadOnlyStringProperty creationInfoProperty() {
+        return creationInfo;
+    }
+
+    public String getCreationError() {
+        return creationError.getValue();
+    }
+
+    public void setCreationError(String err) {
+        creationError.setValue(err);
+    }
+
+    public StringProperty creationErrorProperty() {
+        return creationError;
+    }
+
+    public final void checkVmRootFile(File file) {
+        setCreationError(checkRootFile(file));
+    }
+
+    public ObservableList<Node> getToolBarElements() {
+        return toolBarElements.getValue();
+    }
+
+    public void setToolBarElements(ObservableList<Node> list) {
+        toolBarElements.setValue(list);
+    }
+
+    public ListProperty<Node> toolBarElementsProperty() {
+        return toolBarElements;
+    }
+
+    public Optional<Menu> getMenu() {
+        return Optional.empty();
+    }
+
+    public void update(VirtualMachine vm) {}
+
+    /**
+     * Check whether this file can be correct root file for VM.
+     * @param file root file choosen by user.
+     * @return empty string or {@code null} if file is correct, error information otherwise.
+     */
+    protected String checkRootFile(File file) {
+        return "";
+    }
 
     @Override
     public String toString() {
         return getTypeName();
     }
+
+    public boolean isMainPathDirectory() {
+        return true;
+    }
+
+    protected ReadOnlyStringProperty typeName;
+    protected ReadOnlyStringProperty creationInfo;
+    protected ListProperty<Node> toolBarElements;
+    private final StringProperty creationError = new SimpleStringProperty("");
 
     public static VMType getByName(String name) {
         return types.stream()
@@ -40,9 +122,21 @@ public abstract class VMType {
                 .findAny().get();
     }
 
-    public static List<VMType> getAllTypes() {
-        return types;
+    public static final ObservableList<VMType> types = FXCollections.observableArrayList(
+            new Vagrant()
+    );
+
+    protected static ImageView createToolbarImage(String resourceFileName) {
+        resourceFileName = "/eu/shooktea/vmsm/resources/" + resourceFileName;
+        ImageView iv = new ImageView(new Image(VMType.class.getResourceAsStream(resourceFileName)));
+        iv.setPreserveRatio(true);
+        iv.setFitWidth(20);
+        return iv;
     }
 
-    private static List<VMType> types = new ArrayList<>();
+    protected static ImageView createMenuImage(String resourceFileName) {
+        ImageView iv = createToolbarImage(resourceFileName);
+        iv.setFitWidth(15);
+        return iv;
+    }
 }
