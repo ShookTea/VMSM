@@ -67,6 +67,9 @@ public class Start extends Application {
         }), new KeyFrame(Duration.seconds(10)));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
+        Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> {
+            if (virtualMachineProperty.isNotNull().get()) virtualMachineProperty.get().update();
+        }));
     }
 
     private static void turnOffSSL() {

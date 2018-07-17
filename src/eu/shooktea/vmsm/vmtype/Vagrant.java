@@ -24,6 +24,7 @@ SOFTWARE.
 package eu.shooktea.vmsm.vmtype;
 
 import eu.shooktea.vmsm.VirtualMachine;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -45,20 +46,20 @@ public class Vagrant extends VMType {
         super();
         this.typeName = new SimpleStringProperty("Vagrant");
         this.creationInfo = new SimpleStringProperty("Main path contains .vagrant/machines directory.");
-        this.toolBarElements = new SimpleListProperty<>();
+        this.toolBarElements = new SimpleListProperty(FXCollections.observableArrayList(createToolBarElements()));
         update(null);
     }
 
     private List<Node> createToolBarElements() {
         ImageView vagrantIcon = createToolbarImage("vagrant_icon.png");
-        ImageView statusIcon = createToolbarImage(statusProperty.get().getResourceName());
+        statusIcon = createToolbarImage(statusProperty.get().getResourceName());
         Tooltip tooltip = new Tooltip(statusProperty.get().getTooltipText());
         Tooltip.install(statusIcon, tooltip);
 
-        statusProperty.addListener(((observable, oldValue, newValue) -> {
+        statusProperty.addListener(((observable, oldValue, newValue) -> Platform.runLater(() -> {
             statusIcon.setImage(createToolbarImage(newValue.getResourceName()).getImage());
             tooltip.setText(newValue.getTooltipText());
-        }));
+        })));
 
         return Arrays.asList(vagrantIcon, statusIcon);
     }
@@ -84,7 +85,7 @@ public class Vagrant extends VMType {
 
     private void updateStatus(VirtualMachine vm) {
         if (vm == null) {
-            statusProperty.setValue(Status.STOPPED);
+            statusProperty.setValue(Status.UNDEFINED);
             return;
         }
         try {
@@ -114,19 +115,27 @@ public class Vagrant extends VMType {
 
     @Override
     public void update(VirtualMachine vm) {
+        if (vm != previousUpdateVm) {
+            statusProperty.setValue(Status.UNDEFINED);
+            previousUpdateVm = vm;
+        }
         updateStatus(vm);
-        this.toolBarElements.setValue(FXCollections.observableArrayList(createToolBarElements()));
+        //this.toolBarElements.setValue(FXCollections.observableArrayList(createToolBarElements()));
     }
 
-    private ObjectProperty<Status> statusProperty = new SimpleObjectProperty<>(Status.STOPPED);
+    private VirtualMachine previousUpdateVm = null;
+
+    private ObjectProperty<Status> statusProperty = new SimpleObjectProperty<>(Status.UNDEFINED);
+    private ImageView statusIcon;
 
     public enum Status {
-        RUNNING, STOPPED;
+        RUNNING, STOPPED, UNDEFINED;
 
         public String getResourceName() {
             switch (this) {
                 case RUNNING:   return "green_ball.png";
                 case STOPPED:   return "red_ball.png";
+                case UNDEFINED: return "yellow_ball.png";
                 default: throw new RuntimeException();
             }
         }
@@ -135,6 +144,7 @@ public class Vagrant extends VMType {
             switch (this) {
                 case RUNNING:   return "Vagrant machine is currently switched on.";
                 case STOPPED:   return "Vagrant machine is currently switched off.";
+                case UNDEFINED: return "Vagrant machine state is currently unknown.";
                 default: throw new RuntimeException();
             }
         }
