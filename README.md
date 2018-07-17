@@ -3,6 +3,17 @@
 
 Virtual Machine Server Manager
 
+**index**
+1. [Installation](#installation)
+    * [.JAR file](#.jar-file)
+    * [Download and compile](#download-and-compile)
+    * [(Windows) pin VMSM to task bar / start screen](#(windows)-pin-vmsm-to-task-bar-/-start-screen)
+1. [Managing VMs](#managing-vms)
+    * [Create new VM](#create-new-vm)
+    * [Checking and changing VM state](#checking-and-changing-vm-state)
+    * [Switching between VMs](#switching-between-vms)
+    * [Editing and deleting VMs](#editing-and-deleting-vms)
+
 ## Installation
 **System requirements:**
 * Newest version of Java Runtime Environment
@@ -44,7 +55,7 @@ java -jar VMSM.jar
 
 ### Create new VM
 * Open `New VM` dialog via 
-    *`Virtual machines/New VM` menu, or
+    * `Virtual machines/New VM` menu, or
     * `Virtual machines/VM Manager` menu and pressing `New VM` button
 * Choose name for your virtual machine. It's highly recommended to use unique names.
 * Currently there is only one type of virtual machines: Vagrant.
