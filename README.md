@@ -27,4 +27,42 @@ java -jar VMSM.jar
     * `org.reactfx:reactfx:2.0-M5`
 1. Compile and run 
 
-## Adding VMs
+## Managing VMs
+
+### Create new VM
+* Open `New VM` dialog via 
+    *`Virtual machines/New VM` menu, or
+    * `Virtual machines/VM Manager` menu and pressing `New VM` button
+* Choose name for your virtual machine. It's highly recommended to use unique names.
+* Currently there is only one type of virtual machines: Vagrant.
+* Select path to your VM's root directory. Its a directory that contains `.vagrant/machines` directory. If you choose
+    wrong path, you'll get an information about that.
+* (*not required*) write URL address to HTTP server hosted on your VM. It can be either IP address or domain address (for
+    example if you configured your `hosts` file)
+* Press `Create` button.
+
+New VM will be selected automatically.
+
+### Checking and changing VM state
+There is an Vagrant icon (blue V) right over address field. Ball located next to Vagrant icon can be in one of three
+colors, indicating VM state:
+* red - VM is not running
+* green - VM is on
+* yellow - either VM's state is unknown yet or it's changing now.
+
+Right after choosing your VM status icon will be yellow, which means VMSM checks state of VM. It can take up to few seconds.
+When status icon is red or green, you can toggle on/off VM by simply pressing status icon (it will be yellow during process
+of turning virtual machine on/off) or by using `Vagrant` menu with three options: `Start`, `Restart` and `Stop`.
+
+If your VM is on (green icon) and you've setted up URL address during VM creation, you can press Home button next to
+address field to open main page choosen by you.
+
+### Switching between VMs
+You can change your current virtual machine by selecting it in `Virtual machines` menu.
+
+### Editing and deleting VMs
+In VM Manager screen (`Virtual machines/VM Manager`) you can see more detailed list of virtual machines.
+* To edit existing VM, double click entry in table. You cannot edit name and type of your VM.
+* To remove existing VM, right-click entry in table and confirm your decision.
+
+Editing and removing VMs are permanent actions.
