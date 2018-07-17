@@ -29,6 +29,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
@@ -44,8 +45,12 @@ public class Vagrant extends VMType {
     }
 
     private List<Node> createToolBarElements() {
+        Status status = getStatus(Start.virtualMachineProperty.getValue());
+
         ImageView vagrantIcon = createToolbarImage("vagrant_icon.png");
-        ImageView statusIcon = createToolbarImage(getStatus(Start.virtualMachineProperty.get()).getResourceName());
+        ImageView statusIcon = createToolbarImage(status.getResourceName());
+        Tooltip.install(statusIcon, new Tooltip(status.getTooltipText()));
+
         return Arrays.asList(vagrantIcon, statusIcon);
     }
 
@@ -77,12 +82,17 @@ public class Vagrant extends VMType {
 
         public String getResourceName() {
             switch (this) {
-                case RUNNING:
-                    return "green_ball.png";
-                case STOPPED:
-                    return "red_ball.png";
-                default:
-                    return "";
+                case RUNNING:   return "green_ball.png";
+                case STOPPED:   return "red_ball.png";
+                default: throw new RuntimeException();
+            }
+        }
+
+        public String getTooltipText() {
+            switch (this) {
+                case RUNNING:   return "Vagrant machine is currently switched on.";
+                case STOPPED:   return "Vagrant machine is currently switched off.";
+                default: throw new RuntimeException();
             }
         }
     }
