@@ -31,6 +31,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
+import javafx.scene.control.Menu;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class Vagrant extends VMType {
     public Vagrant() {
@@ -156,6 +158,12 @@ public class Vagrant extends VMType {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    @Override
+    public Optional<Menu> getMenu() {
+        Menu menu = new Menu("Vagrant", createMenuImage("vagrant_icon.png"));
+        return Optional.of(menu);
     }
 
     private VirtualMachine previousUpdateVm = null;

@@ -133,4 +133,10 @@ public abstract class VMType {
         iv.setFitWidth(20);
         return iv;
     }
+
+    protected static ImageView createMenuImage(String resourceFileName) {
+        ImageView iv = createToolbarImage(resourceFileName);
+        iv.setFitWidth(15);
+        return iv;
+    }
 }
