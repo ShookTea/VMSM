@@ -121,7 +121,7 @@ public class Start extends Application {
             stage.setTitle(title);
             if (isModal) {
                 stage.initOwner(primaryStage);
-                stage.initModality(Modality.WINDOW_MODAL);
+                stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
             }
             else {
