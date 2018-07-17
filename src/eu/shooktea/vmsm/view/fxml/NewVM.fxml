@@ -60,7 +60,7 @@
                      <Insets right="10.0" />
                  </GridPane.margin>
              </Label>
-             <TextField fx:id="vmName" promptText="Name of new virtual machine" GridPane.columnIndex="1" onKeyTyped="#onNameInput"/>
+             <TextField fx:id="vmName" onKeyTyped="#onNameInput" promptText="Name of new virtual machine" GridPane.columnIndex="1" />
             <ChoiceBox fx:id="vmType" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
@@ -125,7 +125,7 @@
                   <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                      <children>
                         <Button cancelButton="true" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
-                        <Button defaultButton="true" mnemonicParsing="false" onAction="#create" text="Create">
+                        <Button fx:id="createButton" defaultButton="true" mnemonicParsing="false" onAction="#create" text="Create">
                            <HBox.margin>
                               <Insets left="5.0" />
                            </HBox.margin>

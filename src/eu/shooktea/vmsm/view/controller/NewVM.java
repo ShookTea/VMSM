@@ -30,6 +30,7 @@ import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.When;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -49,13 +50,11 @@ public class NewVM implements StageController {
     @FXML private Label infoLabel;
     @FXML private Label errorLabel;
     @FXML private Label headerLabel;
+    @FXML private Button createButton;
     private Stage stage;
 
     @FXML
     private void initialize() {
-        if (machineToEdit != null) {
-            headerLabel.setText("Editing \"" + machineToEdit.getName() + "\" VM");
-        }
         vmType.setItems(VMType.types);
         vmType.getSelectionModel().selectFirst();
         vmPath.setPromptText(System.getProperty("user.home"));
@@ -69,6 +68,16 @@ public class NewVM implements StageController {
                 new When(errorLabel.textProperty().isEmpty())
                         .then(0.0)
                         .otherwise(1.0));
+
+        if (machineToEdit != null) {
+            headerLabel.setText("Editing \"" + machineToEdit.getName() + "\" VM");
+            createButton.setText("Update");
+            vmName.setText(machineToEdit.getName());
+            vmType.setValue(machineToEdit.getType());
+            vmPath.setText(machineToEdit.getMainPath().getAbsolutePath());
+            vmAddress.setText(machineToEdit.getPageRoot().toString());
+            vmType.setDisable(true);
+        }
     }
 
     @FXML
@@ -92,6 +101,19 @@ public class NewVM implements StageController {
 
     @FXML
     private void create() {
+        if (machineToEdit != null) {
+            updateVm();
+        }
+        else {
+            createVm();
+        }
+    }
+
+    private void updateVm() {
+        
+    }
+
+    private void createVm() {
         File rootFile = new File(vmPath.getText());
         VMType type = vmType.getValue();
         type.checkVmRootFile(rootFile);
