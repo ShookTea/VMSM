@@ -103,8 +103,10 @@ public class Vagrant extends VMType {
                     BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     String line;
                     while ((line = input.readLine()) != null) {
-                        if (line.contains("The VM is running.")) statusProperty.setValue(Status.RUNNING);
-                        if (line.contains("The VM is powered off.")) statusProperty.setValue(Status.STOPPED);
+                        if (!isMachineStateChanging && line.contains("The VM is running."))
+                            statusProperty.setValue(Status.RUNNING);
+                        if (!isMachineStateChanging &&line.contains("The VM is powered off."))
+                            statusProperty.setValue(Status.STOPPED);
                     }
                     process.waitFor();
                     if (afterVmChange) isMachineStateChanging = false;
@@ -134,7 +136,6 @@ public class Vagrant extends VMType {
         if (previousUpdateVm == null) return;
         Status status = statusProperty.get();
         if (status == Status.UNDEFINED) return;
-        statusProperty.setValue(Status.UNDEFINED);
 
         if (status == Status.RUNNING) switchMachine(previousUpdateVm, "halt");
         else if (status == Status.STOPPED) switchMachine(previousUpdateVm, "up");
@@ -143,6 +144,7 @@ public class Vagrant extends VMType {
     private void switchMachine(VirtualMachine vm, String action) {
         try {
             isMachineStateChanging = true;
+            statusProperty.setValue(Status.UNDEFINED);
             ProcessBuilder builder = new ProcessBuilder("vagrant", action).directory(vm.getMainPath());
             Process process = builder.start();
             new Thread(() -> {
@@ -165,12 +167,15 @@ public class Vagrant extends VMType {
     public Optional<Menu> getMenu() {
         MenuItem launch = new MenuItem("Start VM", createMenuImage("play.png"));
         launch.disableProperty().bind(statusProperty.isNotEqualTo(Status.STOPPED));
+        launch.setOnAction((event) -> switchMachine(previousUpdateVm, "up"));
 
         MenuItem restart = new MenuItem("Restart VM", createMenuImage("play_all.png"));
         restart.disableProperty().bind(statusProperty.isNotEqualTo(Status.RUNNING));
+        restart.setOnAction((event) -> switchMachine(previousUpdateVm, "reload"));
 
         MenuItem stop = new MenuItem("Stop VM", createMenuImage("stop.png"));
         stop.disableProperty().bind(statusProperty.isNotEqualTo(Status.RUNNING));
+        stop.setOnAction((event) -> switchMachine(previousUpdateVm, "halt"));
 
         Menu menu = new Menu(
                 "Vagrant",
