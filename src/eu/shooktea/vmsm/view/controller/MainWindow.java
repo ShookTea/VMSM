@@ -133,6 +133,10 @@ public class MainWindow {
         createNewVM.setOnAction(e -> createNewVM());
         items.add(createNewVM);
 
+        MenuItem vmManager = new MenuItem("VM Manager");
+        vmManager.setOnAction(VmManager::openVmManagerWindow);
+        items.add(vmManager);
+
         if (Start.virtualMachineProperty.get() != previousMachine) {
             previousMachine = Start.virtualMachineProperty.get();
             if (previousMachine != null) previousMachine.getType().getMenu().ifPresentOrElse(menu -> {
