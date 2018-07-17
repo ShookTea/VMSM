@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
+import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -83,6 +84,8 @@ public abstract class VMType {
     public ListProperty<Node> toolBarElementsProperty() {
         return toolBarElements;
     }
+
+    public void update(VirtualMachine vm) {}
 
     /**
      * Check whether this file can be correct root file for VM.

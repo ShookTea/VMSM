@@ -23,16 +23,20 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VirtualMachine;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,15 +45,20 @@ public class Vagrant extends VMType {
         super();
         this.typeName = new SimpleStringProperty("Vagrant");
         this.creationInfo = new SimpleStringProperty("Main path contains .vagrant/machines directory.");
-        this.toolBarElements = new SimpleListProperty<>(FXCollections.observableArrayList(createToolBarElements()));
+        this.toolBarElements = new SimpleListProperty<>();
+        update(null);
     }
 
     private List<Node> createToolBarElements() {
-        Status status = getStatus(Start.virtualMachineProperty.getValue());
-
         ImageView vagrantIcon = createToolbarImage("vagrant_icon.png");
-        ImageView statusIcon = createToolbarImage(status.getResourceName());
-        Tooltip.install(statusIcon, new Tooltip(status.getTooltipText()));
+        ImageView statusIcon = createToolbarImage(statusProperty.get().getResourceName());
+        Tooltip tooltip = new Tooltip(statusProperty.get().getTooltipText());
+        Tooltip.install(statusIcon, tooltip);
+
+        statusProperty.addListener(((observable, oldValue, newValue) -> {
+            statusIcon.setImage(createToolbarImage(newValue.getResourceName()).getImage());
+            tooltip.setText(newValue.getTooltipText());
+        }));
 
         return Arrays.asList(vagrantIcon, statusIcon);
     }
@@ -73,9 +82,43 @@ public class Vagrant extends VMType {
         return "";
     }
 
-    public Status getStatus(VirtualMachine vm) {
-        return Status.RUNNING;
+    private void updateStatus(VirtualMachine vm) {
+        if (vm == null) {
+            statusProperty.setValue(Status.STOPPED);
+            return;
+        }
+        try {
+            File root = vm.getMainPath();
+            ProcessBuilder builder = new ProcessBuilder("vagrant", "status").directory(root);
+            Process process = builder.start();
+            new Thread(() -> {
+                try {
+                    BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    while ((line = input.readLine()) != null) {
+                        if (line.contains("The VM is running.")) statusProperty.setValue(Status.RUNNING);
+                        if (line.contains("The VM is powered off.")) statusProperty.setValue(Status.STOPPED);
+                    }
+                    process.waitFor();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.exit(1);
+                }
+            }).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
     }
+
+    @Override
+    public void update(VirtualMachine vm) {
+        updateStatus(vm);
+        this.toolBarElements.setValue(FXCollections.observableArrayList(createToolBarElements()));
+    }
+
+    private ObjectProperty<Status> statusProperty = new SimpleObjectProperty<>(Status.STOPPED);
 
     public enum Status {
         RUNNING, STOPPED;

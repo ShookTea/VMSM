@@ -103,7 +103,7 @@ public class MainWindow {
         );
     }
 
-    private void reloadGUI() {
+    public void reloadGUI() {
         Start.primaryStage.setTitle(
                 Start.virtualMachineProperty.getValue() == null ?
                         "VMSM" :

@@ -24,8 +24,7 @@ SOFTWARE.
 package eu.shooktea.vmsm;
 
 import eu.shooktea.vmsm.vmtype.VMType;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -34,23 +33,35 @@ import java.net.URL;
 
 public class VirtualMachine {
     public VirtualMachine(String name, File mainPath, URL pageRoot, VMType type) {
-        this.name = name;
-        this.mainPath = mainPath;
+        this.name = new SimpleStringProperty(name);
+        this.mainPath = new SimpleObjectProperty<>(mainPath);
         this.pageRoot = new SimpleObjectProperty<>(pageRoot);
         this.type = new SimpleObjectProperty<>(type);
     }
 
     public JSONObject toJSON() {
         JSONObject obj = new JSONObject();
-        obj.put("name", name);
-        obj.put("path", mainPath.getAbsolutePath());
-        if (pageRoot.get() != null) obj.put("url", pageRoot.get().toString());
+        obj.put("name", name.get());
+        obj.put("path", mainPath.get().getAbsolutePath());
+        if (pageRoot.isNotNull().get()) obj.put("url", pageRoot.get().toString());
         obj.put("type", type.get().getTypeName());
         return obj;
     }
 
     public String getName() {
+        return name.getValue();
+    }
+
+    public ReadOnlyStringProperty nameProperty() {
         return name;
+    }
+
+    public File getMainPath() {
+        return mainPath.getValue();
+    }
+
+    public ObjectProperty<File> mainPathProperty() {
+        return mainPath;
     }
 
     public URL getPageRoot() {
@@ -77,8 +88,12 @@ public class VirtualMachine {
         return type;
     }
 
-    private String name;
-    private File mainPath;
+    public void update() {
+        getType().update(this);
+    }
+
+    private ReadOnlyStringProperty name;
+    private ObjectProperty<File> mainPath;
     private ObjectProperty<URL> pageRoot;
     private ObjectProperty<VMType> type;
 

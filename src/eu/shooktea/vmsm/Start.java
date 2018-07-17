@@ -23,7 +23,11 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import eu.shooktea.vmsm.view.controller.MainWindow;
 import eu.shooktea.vmsm.view.controller.StageController;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,6 +37,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import javax.net.ssl.*;
 import java.io.IOException;
@@ -48,6 +53,7 @@ public class Start extends Application {
         URL location = Start.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
         FXMLLoader loader = new FXMLLoader(location);
         VBox vbox = loader.load();
+        MainWindow controller = loader.getController();
         primaryStage.setScene(new Scene(vbox));
 //        primaryStage.setMaximized(true);
         primaryStage.setTitle("VMSM");
@@ -55,6 +61,12 @@ public class Start extends Application {
         if (Storage.vmList.size() > 0) {
             Start.virtualMachineProperty.setValue(Storage.vmList.get(0));
         }
+        Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, (ev) -> {
+            if (virtualMachineProperty.isNotNull().get()) virtualMachineProperty.get().update();
+            controller.reloadGUI();
+        }), new KeyFrame(Duration.seconds(10)));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
     }
 
     private static void turnOffSSL() {
