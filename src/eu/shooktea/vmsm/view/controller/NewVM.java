@@ -48,10 +48,14 @@ public class NewVM implements StageController {
     @FXML private TextField vmAddress;
     @FXML private Label infoLabel;
     @FXML private Label errorLabel;
+    @FXML private Label headerLabel;
     private Stage stage;
 
     @FXML
     private void initialize() {
+        if (machineToEdit != null) {
+            headerLabel.setText("Editing \"" + machineToEdit.getName() + "\" VM");
+        }
         vmType.setItems(VMType.types);
         vmType.getSelectionModel().selectFirst();
         vmPath.setPromptText(System.getProperty("user.home"));
@@ -140,7 +144,13 @@ public class NewVM implements StageController {
     private final String VM_NAME_IS_REQUIRED = "VM name is required.";
     private final String VM_URL_IS_INCORRECT = "VM address is incorrect.";
 
+    private static VirtualMachine machineToEdit = null;
+
     public static void openNewVmWindow(Object... lambdaArgs) {
+        machineToEdit = null;
+        if (lambdaArgs.length > 0 && lambdaArgs[0] instanceof VirtualMachine) {
+            machineToEdit = (VirtualMachine)lambdaArgs[0];
+        }
         Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/NewVM.fxml", "New VM", true);
     }
 }

@@ -18,7 +18,7 @@
 
 <VBox prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.NewVM">
    <children>
-      <Label maxWidth="1.7976931348623157E308" text="New virtual machine">
+      <Label fx:id="headerLabel" maxWidth="1.7976931348623157E308" text="New virtual machine">
          <font>
             <Font size="22.0" />
          </font>

@@ -45,7 +45,7 @@ public class VmManager {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     VirtualMachine vm = row.getItem();
-                    System.out.println(vm.getName());
+                    NewVM.openNewVmWindow(vm);
                 }
             });
             return row;
