@@ -58,9 +58,6 @@ public class Start extends Application {
 //        primaryStage.setMaximized(true);
         primaryStage.setTitle("VMSM");
         primaryStage.show();
-        if (Storage.vmList.size() > 0) {
-            Start.virtualMachineProperty.setValue(Storage.vmList.get(0));
-        }
         Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, (ev) -> {
             if (virtualMachineProperty.isNotNull().get()) virtualMachineProperty.get().update();
             controller.reloadGUI();
@@ -69,6 +66,7 @@ public class Start extends Application {
         timeline.play();
         Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> {
             if (virtualMachineProperty.isNotNull().get()) virtualMachineProperty.get().update();
+            Storage.saveAll();
         }));
     }
 
