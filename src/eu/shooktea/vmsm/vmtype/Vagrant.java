@@ -23,18 +23,17 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
+import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class Vagrant extends VMType {
     public Vagrant() {
@@ -46,7 +45,8 @@ public class Vagrant extends VMType {
 
     private List<Node> createToolBarElements() {
         ImageView vagrantIcon = createToolbarImage("vagrant_icon.png");
-        return Arrays.asList(vagrantIcon);
+        ImageView statusIcon = createToolbarImage(getStatus(Start.virtualMachineProperty.get()).getResourceName());
+        return Arrays.asList(vagrantIcon, statusIcon);
     }
 
     @Override
@@ -66,5 +66,24 @@ public class Vagrant extends VMType {
             return notCorrect;
         }
         return "";
+    }
+
+    public Status getStatus(VirtualMachine vm) {
+        return Status.RUNNING;
+    }
+
+    public enum Status {
+        RUNNING, STOPPED;
+
+        public String getResourceName() {
+            switch (this) {
+                case RUNNING:
+                    return "green_ball.png";
+                case STOPPED:
+                    return "red_ball.png";
+                default:
+                    return "";
+            }
+        }
     }
 }
