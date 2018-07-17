@@ -55,7 +55,7 @@ public class VmManager {
                     alert.setContentText("Are you sure you want to delete \"" + vm.getName() + "\" VM?");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
-                        System.out.println(vm.getName() + " DELETE");
+                        Storage.removeVM(vm);
                     }
                 }
             });

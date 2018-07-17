@@ -44,6 +44,11 @@ public class Storage {
         saveAll();
     }
 
+    public static void removeVM(VirtualMachine vm) {
+        vmList.remove(vm);
+        saveAll();
+    }
+
     public static void saveAll() {
         File backup = new File(vmsmFile.getParentFile(), vmsmFile.getName() + ".backup");
         try {
