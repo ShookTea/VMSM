@@ -164,16 +164,14 @@ public class Vagrant extends VMType {
     @Override
     public Optional<Menu> getMenu() {
         MenuItem launch = new MenuItem("Start VM", createMenuImage("play.png"));
-        launch.setDisable(true);
-        launch.disableProperty().bind(statusProperty.isEqualTo(Status.RUNNING));
+        launch.disableProperty().bind(statusProperty.isNotEqualTo(Status.STOPPED));
 
         MenuItem restart = new MenuItem("Restart VM", createMenuImage("play_all.png"));
-        restart.setDisable(true);
-        restart.disableProperty().bind(statusProperty.isEqualTo(Status.STOPPED));
+        restart.disableProperty().bind(statusProperty.isNotEqualTo(Status.RUNNING));
 
         MenuItem stop = new MenuItem("Stop VM", createMenuImage("stop.png"));
-        stop.setDisable(true);
-        stop.disableProperty().bind(statusProperty.isEqualTo(Status.STOPPED));
+        stop.disableProperty().bind(statusProperty.isNotEqualTo(Status.RUNNING));
+
         Menu menu = new Menu(
                 "Vagrant",
                 createMenuImage("vagrant_icon.png"),
