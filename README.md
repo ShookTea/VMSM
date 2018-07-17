@@ -5,9 +5,9 @@ Virtual Machine Server Manager
 
 **index**
 1. [Installation](#installation)
-    * [.JAR file](#.jar-file)
+    * [.JAR file](#jar-file)
     * [Download and compile](#download-and-compile)
-    * [(Windows) pin VMSM to task bar / start screen](#(windows)-pin-vmsm-to-task-bar-/-start-screen)
+    * [(Windows) pin VMSM to task bar / start screen](#windows-pin-vmsm-to-task-bar--start-screen)
 1. [Managing VMs](#managing-vms)
     * [Create new VM](#create-new-vm)
     * [Checking and changing VM state](#checking-and-changing-vm-state)
