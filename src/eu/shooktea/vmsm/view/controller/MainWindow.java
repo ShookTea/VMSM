@@ -69,11 +69,11 @@ public class MainWindow {
         chooseVmToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             RadioMenuItem item = (RadioMenuItem)newValue;
             String name = item.getText();
-            VirtualMachine choosenMachine = Storage.vmList.stream()
+            VirtualMachine chosenMachine = Storage.vmList.stream()
                     .filter(vm -> vm.getName().equals(name))
                     .findFirst()
                     .get();
-            Start.virtualMachineProperty.setValue(choosenMachine);
+            Start.virtualMachineProperty.setValue(chosenMachine);
         }));
     }
 
