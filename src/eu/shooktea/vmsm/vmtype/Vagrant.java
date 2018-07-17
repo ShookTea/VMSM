@@ -136,11 +136,11 @@ public class Vagrant extends VMType {
 
     private void switchMachine(VirtualMachine vm, String action) {
         try {
+            isMachineStateChanging = true;
             ProcessBuilder builder = new ProcessBuilder("vagrant", action).directory(vm.getMainPath());
             Process process = builder.start();
             new Thread(() -> {
                 try {
-                    isMachineStateChanging = true;
                     process.waitFor();
                     isMachineStateChanging = false;
                     update(vm);
