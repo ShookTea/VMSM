@@ -29,7 +29,6 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.When;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -59,7 +58,7 @@ public class MainWindow {
 
     @FXML
     private void initialize() {
-        Start.virtualMachineProperty.addListener(this::reloadGUI);
+        Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> reloadGUI()));
         webEngine = webView.getEngine();
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
         webEngine.getLoadWorker().exceptionProperty().addListener(
@@ -176,9 +175,5 @@ public class MainWindow {
         URL url = vm.getPageRoot();
         addressField.setText(url.toString());
         webEngine.load(url.toString());
-    }
-
-    private void reloadGUI(ObservableValue<? extends VirtualMachine> observable, VirtualMachine oldValue, VirtualMachine newValue) {
-        reloadGUI();
     }
 }
