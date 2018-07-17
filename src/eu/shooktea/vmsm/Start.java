@@ -76,7 +76,7 @@ public class Start extends Application {
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
-            HostnameVerifier allcd HostsValid = (s, sslSession) -> true;
+            HostnameVerifier allHostsValid = (s, sslSession) -> true;
             HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
