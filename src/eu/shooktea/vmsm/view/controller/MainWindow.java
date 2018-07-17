@@ -130,7 +130,7 @@ public class MainWindow {
 
         MenuItem createNewVM = new MenuItem("New VM");
         createNewVM.setAccelerator(KeyCombination.valueOf("Ctrl+N"));
-        createNewVM.setOnAction(e -> createNewVM());
+        createNewVM.setOnAction(NewVM::openNewVmWindow);
         items.add(createNewVM);
 
         MenuItem vmManager = new MenuItem("VM Manager");
@@ -162,11 +162,6 @@ public class MainWindow {
             VirtualMachine vm = Start.virtualMachineProperty.getValue();
             toolBar.getItems().addAll(vm.getType().getToolBarElements());
         }
-    }
-
-    @FXML
-    private void createNewVM() {
-        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/NewVM.fxml", "New VM", true);
     }
 
     @FXML

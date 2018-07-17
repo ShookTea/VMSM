@@ -32,16 +32,7 @@
                   <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
                </accelerator>
           </Menu>
-            <Menu fx:id="vmListMenu" mnemonicParsing="false" text="Virtual machines">
-              <items>
-              <SeparatorMenuItem />
-                <MenuItem mnemonicParsing="false" onAction="#createNewVM" text="New VM">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-              </items>
-            </Menu>
+            <Menu fx:id="vmListMenu" mnemonicParsing="false" text="Virtual machines"/>
             <Menu fx:id="virtualMachineTypeMenu" visible="false"/>
         </menus>
       </MenuBar>

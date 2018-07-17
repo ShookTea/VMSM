@@ -139,4 +139,8 @@ public class NewVM implements StageController {
 
     private final String VM_NAME_IS_REQUIRED = "VM name is required.";
     private final String VM_URL_IS_INCORRECT = "VM address is incorrect.";
+
+    public static void openNewVmWindow(Object... lambdaArgs) {
+        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/NewVM.fxml", "New VM", true);
+    }
 }
