@@ -34,7 +34,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
-import javax.swing.plaf.nimbus.State;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -87,7 +86,7 @@ public class Vagrant extends VMType {
     }
 
     private void updateStatus(VirtualMachine vm) {
-        if (vm == null) {
+        if (isMachineStateChanging || vm == null) {
             statusProperty.setValue(Status.UNDEFINED);
             return;
         }
@@ -130,12 +129,37 @@ public class Vagrant extends VMType {
         Status status = statusProperty.get();
         if (status == Status.UNDEFINED) return;
         statusProperty.setValue(Status.UNDEFINED);
+
+        if (status == Status.RUNNING) switchMachine(previousUpdateVm, "halt");
+        else if (status == Status.STOPPED) switchMachine(previousUpdateVm, "up");
+    }
+
+    private void switchMachine(VirtualMachine vm, String action) {
+        try {
+            ProcessBuilder builder = new ProcessBuilder("vagrant", action).directory(vm.getMainPath());
+            Process process = builder.start();
+            new Thread(() -> {
+                try {
+                    isMachineStateChanging = true;
+                    process.waitFor();
+                    isMachineStateChanging = false;
+                    update(vm);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.exit(1);
+                }
+            }).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     private VirtualMachine previousUpdateVm = null;
 
     private ObjectProperty<Status> statusProperty = new SimpleObjectProperty<>(Status.UNDEFINED);
     private ImageView statusIcon;
+    private boolean isMachineStateChanging = false;
 
     public enum Status {
         RUNNING, STOPPED, UNDEFINED;
