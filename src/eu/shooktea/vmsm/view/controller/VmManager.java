@@ -6,6 +6,7 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -18,6 +19,7 @@ public class VmManager {
     @FXML
     private void initialize() {
         createColumns();
+        initEvents();
         table.setItems(Storage.vmList);
     }
 
@@ -35,6 +37,19 @@ public class VmManager {
         url.setCellValueFactory(new PropertyValueFactory<>("pageRoot"));
 
         table.getColumns().addAll(name, type, path, url);
+    }
+
+    private void initEvents() {
+        table.setRowFactory(tv -> {
+            TableRow<VirtualMachine> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    VirtualMachine vm = row.getItem();
+                    System.out.println(vm.getName());
+                }
+            });
+            return row;
+        });
     }
 
     @FXML
