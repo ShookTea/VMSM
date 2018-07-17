@@ -26,6 +26,8 @@ package eu.shooktea.vmsm.view.controller;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
+import javafx.beans.binding.When;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -58,9 +60,9 @@ public class MainWindow {
         Start.virtualMachineProperty.addListener(this::reloadGUI);
         webEngine = webView.getEngine();
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
-        Worker worker = webEngine.getLoadWorker();
-        progressBar.progressProperty().bind(worker.progressProperty());
-        worker.exceptionProperty().addListener((observable, oldValue, newValue) -> displayErrorMessage(((Throwable)newValue)));
+        webEngine.getLoadWorker().exceptionProperty().addListener(
+                (observable, oldValue, newValue) -> displayErrorMessage(((Throwable)newValue)));
+        bindProgressBar();
         bindHomeButton();
 
         chooseVmToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
@@ -78,6 +80,18 @@ public class MainWindow {
         if (error == null) return;
         String message = error.getMessage();
         webEngine.loadContent("<b>" + message + "</b>");
+    }
+
+    private void bindProgressBar() {
+        ReadOnlyDoubleProperty progress = webEngine.getLoadWorker().progressProperty();
+        progressBar.progressProperty().bind(
+                new When(progress.isEqualTo(0))
+                .then(-1)
+                .otherwise(
+                    new When(progress.lessThan(0.0))
+                    .then(0)
+                    .otherwise(progress))
+        );
     }
 
     private void bindHomeButton() {
