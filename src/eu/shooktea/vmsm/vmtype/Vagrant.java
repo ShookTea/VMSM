@@ -163,6 +163,7 @@ public class Vagrant extends VMType {
     @Override
     public Optional<Menu> getMenu() {
         Menu menu = new Menu("Vagrant", createMenuImage("vagrant_icon.png"));
+        menu.setId("menu_vmtype_Vagrant");
         return Optional.of(menu);
     }
 

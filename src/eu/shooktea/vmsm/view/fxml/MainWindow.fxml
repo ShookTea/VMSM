@@ -42,6 +42,7 @@
                   </MenuItem>
               </items>
             </Menu>
+            <Menu fx:id="virtualMachineTypeMenu" visible="false"/>
         </menus>
       </MenuBar>
       <ToolBar fx:id="toolBar" prefHeight="40.0" prefWidth="200.0">

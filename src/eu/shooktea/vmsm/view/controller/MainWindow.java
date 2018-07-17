@@ -52,6 +52,7 @@ public class MainWindow {
     @FXML private ToolBar toolBar;
     @FXML private Menu vmListMenu;
     @FXML private ImageView homeButton;
+    @FXML private Menu virtualMachineTypeMenu;
 
     private WebEngine webEngine;
     private ToggleGroup chooseVmToggleGroup = new ToggleGroup();
@@ -130,13 +131,17 @@ public class MainWindow {
         createNewVM.setOnAction(e -> createNewVM());
         items.add(createNewVM);
 
-        ObservableList<Menu> menus = menuBar.getMenus();
-        menus.removeIf(menu -> !menu.getId().equals(vmListMenu.getId())
-                            && !menu.getId().equals(vmsmApplicationMenu.getId()));
-        if (Start.virtualMachineProperty.isNotNull().get()) {
-            VirtualMachine vm = Start.virtualMachineProperty.getValue();
-            VMType type = vm.getType();
-            type.getMenu().ifPresent(menus::add);
+        if (Start.virtualMachineProperty.get() != previousMachine) {
+            previousMachine = Start.virtualMachineProperty.get();
+            if (previousMachine != null) previousMachine.getType().getMenu().ifPresentOrElse(menu -> {
+                virtualMachineTypeMenu.setText(menu.getText());
+                virtualMachineTypeMenu.setGraphic(menu.getGraphic());
+                virtualMachineTypeMenu.setAccelerator(menu.getAccelerator());
+                ObservableList<MenuItem> vmTypeItems = virtualMachineTypeMenu.getItems();
+                vmTypeItems.clear();
+                vmTypeItems.addAll(menu.getItems());
+                virtualMachineTypeMenu.setVisible(true);
+            }, () -> virtualMachineTypeMenu.setVisible(false));
         }
     }
 
@@ -176,4 +181,6 @@ public class MainWindow {
         addressField.setText(url.toString());
         webEngine.load(url.toString());
     }
+
+    private VirtualMachine previousMachine = null;
 }
