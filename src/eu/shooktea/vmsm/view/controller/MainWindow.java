@@ -60,8 +60,7 @@ public class MainWindow {
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
         Worker worker = webEngine.getLoadWorker();
         progressBar.progressProperty().bind(worker.progressProperty());
-        worker.stateProperty().addListener(((observable, oldValue, newValue) -> System.out.println(newValue)));
-        worker.exceptionProperty().addListener((observable, oldValue, newValue) -> ((Throwable)newValue).printStackTrace());
+        worker.exceptionProperty().addListener((observable, oldValue, newValue) -> displayErrorMessage(((Throwable)newValue)));
         bindHomeButton();
 
         chooseVmToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
@@ -73,6 +72,12 @@ public class MainWindow {
                     .get();
             Start.virtualMachineProperty.setValue(choosenMachine);
         }));
+    }
+
+    private void displayErrorMessage(Throwable error) {
+        if (error == null) return;
+        String message = error.getMessage();
+        webEngine.loadContent("<b>" + message + "</b>");
     }
 
     private void bindHomeButton() {
