@@ -26,6 +26,7 @@ package eu.shooktea.vmsm.view.controller;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.When;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ObservableValue;
@@ -44,6 +45,8 @@ import java.net.URL;
 
 public class MainWindow {
 
+    @FXML private MenuBar menuBar;
+    @FXML private Menu vmsmApplicationMenu;
     @FXML private WebView webView;
     @FXML private TextField addressField;
     @FXML private ProgressBar progressBar;
@@ -127,6 +130,15 @@ public class MainWindow {
         createNewVM.setAccelerator(KeyCombination.valueOf("Ctrl+N"));
         createNewVM.setOnAction(e -> createNewVM());
         items.add(createNewVM);
+
+        ObservableList<Menu> menus = menuBar.getMenus();
+        menus.removeIf(menu -> !menu.getId().equals(vmListMenu.getId())
+                            && !menu.getId().equals(vmsmApplicationMenu.getId()));
+        if (Start.virtualMachineProperty.isNotNull().get()) {
+            VirtualMachine vm = Start.virtualMachineProperty.getValue();
+            VMType type = vm.getType();
+            type.getMenu().ifPresent(menus::add);
+        }
     }
 
     private void reloadToolbar() {

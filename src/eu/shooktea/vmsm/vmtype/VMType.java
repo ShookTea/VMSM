@@ -28,10 +28,12 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.Menu;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
+import java.util.Optional;
 
 public abstract class VMType {
 
@@ -83,6 +85,10 @@ public abstract class VMType {
 
     public ListProperty<Node> toolBarElementsProperty() {
         return toolBarElements;
+    }
+
+    public Optional<Menu> getMenu() {
+        return Optional.empty();
     }
 
     public void update(VirtualMachine vm) {}
