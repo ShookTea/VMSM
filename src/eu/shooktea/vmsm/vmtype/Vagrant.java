@@ -85,12 +85,13 @@ public class Vagrant extends VMType {
         return "";
     }
 
-    private void updateStatus(VirtualMachine vm) {
+    private void updateStatus(VirtualMachine vm, boolean afterVmChange) {
         if (isMachineStateChanging || vm == null) {
             statusProperty.setValue(Status.UNDEFINED);
             return;
         }
         try {
+            if (afterVmChange) isMachineStateChanging = true;
             File root = vm.getMainPath();
             ProcessBuilder builder = new ProcessBuilder("vagrant", "status").directory(root);
             Process process = builder.start();
@@ -103,6 +104,7 @@ public class Vagrant extends VMType {
                         if (line.contains("The VM is powered off.")) statusProperty.setValue(Status.STOPPED);
                     }
                     process.waitFor();
+                    if (afterVmChange) isMachineStateChanging = false;
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     System.exit(1);
@@ -117,11 +119,12 @@ public class Vagrant extends VMType {
 
     @Override
     public void update(VirtualMachine vm) {
-        if (vm != previousUpdateVm) {
+        boolean vmChange = vm != previousUpdateVm;
+        if (vmChange) {
             statusProperty.setValue(Status.UNDEFINED);
             previousUpdateVm = vm;
         }
-        updateStatus(vm);
+        updateStatus(vm, vmChange);
     }
 
     private void statusIconClicked() {
