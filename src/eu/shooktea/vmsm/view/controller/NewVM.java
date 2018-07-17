@@ -76,6 +76,7 @@ public class NewVM implements StageController {
             vmType.setValue(machineToEdit.getType());
             vmPath.setText(machineToEdit.getMainPath().getAbsolutePath());
             vmAddress.setText(machineToEdit.getPageRoot().toString());
+            vmName.setDisable(true);
             vmType.setDisable(true);
         }
     }
@@ -101,19 +102,6 @@ public class NewVM implements StageController {
 
     @FXML
     private void create() {
-        if (machineToEdit != null) {
-            updateVm();
-        }
-        else {
-            createVm();
-        }
-    }
-
-    private void updateVm() {
-        
-    }
-
-    private void createVm() {
         File rootFile = new File(vmPath.getText());
         VMType type = vmType.getValue();
         type.checkVmRootFile(rootFile);
@@ -140,10 +128,19 @@ public class NewVM implements StageController {
             }
         }
         File file = new File(vmPath.getText().trim());
-        VirtualMachine machine = new VirtualMachine(name, file, url, vmType.getValue());
-        Storage.registerVM(machine);
-        stage.close();
-        Start.virtualMachineProperty.setValue(machine);
+
+        if (machineToEdit != null) {
+            machineToEdit.setPageRoot(url);
+            machineToEdit.setMainPath(file);
+            Storage.saveAll();
+            stage.close();
+        }
+        else {
+            VirtualMachine machine = new VirtualMachine(name, file, url, vmType.getValue());
+            Storage.registerVM(machine);
+            stage.close();
+            Start.virtualMachineProperty.setValue(machine);
+        }
     }
 
     @FXML

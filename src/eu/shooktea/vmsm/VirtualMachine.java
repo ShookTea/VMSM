@@ -60,6 +60,10 @@ public class VirtualMachine {
         return mainPath.getValue();
     }
 
+    public void setMainPath(File f) {
+        mainPath.setValue(f);
+    }
+
     public ObjectProperty<File> mainPathProperty() {
         return mainPath;
     }
