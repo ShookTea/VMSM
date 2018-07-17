@@ -26,6 +26,10 @@ package eu.shooktea.vmsm.view.controller;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.binding.When;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ObservableValue;
@@ -61,7 +65,7 @@ public class MainWindow {
         webEngine = webView.getEngine();
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
         webEngine.getLoadWorker().exceptionProperty().addListener(
-                (observable, oldValue, newValue) -> displayErrorMessage(((Throwable)newValue)));
+                (observable, oldValue, newValue) -> displayErrorMessage(newValue));
         bindProgressBar();
         bindHomeButton();
 
@@ -83,6 +87,7 @@ public class MainWindow {
     }
 
     private void bindProgressBar() {
+        progressBar.setStyle("-fx-accent: blue;");
         ReadOnlyDoubleProperty progress = webEngine.getLoadWorker().progressProperty();
         progressBar.progressProperty().bind(
                 new When(progress.isEqualTo(0))
