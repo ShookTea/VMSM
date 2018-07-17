@@ -53,14 +53,14 @@ public class Start extends Application {
         URL location = Start.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
         FXMLLoader loader = new FXMLLoader(location);
         VBox vbox = loader.load();
-        MainWindow controller = loader.getController();
+        mainWindow = loader.getController();
         primaryStage.setScene(new Scene(vbox));
 //        primaryStage.setMaximized(true);
         primaryStage.setTitle("VMSM");
         primaryStage.show();
         Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, (ev) -> {
             if (virtualMachineProperty.isNotNull().get()) virtualMachineProperty.get().update();
-            controller.reloadGUI();
+            mainWindow.reloadGUI();
         }), new KeyFrame(Duration.seconds(10)));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
@@ -98,6 +98,7 @@ public class Start extends Application {
     }
 
     public static Stage primaryStage;
+    public static MainWindow mainWindow;
 
     public static void main(String[] args) {
         turnOffSSL();
