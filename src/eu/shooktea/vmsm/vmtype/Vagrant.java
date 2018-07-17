@@ -34,6 +34,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -60,6 +61,8 @@ public class Vagrant extends VMType {
             statusIcon.setImage(createToolbarImage(newValue.getResourceName()).getImage());
             tooltip.setText(newValue.getTooltipText());
         })));
+
+        statusIcon.setOnMouseClicked((e) -> statusIconClicked());
 
         return Arrays.asList(vagrantIcon, statusIcon);
     }
@@ -120,7 +123,13 @@ public class Vagrant extends VMType {
             previousUpdateVm = vm;
         }
         updateStatus(vm);
-        //this.toolBarElements.setValue(FXCollections.observableArrayList(createToolBarElements()));
+    }
+
+    private void statusIconClicked() {
+        if (previousUpdateVm == null) return;
+        Status status = statusProperty.get();
+        if (status == Status.UNDEFINED) return;
+        statusProperty.setValue(Status.UNDEFINED);
     }
 
     private VirtualMachine previousUpdateVm = null;
