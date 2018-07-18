@@ -27,7 +27,7 @@ public class ModuleConfig {
         Module[] modules = type.getModules().get();
         int index = 0;
         for (Module module : modules) {
-            createModuleEntry(module, index);
+            createModuleEntry(vm, module, index);
             index += 2;
         }
         ColumnConstraints textColumn = new ColumnConstraints();
@@ -35,7 +35,7 @@ public class ModuleConfig {
         grid.getColumnConstraints().add(textColumn);
     }
 
-    private void createModuleEntry(Module module, int rowIndex) {
+    private void createModuleEntry(VirtualMachine vm, Module module, int rowIndex) {
         Label name = new Label(module.getName());
         name.setFont(new Font(22));
         name.setMaxWidth(Double.MAX_VALUE);
@@ -53,6 +53,7 @@ public class ModuleConfig {
                 .then("-fx-background-color: green;")
                 .otherwise("-fx-background-color: red;"));
         switchButton.setMaxWidth(Double.MAX_VALUE);
+        switchButton.setSelected(module.isInstalled(vm));
 
         Button configButton = new Button("Config");
         configButton.setMaxWidth(Double.MAX_VALUE);
