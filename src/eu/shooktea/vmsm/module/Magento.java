@@ -41,7 +41,6 @@ public class Magento extends Module {
         super.afterModuleInstalled();
         if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu)) {
             Start.mainWindow.menuBar.getMenus().add(magentoMenu);
-            Start.mainWindow.toolBar.getItems().addAll(toolbarElements);
         }
     }
 
@@ -58,7 +57,6 @@ public class Magento extends Module {
         Platform.runLater(() -> {
             if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu)) {
                 Start.mainWindow.menuBar.getMenus().add(magentoMenu);
-                Start.mainWindow.toolBar.getItems().addAll(toolbarElements);
             }
         });
     }
@@ -70,6 +68,11 @@ public class Magento extends Module {
             Start.mainWindow.menuBar.getMenus().remove(magentoMenu);
             Start.mainWindow.toolBar.getItems().removeAll(toolbarElements);
         });
+    }
+
+    @Override
+    public void reloadToolbar() {
+        Start.mainWindow.toolBar.getItems().addAll(toolbarElements);
     }
 
     private static final Menu magentoMenu = createMenu();

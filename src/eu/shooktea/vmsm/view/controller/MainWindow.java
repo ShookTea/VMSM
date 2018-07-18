@@ -29,8 +29,10 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.When;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
@@ -176,6 +178,7 @@ public class MainWindow {
         if (!Start.virtualMachineProperty.isNull().get()) {
             VirtualMachine vm = Start.virtualMachineProperty.getValue();
             toolBar.getItems().addAll(vm.getType().getToolBarElements());
+            vm.getModules().forEach(module -> module.reloadToolbar());
         }
     }
 

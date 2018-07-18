@@ -37,10 +37,16 @@ public abstract class Module {
     public Optional<Runnable> openConfigWindow() {
         return Optional.empty();
     }
+    /** run after toggling module on */
     public void afterModuleInstalled() {}
+    /** run after toggling module off */
     public void afterModuleRemoved() {}
+    /** run after choosing VM with module toggled on */
     public void afterModuleLoaded() {}
+    /** run after choosing other machine than the one with module toggled on */
     public void afterModuleTurnedOff() {}
+    /** regular action after clearing toolbar */
+    public void reloadToolbar() {}
 
     @Override
     public boolean equals(Object ob) {
