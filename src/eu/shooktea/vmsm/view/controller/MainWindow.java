@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
+import com.sun.tools.javac.Main;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
@@ -153,14 +154,14 @@ public class MainWindow {
                     vmTypeItems.add(item);
                 }
                 if (type.getModules().isPresent()) {
-                    MenuItem modulesDialog = new MenuItem("Managing modules");
+                    MenuItem modulesDialog = new MenuItem("Managing modules", Start.createMenuImage("run.png"));
                     modulesDialog.setOnAction(ModuleConfig::openModuleConfigWindow);
                     vmTypeItems.addAll(new SeparatorMenuItem(), modulesDialog);
                 }
                 virtualMachineTypeMenu.setVisible(true);
             }, () -> {
                 if (type.getModules().isPresent()) {
-                    MenuItem modulesDialog = new MenuItem("Managing modules");
+                    MenuItem modulesDialog = new MenuItem("Managing modules", Start.createMenuImage("run.png"));
                     modulesDialog.setOnAction(ModuleConfig::openModuleConfigWindow);
                     vmTypeItems.add(modulesDialog);
                     virtualMachineTypeMenu.setVisible(true);

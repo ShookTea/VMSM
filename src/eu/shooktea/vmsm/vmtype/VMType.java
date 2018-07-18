@@ -129,17 +129,4 @@ public abstract class VMType {
             new Vagrant()
     );
 
-    protected static ImageView createToolbarImage(String resourceFileName) {
-        resourceFileName = "/eu/shooktea/vmsm/resources/" + resourceFileName;
-        ImageView iv = new ImageView(new Image(VMType.class.getResourceAsStream(resourceFileName)));
-        iv.setPreserveRatio(true);
-        iv.setFitWidth(20);
-        return iv;
-    }
-
-    protected static ImageView createMenuImage(String resourceFileName) {
-        ImageView iv = createToolbarImage(resourceFileName);
-        iv.setFitWidth(15);
-        return iv;
-    }
 }
