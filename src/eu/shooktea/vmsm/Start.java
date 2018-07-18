@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.view.controller.MainWindow;
 import eu.shooktea.vmsm.view.controller.StageController;
 import eu.shooktea.vmsm.vmtype.VMType;
@@ -32,6 +33,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -81,10 +83,14 @@ public class Start extends Application {
         }), new KeyFrame(Duration.seconds(10)));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
-        Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> {
+        ChangeListener<VirtualMachine> cl = ((observable, oldValue, newValue) -> {
+            if (oldValue != null) for (Module m : oldValue.getModules()) m.afterModuleTurnedOff();
+            if (newValue != null) for (Module m : newValue.getModules()) m.afterModuleLoaded();
             if (virtualMachineProperty.isNotNull().get()) virtualMachineProperty.get().update();
             Storage.saveAll();
-        }));
+        });
+        Start.virtualMachineProperty.addListener(cl);
+        cl.changed(virtualMachineProperty, null, virtualMachineProperty.get());
     }
 
     private static void turnOffSSL() {

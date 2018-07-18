@@ -6,7 +6,6 @@ import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.control.Menu;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -31,6 +30,8 @@ public abstract class Module {
     }
     public void afterModuleInstalled() {}
     public void afterModuleRemoved() {}
+    public void afterModuleLoaded() {}
+    public void afterModuleTurnedOff() {}
 
     @Override
     public boolean equals(Object ob) {

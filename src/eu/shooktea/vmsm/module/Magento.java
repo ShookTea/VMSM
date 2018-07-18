@@ -39,14 +39,26 @@ public class Magento extends Module {
     @Override
     public void afterModuleInstalled() {
         super.afterModuleInstalled();
-        System.out.println("INSTALLED");
-        Start.mainWindow.menuBar.getMenus().add(magentoMenu);
+        if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu))
+            Start.mainWindow.menuBar.getMenus().add(magentoMenu);
     }
 
     @Override
     public void afterModuleRemoved() {
         super.afterModuleRemoved();
-        System.out.println("REMOVED");
+        Start.mainWindow.menuBar.getMenus().remove(magentoMenu);
+    }
+
+    @Override
+    public void afterModuleLoaded() {
+        super.afterModuleLoaded();
+        if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu))
+            Start.mainWindow.menuBar.getMenus().add(magentoMenu);
+    }
+
+    @Override
+    public void afterModuleTurnedOff() {
+        super.afterModuleTurnedOff();
         Start.mainWindow.menuBar.getMenus().remove(magentoMenu);
     }
 
