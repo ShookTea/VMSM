@@ -5,7 +5,6 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.ColorAdjust?>
@@ -20,8 +19,9 @@
    <children>
       <MenuBar fx:id="menuBar">
         <menus>
-          <Menu mnemonicParsing="false" text="Application" fx:id="vmsmApplicationMenu">
+          <Menu fx:id="vmsmApplicationMenu" mnemonicParsing="false" text="Application">
             <items>
+                  <MenuItem mnemonicParsing="false" text="Reload web page" onAction="#reloadWebpage" accelerator="F5"/>
               <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit">
                      <accelerator>
                         <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
@@ -32,8 +32,8 @@
                   <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
                </accelerator>
           </Menu>
-            <Menu fx:id="vmListMenu" mnemonicParsing="false" text="Virtual machines"/>
-            <Menu fx:id="virtualMachineTypeMenu" visible="false"/>
+            <Menu fx:id="vmListMenu" mnemonicParsing="false" text="Virtual machines" />
+            <Menu fx:id="virtualMachineTypeMenu" visible="false" />
         </menus>
       </MenuBar>
       <ToolBar fx:id="toolBar" prefHeight="40.0" prefWidth="200.0">
@@ -56,7 +56,7 @@
                    <TextField fx:id="addressField" onAction="#addressEnterPressed" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" prefHeight="11.0" prefWidth="600.0" progress="0.0" VBox.vgrow="NEVER" style="-fx-padding: 1px; -fx-background-insets: 0;" />
+            <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" prefHeight="11.0" prefWidth="600.0" progress="0.0" style="-fx-padding: 1px; -fx-background-insets: 0;" VBox.vgrow="NEVER" />
          </children>
       </VBox>
       <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />

@@ -206,5 +206,10 @@ public class MainWindow {
         webEngine.load(url.toString());
     }
 
+    @FXML
+    public void reloadWebpage() {
+        if (!this.addressField.getText().trim().isEmpty()) webEngine.reload();
+    }
+
     private VirtualMachine previousMachine = null;
 }
