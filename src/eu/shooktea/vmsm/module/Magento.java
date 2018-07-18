@@ -1,6 +1,7 @@
 package eu.shooktea.vmsm.module;
 
 import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.view.controller.MagentoConfig;
 import javafx.application.Platform;
 import javafx.scene.control.Menu;
 import org.json.JSONObject;
@@ -34,7 +35,7 @@ public class Magento extends Module {
 
     @Override
     public Optional<Runnable> openConfigWindow() {
-        return Optional.of(() -> {});
+        return Optional.of(MagentoConfig::openMagentoConfig);
     }
 
     @Override
