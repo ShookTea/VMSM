@@ -139,7 +139,8 @@ public class MainWindow {
 
         if (Start.virtualMachineProperty.get() != previousMachine) {
             previousMachine = Start.virtualMachineProperty.get();
-            if (previousMachine != null) previousMachine.getType().getMenu().ifPresentOrElse(menu -> {
+            VMType type = previousMachine.getType();
+            if (previousMachine != null) type.getMenu().ifPresentOrElse(menu -> {
                 virtualMachineTypeMenu.setText(menu.getText());
                 virtualMachineTypeMenu.setGraphic(menu.getGraphic());
                 virtualMachineTypeMenu.setAccelerator(menu.getAccelerator());
@@ -150,6 +151,10 @@ public class MainWindow {
                 for(MenuItem item : transfer) {
                     newItems.remove(item);
                     vmTypeItems.add(item);
+                }
+                if (type.getModules().isPresent()) {
+                    MenuItem modulesDialog = new MenuItem("Managing modules");
+                    vmTypeItems.addAll(new SeparatorMenuItem(), modulesDialog);
                 }
                 virtualMachineTypeMenu.setVisible(true);
             }, () -> virtualMachineTypeMenu.setVisible(false));

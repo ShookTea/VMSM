@@ -91,6 +91,8 @@ public abstract class VMType {
         return Optional.empty();
     }
 
+    public Optional<Module[]> getModules() { return Optional.empty(); }
+
     public void update(VirtualMachine vm) {}
 
     /**
