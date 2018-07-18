@@ -1,6 +1,7 @@
 package eu.shooktea.vmsm.module;
 
 import eu.shooktea.vmsm.Start;
+import javafx.application.Platform;
 import javafx.scene.control.Menu;
 import org.json.JSONObject;
 
@@ -52,14 +53,18 @@ public class Magento extends Module {
     @Override
     public void afterModuleLoaded() {
         super.afterModuleLoaded();
-        if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu))
-            Start.mainWindow.menuBar.getMenus().add(magentoMenu);
+        Platform.runLater(() -> {
+            if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu))
+                Start.mainWindow.menuBar.getMenus().add(magentoMenu);
+        });
     }
 
     @Override
     public void afterModuleTurnedOff() {
         super.afterModuleTurnedOff();
-        Start.mainWindow.menuBar.getMenus().remove(magentoMenu);
+        Platform.runLater(() ->
+                Start.mainWindow.menuBar.getMenus().remove(magentoMenu)
+        );
     }
 
     private static final Menu magentoMenu = createMenu();
