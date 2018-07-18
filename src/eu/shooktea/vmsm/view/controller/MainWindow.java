@@ -23,7 +23,6 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
-import com.sun.tools.javac.Main;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
@@ -48,7 +47,6 @@ import java.util.List;
 public class MainWindow {
 
     @FXML public MenuBar menuBar;
-    @FXML private Menu vmsmApplicationMenu;
     @FXML private WebView webView;
     @FXML private TextField addressField;
     @FXML private ProgressBar progressBar;
