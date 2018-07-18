@@ -23,8 +23,10 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.property.*;
+import javafx.collections.ObservableList;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -37,6 +39,7 @@ public class VirtualMachine {
         this.mainPath = new SimpleObjectProperty<>(mainPath);
         this.pageRoot = new SimpleObjectProperty<>(pageRoot);
         this.type = new SimpleObjectProperty<>(type);
+        this.modules = new SimpleListProperty<>();
     }
 
     public JSONObject toJSON() {
@@ -92,6 +95,18 @@ public class VirtualMachine {
         return type;
     }
 
+    public ObservableList<Module> getModules() {
+        return modules.getValue();
+    }
+
+    public void setModules(ObservableList<Module> m) {
+        modules.setValue(m);
+    }
+
+    public ListProperty<Module> modulesProperty() {
+        return modules;
+    }
+
     public void update() {
         getType().update(this);
     }
@@ -100,6 +115,7 @@ public class VirtualMachine {
     private ObjectProperty<File> mainPath;
     private ObjectProperty<URL> pageRoot;
     private ObjectProperty<VMType> type;
+    private ListProperty<Module> modules;
 
     public static VirtualMachine fromJSON(JSONObject json) throws MalformedURLException {
         String name = json.getString("name");
