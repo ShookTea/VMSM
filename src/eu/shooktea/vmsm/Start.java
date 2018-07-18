@@ -67,6 +67,7 @@ public class Start extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
         Storage.loadAll();
         Start.primaryStage = primaryStage;
         URL location = Start.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
