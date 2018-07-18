@@ -54,6 +54,7 @@ public class ModuleConfig {
                 .otherwise("-fx-background-color: red;"));
         switchButton.setMaxWidth(Double.MAX_VALUE);
         switchButton.setSelected(module.isInstalled(vm));
+        switchButton.setOnAction((e) -> module.installOn(vm));
 
         Button configButton = new Button("Config");
         configButton.setMaxWidth(Double.MAX_VALUE);

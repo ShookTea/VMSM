@@ -1,13 +1,20 @@
 package eu.shooktea.vmsm.module;
 
+import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
 import org.json.JSONObject;
 
 import java.util.Map;
 
 public abstract class Module {
+    public Module() {
+
+    }
+
     public abstract String getName();
     public abstract String getDescription();
+    public abstract void storeInJSON(JSONObject obj);
+    public abstract void loadFromJSON(JSONObject obj);
 
     @Override
     public boolean equals(Object ob) {
@@ -21,8 +28,11 @@ public abstract class Module {
         return vm.getModules().contains(this);
     }
 
-    public abstract void storeInJSON(JSONObject obj);
-    public abstract void loadFromJSON(JSONObject obj);
+    public void installOn(VirtualMachine vm) {
+        if (isInstalled(vm)) vm.getModules().remove(this);
+        else vm.getModules().add(this);
+        Storage.saveAll();
+    }
 
     public static Map<String, Module> getModulesByName() {
         return Map.of(

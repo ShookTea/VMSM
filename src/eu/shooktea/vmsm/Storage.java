@@ -64,8 +64,7 @@ public class Storage {
             e.printStackTrace();
             try {
                 Files.copy(backupFile.toPath(), vmsmFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                backupFile.delete();
-                System.err.println("Backup restored and deleted.");
+                System.err.println("Backup restored.");
             } catch (IOException e1) {
                 System.err.println("Failed restoring backup.");
                 e1.printStackTrace();

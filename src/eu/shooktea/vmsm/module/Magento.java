@@ -3,6 +3,10 @@ package eu.shooktea.vmsm.module;
 import org.json.JSONObject;
 
 public class Magento extends Module {
+    public Magento() {
+        super();
+    }
+
     @Override
     public String getName() {
         return "Magento";
