@@ -4,12 +4,17 @@ import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MagentoConfig;
 import javafx.application.Platform;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Separator;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCombination;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class Magento extends Module {
@@ -35,34 +40,41 @@ public class Magento extends Module {
     @Override
     public void afterModuleInstalled() {
         super.afterModuleInstalled();
-        if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu))
+        if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu)) {
             Start.mainWindow.menuBar.getMenus().add(magentoMenu);
+            Start.mainWindow.toolBar.getItems().addAll(toolbarElements);
+        }
     }
 
     @Override
     public void afterModuleRemoved() {
         super.afterModuleRemoved();
         Start.mainWindow.menuBar.getMenus().remove(magentoMenu);
+        Start.mainWindow.toolBar.getItems().removeAll(toolbarElements);
     }
 
     @Override
     public void afterModuleLoaded() {
         super.afterModuleLoaded();
         Platform.runLater(() -> {
-            if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu))
+            if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu)) {
                 Start.mainWindow.menuBar.getMenus().add(magentoMenu);
+                Start.mainWindow.toolBar.getItems().addAll(toolbarElements);
+            }
         });
     }
 
     @Override
     public void afterModuleTurnedOff() {
         super.afterModuleTurnedOff();
-        Platform.runLater(() ->
-                Start.mainWindow.menuBar.getMenus().remove(magentoMenu)
-        );
+        Platform.runLater(() -> {
+            Start.mainWindow.menuBar.getMenus().remove(magentoMenu);
+            Start.mainWindow.toolBar.getItems().removeAll(toolbarElements);
+        });
     }
 
     private static final Menu magentoMenu = createMenu();
+    private static final List<Node> toolbarElements = createToolbar();
 
     private static Menu createMenu() {
         MenuItem deleteCache = new MenuItem("Delete cache files", Start.createMenuImage("trash_full.png"));
@@ -118,5 +130,13 @@ public class Magento extends Module {
             for (File c : file.listFiles()) delete(c);
         }
         if (!file.delete()) file.deleteOnExit();
+    }
+
+    private static List<Node> createToolbar() {
+
+        return Arrays.asList(
+                new Separator(Orientation.VERTICAL),
+                Start.createToolbarImage("magento.png")
+        );
     }
 }

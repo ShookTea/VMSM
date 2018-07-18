@@ -47,10 +47,10 @@ import java.util.List;
 public class MainWindow {
 
     @FXML public MenuBar menuBar;
+    @FXML public ToolBar toolBar;
     @FXML private WebView webView;
     @FXML private TextField addressField;
     @FXML private ProgressBar progressBar;
-    @FXML private ToolBar toolBar;
     @FXML private Menu vmListMenu;
     @FXML private ImageView homeButton;
     @FXML private Menu virtualMachineTypeMenu;
