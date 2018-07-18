@@ -24,6 +24,8 @@ SOFTWARE.
 package eu.shooktea.vmsm.vmtype;
 
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.Magento;
+import eu.shooktea.vmsm.module.Module;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -183,6 +185,13 @@ public class Vagrant extends VMType {
                 launch, restart, stop
         );
         return Optional.of(menu);
+    }
+
+    @Override
+    public Optional<Module[]> getModules() {
+        return Optional.of(new Module[]{
+                new Magento()
+        });
     }
 
     private VirtualMachine previousUpdateVm = null;

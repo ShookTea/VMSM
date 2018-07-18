@@ -24,6 +24,7 @@ SOFTWARE.
 package eu.shooktea.vmsm.vmtype;
 
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.Module;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
