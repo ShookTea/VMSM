@@ -1,10 +1,15 @@
 package eu.shooktea.vmsm.module;
 
 import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MagentoConfig;
 import javafx.application.Platform;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.KeyCombination;
 
+import java.io.File;
 import java.util.Optional;
 
 public class Magento extends Module {
@@ -60,6 +65,58 @@ public class Magento extends Module {
     private static final Menu magentoMenu = createMenu();
 
     private static Menu createMenu() {
-        return new Menu("Magento");
+        MenuItem deleteCache = new MenuItem("Delete cache files", Start.createMenuImage("trash_full.png"));
+        deleteCache.setAccelerator(KeyCombination.valueOf("Ctrl+D"));
+        deleteCache.setOnAction(e -> deleteAllInVar("cache"));
+
+        MenuItem deleteCache2 = new MenuItem("Cache files");
+        deleteCache2.setOnAction(e -> deleteAllInVar("cache"));
+
+        MenuItem deleteLogs = new MenuItem("Logs");
+        deleteLogs.setOnAction(e -> deleteAllInVar("log"));
+
+        MenuItem deleteReports = new MenuItem("Exception reports");
+        deleteReports.setOnAction(e -> deleteAllInVar("report"));
+
+        MenuItem deleteSession = new MenuItem("User session");
+        deleteSession.setOnAction(e -> deleteAllInVar("session"));
+
+        MenuItem deleteAll = new MenuItem("All");
+        deleteAll.setOnAction(e -> deleteAllInVar("cache", "log", "report", "session"));
+
+        Menu removeSubmenu = new Menu("Delete...", Start.createMenuImage("trash_full.png"),
+                deleteAll, new SeparatorMenuItem(), deleteCache2, deleteLogs, deleteReports, deleteSession);
+
+        return new Menu("Magento", Start.createMenuImage("magento.png"),
+                deleteCache, removeSubmenu
+        );
+    }
+
+    private static void deleteAllInVar(String... varSubdirs) {
+        VirtualMachine current = Start.virtualMachineProperty.get();
+        String mainPath = getModuleByName("Magento").getSetting(current, "path");
+        if (mainPath == null) return;
+
+        File root = new File(mainPath);
+        if (!root.exists() || !root.isDirectory()) return;
+
+        File var = new File(root, "var");
+        if (!var.exists() || !var.isDirectory()) return;
+
+        for (String subdir : varSubdirs) {
+            File toRemoveDir = new File(var, subdir);
+            if (toRemoveDir.exists() && toRemoveDir.isDirectory()) {
+                for (File file : toRemoveDir.listFiles()) {
+                    delete(file);
+                }
+            }
+        }
+    }
+
+    private static void delete(File file) {
+        if (file.isDirectory()) {
+            for (File c : file.listFiles()) delete(c);
+        }
+        if (!file.delete()) file.deleteOnExit();
     }
 }
