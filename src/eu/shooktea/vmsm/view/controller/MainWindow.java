@@ -140,12 +140,12 @@ public class MainWindow {
         if (Start.virtualMachineProperty.get() != previousMachine) {
             previousMachine = Start.virtualMachineProperty.get();
             VMType type = previousMachine.getType();
+            ObservableList<MenuItem> vmTypeItems = virtualMachineTypeMenu.getItems();
+            vmTypeItems.clear();
             if (previousMachine != null) type.getMenu().ifPresentOrElse(menu -> {
                 virtualMachineTypeMenu.setText(menu.getText());
                 virtualMachineTypeMenu.setGraphic(menu.getGraphic());
                 virtualMachineTypeMenu.setAccelerator(menu.getAccelerator());
-                ObservableList<MenuItem> vmTypeItems = virtualMachineTypeMenu.getItems();
-                vmTypeItems.clear();
                 ObservableList<MenuItem> newItems = menu.getItems();
                 List<MenuItem> transfer = new ArrayList<>(newItems);
                 for(MenuItem item : transfer) {
@@ -154,10 +154,21 @@ public class MainWindow {
                 }
                 if (type.getModules().isPresent()) {
                     MenuItem modulesDialog = new MenuItem("Managing modules");
+                    modulesDialog.setOnAction(ModuleConfig::openModuleConfigWindow);
                     vmTypeItems.addAll(new SeparatorMenuItem(), modulesDialog);
                 }
                 virtualMachineTypeMenu.setVisible(true);
-            }, () -> virtualMachineTypeMenu.setVisible(false));
+            }, () -> {
+                if (type.getModules().isPresent()) {
+                    MenuItem modulesDialog = new MenuItem("Managing modules");
+                    modulesDialog.setOnAction(ModuleConfig::openModuleConfigWindow);
+                    vmTypeItems.add(modulesDialog);
+                    virtualMachineTypeMenu.setVisible(true);
+                }
+                else {
+                    virtualMachineTypeMenu.setVisible(false);
+                }
+            });
         }
     }
 
