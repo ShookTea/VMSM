@@ -50,9 +50,8 @@ public class Storage {
     }
 
     public static void saveAll() {
-        File backup = new File(vmsmFile.getParentFile(), vmsmFile.getName() + ".backup");
         try {
-            Files.copy(vmsmFile.toPath(), backup.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(vmsmFile.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             System.err.println("Failed to created backup");
             e.printStackTrace();
@@ -64,8 +63,8 @@ public class Storage {
             System.err.println("Failed to save; try for restoring backup");
             e.printStackTrace();
             try {
-                Files.copy(backup.toPath(), vmsmFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                backup.delete();
+                Files.copy(backupFile.toPath(), vmsmFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                backupFile.delete();
                 System.err.println("Backup restored and deleted.");
             } catch (IOException e1) {
                 System.err.println("Failed restoring backup.");
@@ -105,7 +104,11 @@ public class Storage {
 
     private static void tryLoadAll() throws IOException {
         String config = new String(Files.readAllBytes(vmsmFile.toPath())).trim();
-        if (config.isEmpty()) return;
+        String backupConfig = new String(Files.readAllBytes(backupFile.toPath())).trim();
+
+        if (config.isEmpty() && backupConfig.isEmpty()) return;
+        if (config.isEmpty()) config = backupConfig;
+
         JSONObject obj = new JSONObject(config);
 
         vmList.clear();
@@ -144,6 +147,21 @@ public class Storage {
         return file;
     }
 
+    private static File getBackupFile(File originalFile) {
+        File file = new File(originalFile.getParentFile(), originalFile.getName() + ".backup");
+        if (!file.exists()) {
+            try {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+        }
+        return file;
+    }
+
     private static File vmsmFile = getVmsmFile();
+    private static File backupFile = getBackupFile(vmsmFile);
     public static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
 }
