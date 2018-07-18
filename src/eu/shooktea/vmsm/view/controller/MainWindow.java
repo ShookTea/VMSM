@@ -47,7 +47,7 @@ import java.util.List;
 
 public class MainWindow {
 
-    @FXML private MenuBar menuBar;
+    @FXML public MenuBar menuBar;
     @FXML private Menu vmsmApplicationMenu;
     @FXML private WebView webView;
     @FXML private TextField addressField;
