@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import org.json.JSONObject;
 
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class Module {
     public Module() {
@@ -23,6 +24,10 @@ public abstract class Module {
     public abstract String getDescription();
     public abstract void storeInJSON(JSONObject obj);
     public abstract void loadFromJSON(JSONObject obj);
+
+    public Optional<Runnable> openConfigWindow() {
+        return Optional.empty();
+    }
 
     @Override
     public boolean equals(Object ob) {

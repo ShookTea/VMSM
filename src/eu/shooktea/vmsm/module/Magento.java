@@ -2,6 +2,8 @@ package eu.shooktea.vmsm.module;
 
 import org.json.JSONObject;
 
+import java.util.Optional;
+
 public class Magento extends Module {
     public Magento() {
         super();
@@ -25,5 +27,10 @@ public class Magento extends Module {
     @Override
     public void loadFromJSON(JSONObject obj) {
 
+    }
+
+    @Override
+    public Optional<Runnable> openConfigWindow() {
+        return Optional.of(() -> {});
     }
 }

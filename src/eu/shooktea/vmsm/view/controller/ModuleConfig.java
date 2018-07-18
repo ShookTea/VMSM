@@ -43,6 +43,11 @@ public class ModuleConfig {
         Label description = new Label(module.getDescription());
         description.setMaxWidth(Double.MAX_VALUE);
 
+        Button configButton = new Button("Config");
+        configButton.setMaxWidth(Double.MAX_VALUE);
+        configButton.setDisable(!module.isInstalled(vm) || !module.openConfigWindow().isPresent());
+        module.openConfigWindow().ifPresent(r -> configButton.setOnAction(e -> r.run()));
+
         ToggleButton switchButton = new ToggleButton();
         switchButton.textProperty().bind(
                 new When(switchButton.selectedProperty())
@@ -54,10 +59,12 @@ public class ModuleConfig {
                 .otherwise("-fx-background-color: red;"));
         switchButton.setMaxWidth(Double.MAX_VALUE);
         switchButton.setSelected(module.isInstalled(vm));
-        switchButton.setOnAction((e) -> module.installOn(vm));
+        switchButton.setOnAction((e) -> {
+            module.installOn(vm);
+            configButton.setDisable(!module.isInstalled(vm) || !module.openConfigWindow().isPresent());
+        });
 
-        Button configButton = new Button("Config");
-        configButton.setMaxWidth(Double.MAX_VALUE);
+
 
         grid.addRow(rowIndex, name, switchButton);
         grid.addRow(rowIndex + 1, description, configButton);
