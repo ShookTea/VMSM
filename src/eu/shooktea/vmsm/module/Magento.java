@@ -1,5 +1,7 @@
 package eu.shooktea.vmsm.module;
 
+import org.json.JSONObject;
+
 public class Magento extends Module {
     @Override
     public String getName() {
@@ -9,5 +11,15 @@ public class Magento extends Module {
     @Override
     public String getDescription() {
         return "Open-source e-commerce platform written in PHP";
+    }
+
+    @Override
+    public void storeInJSON(JSONObject obj) {
+
+    }
+
+    @Override
+    public void loadFromJSON(JSONObject obj) {
+
     }
 }

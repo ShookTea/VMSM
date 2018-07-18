@@ -26,6 +26,7 @@ package eu.shooktea.vmsm;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.JSONObject;
 
@@ -39,7 +40,7 @@ public class VirtualMachine {
         this.mainPath = new SimpleObjectProperty<>(mainPath);
         this.pageRoot = new SimpleObjectProperty<>(pageRoot);
         this.type = new SimpleObjectProperty<>(type);
-        this.modules = new SimpleListProperty<>();
+        this.modules = new SimpleListProperty<>(FXCollections.observableArrayList());
     }
 
     public JSONObject toJSON() {
@@ -48,6 +49,14 @@ public class VirtualMachine {
         obj.put("path", mainPath.get().getAbsolutePath());
         if (pageRoot.isNotNull().get()) obj.put("url", pageRoot.get().toString());
         obj.put("type", type.get().getTypeName());
+
+        JSONObject modules = new JSONObject();
+        for (Module module : getModules()) {
+            JSONObject config = new JSONObject();
+            module.storeInJSON(config);
+            modules.put(module.getName(), config);
+        }
+        obj.put("modules", modules);
         return obj;
     }
 
@@ -122,6 +131,14 @@ public class VirtualMachine {
         File path = new File(json.getString("path"));
         URL url = json.has("url") ? new URL(json.getString("url")) : null;
         VMType type = VMType.getByName(json.getString("type"));
-        return new VirtualMachine(name, path, url, type);
+        VirtualMachine vm = new VirtualMachine(name, path, url, type);
+
+        JSONObject modules = json.has("modules") ? json.getJSONObject("modules") : new JSONObject();
+        for (String moduleName : modules.keySet()) {
+            Module module = Module.getModulesByName().get(moduleName);
+            module.loadFromJSON(modules.getJSONObject(module.getName()));
+            vm.getModules().add(module);
+        }
+        return vm;
     }
 }
