@@ -6,12 +6,11 @@ import eu.shooktea.vmsm.view.controller.MagentoConfig;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Separator;
-import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 
+import javax.tools.Tool;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -133,10 +132,15 @@ public class Magento extends Module {
     }
 
     private static List<Node> createToolbar() {
+        ImageView removeCache = Start.createToolbarImage("trash_full.png");
+        Tooltip removeCacheTip = new Tooltip("Delete cache");
+        Tooltip.install(removeCache, removeCacheTip);
+        removeCache.setOnMouseClicked(e -> deleteAllInVar("cache"));
 
         return Arrays.asList(
                 new Separator(Orientation.VERTICAL),
-                Start.createToolbarImage("magento.png")
+                Start.createToolbarImage("magento.png"),
+                removeCache
         );
     }
 }
