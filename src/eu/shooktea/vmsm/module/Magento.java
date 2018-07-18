@@ -4,7 +4,6 @@ import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.view.controller.MagentoConfig;
 import javafx.application.Platform;
 import javafx.scene.control.Menu;
-import org.json.JSONObject;
 
 import java.util.Optional;
 
@@ -21,16 +20,6 @@ public class Magento extends Module {
     @Override
     public String getDescription() {
         return "Open-source e-commerce platform written in PHP";
-    }
-
-    @Override
-    public void storeInJSON(JSONObject obj) {
-
-    }
-
-    @Override
-    public void loadFromJSON(JSONObject obj) {
-
     }
 
     @Override

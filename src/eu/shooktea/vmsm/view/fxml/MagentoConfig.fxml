@@ -56,7 +56,7 @@
       <HBox>
          <children>
             <Separator opacity="0.0" HBox.hgrow="ALWAYS" />
-            <Button defaultButton="true" mnemonicParsing="false" text="Save" />
+            <Button defaultButton="true" mnemonicParsing="false" text="Save" onAction="#saveSettings" />
          </children>
       </HBox>
     </children>

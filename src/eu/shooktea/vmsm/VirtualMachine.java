@@ -53,7 +53,7 @@ public class VirtualMachine {
         JSONObject modules = new JSONObject();
         for (Module module : getModules()) {
             JSONObject config = new JSONObject();
-            module.storeInJSON(config);
+            module.storeInJSON(config, this);
             modules.put(module.getName(), config);
         }
         obj.put("modules", modules);
@@ -136,7 +136,7 @@ public class VirtualMachine {
         JSONObject modules = json.has("modules") ? json.getJSONObject("modules") : new JSONObject();
         for (String moduleName : modules.keySet()) {
             Module module = Module.getModulesByName().get(moduleName);
-            module.loadFromJSON(modules.getJSONObject(module.getName()));
+            module.loadFromJSON(modules.getJSONObject(module.getName()), vm);
             vm.getModules().add(module);
         }
         return vm;
