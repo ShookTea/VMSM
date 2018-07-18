@@ -1,14 +1,22 @@
 package eu.shooktea.vmsm.module;
 
+import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.json.JSONObject;
 
 import java.util.Map;
 
 public abstract class Module {
     public Module() {
-
+        isInstalled = new SimpleBooleanProperty();
+        isInstalled.bind(Bindings.createBooleanBinding(() ->
+                Start.virtualMachineProperty.isNotNull().get()
+                && Start.virtualMachineProperty.get().getModules().contains(this)
+        ));
     }
 
     public abstract String getName();
@@ -39,4 +47,6 @@ public abstract class Module {
                 "Magento", new Magento()
         );
     }
+
+    private BooleanProperty isInstalled;
 }
