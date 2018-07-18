@@ -24,14 +24,11 @@ SOFTWARE.
 package eu.shooktea.vmsm.vmtype;
 
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.Module;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.util.Optional;
@@ -92,7 +89,7 @@ public abstract class VMType {
         return Optional.empty();
     }
 
-    public Optional<Module[]> getModules() { return Optional.empty(); }
+    public Optional<String[]> getModules() { return Optional.empty(); }
 
     public void update(VirtualMachine vm) {}
 

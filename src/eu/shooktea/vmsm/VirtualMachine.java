@@ -135,7 +135,7 @@ public class VirtualMachine {
 
         JSONObject modules = json.has("modules") ? json.getJSONObject("modules") : new JSONObject();
         for (String moduleName : modules.keySet()) {
-            Module module = Module.getModulesByName().get(moduleName);
+            Module module = Module.getModuleByName(moduleName);
             module.loadFromJSON(modules.getJSONObject(module.getName()), vm);
             vm.getModules().add(module);
         }

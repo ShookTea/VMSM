@@ -29,9 +29,9 @@ public abstract class Module {
     }
 
     public void loadFromJSON(JSONObject obj, VirtualMachine vm) {
+        if (!settings.containsKey(vm)) settings.put(vm, new HashMap<>());
         Map<String, String> values = settings.getOrDefault(vm, new HashMap<>());
         obj.keySet().forEach(key -> values.put(key, obj.getString(key)));
-        settings.put(vm, values);
     }
 
     public Optional<Runnable> openConfigWindow() {
@@ -66,16 +66,19 @@ public abstract class Module {
         Storage.saveAll();
     }
 
-    public static Map<String, Module> getModulesByName() {
-        return Map.of(
-                "Magento", new Magento()
-        );
+    public static Module getModuleByName(String name) {
+        return modules.get(name);
     }
 
+    private static Map<String, Module> modules = Map.of(
+            "Magento", new Magento()
+    );
+
     public void setSetting(VirtualMachine vm, String key, String value) {
-        Map<String, String> keys = settings.getOrDefault(vm, new HashMap<>());
-        keys.put(key, value);
-        settings.put(vm, keys);
+        if (!settings.containsKey(vm)) {
+            settings.put(vm, new HashMap<>());
+        }
+        settings.getOrDefault(vm, new HashMap<>()).put(key, value);
     }
 
     public String getSetting(VirtualMachine vm, String key) {

@@ -24,10 +24,10 @@ public class ModuleConfig {
 
         VirtualMachine vm = Start.virtualMachineProperty.getValue();
         VMType type = vm.getType();
-        Module[] modules = type.getModules().get();
+        String[] modules = type.getModules().get();
         int index = 0;
-        for (Module module : modules) {
-            createModuleEntry(vm, module, index);
+        for (String module : modules) {
+            createModuleEntry(vm, Module.getModuleByName(module), index);
             index += 2;
         }
         ColumnConstraints textColumn = new ColumnConstraints();
