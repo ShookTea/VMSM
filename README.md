@@ -18,6 +18,7 @@ Virtual Machine Server Manager
     * [Magento Module configuration](#magento-module-configuration)
     * [Clearing var files](#clearing-var-files)
     * [Login to administrator panel](#login-to-administrator-panel)
+    * [Creation of modules](#creation-of-modules)
 
 ## Installation
 **System requirements:**
@@ -137,3 +138,40 @@ If you have stored your login and/or password in [configuration](#magento-module
 will also automatically fill input fields in login form. If you've stored both login and password, form will be also
 submitted, which means that after correct configuration of module pressing that button will log you in to administrator
 panel automatically.
+
+### Creation of modules
+
+After choosing `Magento/Create new module...` menu or using `Ctrl+Shift+N` shortcut, New Module window will be displayed.
+
+![Module configuration](doc_img/magento_new_module.png)
+
+Important notes:
+
+* Namespace, module name and full name are all connected to each other. Full name is equal to namespace and module name
+connected with underline _.
+* Root directory of new module is `MAGENTO_ROOT/app/code/CODE_POOL/NAMESPACE/MODULE_NAME`.
+* Module declaration will be stored in `MAGENTO_ROOT/app/etc/modules/FULL_NAME.xml`.
+* Blocks and models will create empty directories `Block` and `Model` in module root directory.
+* Installers will create `install-VERSION.php` file in `sql/FULL_NAME_setup/` directory, with code:
+
+```php
+<?php
+$installer = $this;
+$installer->startSetup();
+
+$installer->endSetup();
+```
+
+* Helpers will create `Data.php` file in `Helper` directory, with code:
+
+```php
+<?php
+class Namespace_ModuleName_Helper_Data extends Mage_Core_Helper_Abstract
+{
+
+}
+```
+
+* Configuration file in `etc/config.xml` will contain all basic information about modules, including configuration of models, blocks, helpers and installers.
+* If `Activate module` is selected, module will be marked as active by default. Turning it on in Magento configuration won't be necessary.
+* If `Remove cache after creation` is selected, cache files will be removed after creating new module.
