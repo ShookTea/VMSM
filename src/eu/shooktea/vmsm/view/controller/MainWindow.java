@@ -55,7 +55,7 @@ public class MainWindow {
     @FXML private ImageView homeButton;
     @FXML private Menu virtualMachineTypeMenu;
 
-    private WebEngine webEngine;
+    public WebEngine webEngine;
     private ToggleGroup chooseVmToggleGroup = new ToggleGroup();
 
     @FXML

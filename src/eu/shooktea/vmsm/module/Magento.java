@@ -5,16 +5,21 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MagentoConfig;
 import eu.shooktea.vmsm.view.controller.MainWindow;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.web.WebEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.html.HTMLFormElement;
+import org.w3c.dom.html.HTMLInputElement;
 import org.xml.sax.SAXException;
 
-import javax.tools.Tool;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -196,6 +201,21 @@ public class Magento extends Module {
         String currentAddress = vm.getPageRoot().toString();
         if (!currentAddress.endsWith("/")) currentAddress = currentAddress + "/";
         currentAddress = currentAddress + address;
+
+        WebEngine engine = mw.webEngine;
+        final ChangeListener<Document> listener = new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends Document> observable, Document oldValue, Document doc) {
+                engine.documentProperty().removeListener(this);
+                engine.executeScript(
+                        "document.getElementsByName('login[username]')[0].value = 'nkowalik';" +
+                        "document.getElementsByName('login[password]')[0].value = 'password';" +
+                        "document.getElementById('loginForm').submit();"
+                );
+            }
+        };
+        engine.documentProperty().addListener(listener);
+
         mw.goTo(currentAddress);
     }
 }
