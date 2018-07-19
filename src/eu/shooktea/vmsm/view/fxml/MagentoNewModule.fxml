@@ -107,7 +107,12 @@
       <Separator opacity="0.0" orientation="VERTICAL" VBox.vgrow="ALWAYS" />
       <HBox maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
          <children>
-            <Separator opacity="0.0" HBox.hgrow="ALWAYS" />
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <CheckBox fx:id="activateModule" mnemonicParsing="false" selected="true" text="Activate module" />
+                  <CheckBox fx:id="removeCache" mnemonicParsing="false" selected="true" text="Remove cache after creation" />
+               </children>
+            </VBox>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#createAction" text="Create" />
          </children>
       </HBox>

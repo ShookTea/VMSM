@@ -26,6 +26,8 @@ public class MagentoNewModule implements StageController {
     @FXML private CheckBox installer;
     @FXML private CheckBox helper;
     @FXML private CheckBox block;
+    @FXML private CheckBox removeCache;
+    @FXML private CheckBox activateModule;
 
     private Stage stage;
 
