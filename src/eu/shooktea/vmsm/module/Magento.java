@@ -110,10 +110,10 @@ public class Magento extends Module {
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
             System.exit(1);
-            return null;
+            return "admin";
         } catch (SAXException | IOException e) {
             e.printStackTrace();
-            return null;
+            return "admin";
         }
     }
 
