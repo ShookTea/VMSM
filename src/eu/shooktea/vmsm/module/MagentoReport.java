@@ -1,7 +1,10 @@
 package eu.shooktea.vmsm.module;
 
+import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.controller.MainWindow;
+import javafx.scene.paint.Paint;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -29,13 +32,18 @@ public class MagentoReport {
     public final String text;
 
     public static void update(Magento module, VirtualMachine vm, File reportsDir) {
+        if (previousMachine != vm) {
+            previousMachine = vm;
+            notifyReports = new ArrayList<>();
+            allReports = new ArrayList<>();
+        }
         if (MAX_TIME_DIFFERENCE == -1) {
             Long value = (Long)module.getSetting(vm, "report_keep_time");
             MAX_TIME_DIFFERENCE = value == null ? MAX_TIME_DIFFERENCE_DEFAULT : value;
         }
         CHANGES = false;
-        List<MagentoReport> reports = getReportsFromConfig(module, vm, reportsDir);
-        List<String> reportNames = reports.stream()
+        allReports = getReportsFromConfig(module, vm, reportsDir);
+        List<String> reportNames = allReports.stream()
                 .map(MagentoReport::getName)
                 .collect(Collectors.toList());
         Arrays.stream(reportsDir.listFiles())
@@ -50,16 +58,24 @@ public class MagentoReport {
                         throw new RuntimeException("Cannot read report text from file " + file.toString(), e);
                     }
                     MagentoReport newReport = new MagentoReport(name, timestamp, text);
-                    reports.add(newReport);
-                    if (timestamp - file.lastModified() < 1000 * 60) notifyNewReport(newReport); //not notify if report is older than one minute
+                    allReports.add(newReport);
+                    notifyNewReport(newReport);
                     CHANGES = true;
                 });
-        storeReportsInConfig(module, vm, reports);
+        storeReportsInConfig(module, vm, allReports);
     }
 
     private static void notifyNewReport(MagentoReport report) {
-
+        notifyReports.add(report);
+        MainWindow mw = Start.mainWindow;
+        mw.statusLabel.setText(notifyReports.size() + " new exception report" + (notifyReports.size() > 1 ? "s" : ""));
+        mw.statusLabel.setTextFill(Paint.valueOf("RED"));
+        mw.statusLabel.setOnMouseClicked(e -> {});
     }
+
+    private static List<MagentoReport> notifyReports = new ArrayList<>();
+    private static List<MagentoReport> allReports = new ArrayList<>();
+    private static VirtualMachine previousMachine = null;
 
     private static void storeReportsInConfig(Magento module, VirtualMachine vm, List<MagentoReport> reports) {
         JSONArray array = new JSONArray();
