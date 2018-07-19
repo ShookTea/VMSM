@@ -29,10 +29,12 @@ public class MagentoReport {
     public final String text;
 
     public static void update(Magento module, VirtualMachine vm, File reportsDir) {
+        if (MAX_TIME_DIFFERENCE == -1) {
+            Long value = (Long)module.getSetting(vm, "report_keep_time");
+            MAX_TIME_DIFFERENCE = value == null ? MAX_TIME_DIFFERENCE_DEFAULT : value;
+        }
         CHANGES = false;
-        System.out.println("UPDATE");
         List<MagentoReport> reports = getReportsFromConfig(module, vm, reportsDir);
-        reports.forEach(report -> System.out.println("Report " + report.name + " loaded from config"));
         List<String> reportNames = reports.stream()
                 .map(MagentoReport::getName)
                 .collect(Collectors.toList());
@@ -49,7 +51,6 @@ public class MagentoReport {
                     }
                     MagentoReport newReport = new MagentoReport(name, timestamp, text);
                     reports.add(newReport);
-                    System.out.println("Report " + newReport.name + " added to config");
                     CHANGES = true;
                 });
         storeReportsInConfig(module, vm, reports);
@@ -91,6 +92,7 @@ public class MagentoReport {
         return reportsFromConfig;
     }
 
-    private static long MAX_TIME_DIFFERENCE = 1000L * 60 * 60 * 24 * 30; //30 days
+    private static long MAX_TIME_DIFFERENCE = -1;
+    private static long MAX_TIME_DIFFERENCE_DEFAULT = 1000L * 60 * 60 * 24 * 30; //30 days
     private static boolean CHANGES = false;
 }
