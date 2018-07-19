@@ -1,13 +1,21 @@
 package eu.shooktea.vmsm.view.controller;
 
 import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.module.Magento;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
-public class MagentoNewModule {
+import java.io.File;
+
+
+public class MagentoNewModule implements StageController {
 
     @FXML private TextField namespaceField;
     @FXML private TextField nameField;
@@ -18,6 +26,8 @@ public class MagentoNewModule {
     @FXML private CheckBox installer;
     @FXML private CheckBox helper;
     @FXML private CheckBox block;
+
+    private Stage stage;
 
     @FXML
     private void initialize() {
@@ -51,7 +61,37 @@ public class MagentoNewModule {
 
     @FXML
     private void createAction() {
+        VirtualMachine vm = Start.virtualMachineProperty.getValue();
+        Magento magento = (Magento)Module.getModuleByName("Magento");
+        String path = magento.getSetting(vm, "path");
+        if (path == null) {
+            showError("You haven't configured Magento main directory!");
+            return;
+        }
+        File root = new File(path);
 
+        String namespace = namespaceField.getText().trim();
+        String moduleName = nameField.getText().trim();
+        if (namespace.isEmpty()) namespace = "Mage";
+        if (moduleName.isEmpty()) {
+            showError("Module name cannot be empty!");
+            return;
+        }
+        String fullModuleName = namespace + "_" + moduleName;
+        String codePool = codePoolField.getValue();
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Module error");
+        alert.setHeaderText("Module creation error");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    @Override
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public static void openMagentoNewModuleWindow(Object... lambdaArgs) {
