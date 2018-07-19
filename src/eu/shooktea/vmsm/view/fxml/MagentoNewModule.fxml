@@ -70,7 +70,7 @@
             <TextField fx:id="namespaceField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Mage" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
             <TextField fx:id="nameField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Customer" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
             <TextField fx:id="fullModuleNameField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Mage_Customer" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
-             <TextField fx:id="versionField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Version" text="0.1.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS" />
+             <TextField fx:id="versionField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="0.1.0" text="0.1.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS" />
             <ChoiceBox fx:id="codePoolField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
          </children>
       </GridPane>

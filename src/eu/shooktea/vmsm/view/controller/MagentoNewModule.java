@@ -11,8 +11,19 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.IOException;
 
 
 public class MagentoNewModule implements StageController {
@@ -84,12 +95,71 @@ public class MagentoNewModule implements StageController {
         String fullModuleName = namespace + "_" + moduleName;
         String codePool = codePoolField.getValue();
 
+        String version = versionField.getText().trim();
+        if (version.isEmpty()) version = "0.1.0";
+
         File moduleRoot = new File(codeRoot, codePool + "/" + namespace + "/" + moduleName);
         if (moduleRoot.exists()) {
             showError("Module " + fullModuleName + " exists in " + codePool + " code pool already.");
             return;
         }
+
+        try {
+            createModuleDeclaration(moduleDeclarationRoot, fullModuleName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("IO Exception happened :(");
+        }
     }
+
+    private void createModuleDeclaration(File root, String moduleName) throws Exception {
+        File entry = new File(root, moduleName + ".xml");
+        entry.createNewFile();
+        Document doc = createNewDocument();
+
+        Element config = doc.createElement("config");
+        doc.appendChild(config);
+
+        Element module = doc.createElement(moduleName);
+        config.appendChild(module);
+
+        Element active = doc.createElement("active");
+        active.setTextContent(activateModule.isSelected() ? "true" : "false");
+        module.appendChild(active);
+
+        Element pool = doc.createElement("codePool");
+        pool.setTextContent(codePoolField.getValue());
+        module.appendChild(pool);
+
+        saveDocument(entry, doc);
+    }
+
+    private Document createNewDocument() throws ParserConfigurationException {
+        if (builder == null) {
+            builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        }
+        return builder.newDocument();
+    }
+
+    private void saveDocument(File file, Document document) throws Exception {
+        Transformer transformer = createTransformer();
+        DOMSource source = new DOMSource(document);
+        StreamResult result = new StreamResult(file);
+        transformer.transform(source, result);
+    }
+
+    private Transformer createTransformer() throws Exception {
+        if (transfFact == null) {
+            transfFact = TransformerFactory.newInstance();
+        }
+        Transformer transformer = transfFact.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+        return transformer;
+    }
+
+    private DocumentBuilder builder = null;
+    private TransformerFactory transfFact = null;
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
