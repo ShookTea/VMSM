@@ -3,15 +3,23 @@ package eu.shooktea.vmsm.module;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MagentoConfig;
+import eu.shooktea.vmsm.view.controller.MainWindow;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import javax.tools.Tool;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +83,35 @@ public class Magento extends Module {
         Start.mainWindow.toolBar.getItems().addAll(toolbarElements);
     }
 
+    public String getAdminAddress(VirtualMachine vm) {
+        try {
+            String rootPath = getSetting(vm, "path");
+            if (rootPath == null) throw new IOException("rootPath == null");
+            File rootFile = new File(rootPath);
+            if (!rootFile.exists()) throw new IOException("rootFile " + rootFile.toString() + "doesn't exist");
+            File localXmlFile = new File(rootFile, "app/etc/local.xml");
+            if (!localXmlFile.exists()) throw new IOException("local xml file " + localXmlFile.toString() + " doesn't exist");
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = db.parse(localXmlFile);
+
+            Element config = doc.getDocumentElement();
+            config.normalize();
+            Element admin = (Element)config.getElementsByTagName("admin").item(0);
+            Element routers = (Element)admin.getElementsByTagName("routers").item(0);
+            Element adminhtml = (Element)routers.getElementsByTagName("adminhtml").item(0);
+            Element args = (Element)adminhtml.getElementsByTagName("args").item(0);
+            Element frontname = (Element)args.getElementsByTagName("frontName").item(0);
+            return frontname.getTextContent().trim();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+            System.exit(1);
+            return null;
+        } catch (SAXException | IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private static final Menu magentoMenu = createMenu();
     private static final List<Node> toolbarElements = createToolbar();
 
@@ -101,8 +138,11 @@ public class Magento extends Module {
         Menu removeSubmenu = new Menu("Delete...", Start.createMenuImage("trash_full.png"),
                 deleteAll, new SeparatorMenuItem(), deleteCache2, deleteLogs, deleteReports, deleteSession);
 
+        MenuItem loginAsAdmin = new MenuItem("Login as administrator");
+        loginAsAdmin.setOnAction(e -> loginAsAdmin());
+
         return new Menu("Magento", Start.createMenuImage("magento.png"),
-                deleteCache, removeSubmenu
+                deleteCache, removeSubmenu, loginAsAdmin
         );
     }
 
@@ -145,5 +185,17 @@ public class Magento extends Module {
                 Start.createToolbarImage("magento.png"),
                 removeCache
         );
+    }
+
+    private static void loginAsAdmin() {
+        VirtualMachine vm = Start.virtualMachineProperty.get();
+        Magento magento = (Magento)Module.getModuleByName("Magento");
+        String address = magento.getAdminAddress(vm);
+        if (address == null) return;
+        MainWindow mw = Start.mainWindow;
+        String currentAddress = vm.getPageRoot().toString();
+        if (!currentAddress.endsWith("/")) currentAddress = currentAddress + "/";
+        currentAddress = currentAddress + address;
+        mw.goTo(currentAddress);
     }
 }

@@ -29,10 +29,8 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.When;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
@@ -209,6 +207,11 @@ public class MainWindow {
     @FXML
     public void reloadWebpage() {
         if (!this.addressField.getText().trim().isEmpty()) webEngine.reload();
+    }
+
+    public void goTo(String url) {
+        addressField.setText(url);
+        addressEnterPressed();
     }
 
     private VirtualMachine previousMachine = null;
