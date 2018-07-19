@@ -16,9 +16,6 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.web.WebEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.html.HTMLFormElement;
-import org.w3c.dom.html.HTMLInputElement;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -157,7 +154,7 @@ public class Magento extends Module {
         );
     }
 
-    private static void deleteAllInVar(String... varSubdirs) {
+    public static void deleteAllInVar(String... varSubdirs) {
         VirtualMachine current = Start.virtualMachineProperty.get();
         String mainPath = getModuleByName("Magento").getSetting(current, "path");
         if (mainPath == null) return;

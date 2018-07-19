@@ -23,7 +23,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 
@@ -109,6 +108,10 @@ public class MagentoNewModule implements StageController {
         try {
             createModuleDeclaration(moduleDeclarationRoot, fullModuleName);
             createModuleConfigFile(moduleRoot, fullModuleName, version);
+            if (removeCache.isSelected()) {
+                Magento.deleteAllInVar("cache");
+            }
+            stage.close();
         } catch (Exception e) {
             e.printStackTrace();
             showError("IO Exception happened :(");
@@ -137,7 +140,7 @@ public class MagentoNewModule implements StageController {
         File configFile = new File(moduleRoot, "etc/config.xml");
         configFile.getParentFile().mkdirs();
         configFile.createNewFile();
-        Document doc = createNewDocument();
+        doc = createNewDocument();
 
         Element config = doc.createElement("config");
         doc.appendChild(config);
@@ -197,10 +200,7 @@ public class MagentoNewModule implements StageController {
     }
 
     private Document createNewDocument() throws ParserConfigurationException {
-        if (builder == null) {
-            builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        }
-        return builder.newDocument();
+        return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
     }
 
     private void saveDocument(File file, Document document) throws Exception {
@@ -211,10 +211,7 @@ public class MagentoNewModule implements StageController {
     }
 
     private Transformer createTransformer() throws Exception {
-        if (transfFact == null) {
-            transfFact = TransformerFactory.newInstance();
-        }
-        Transformer transformer = transfFact.newTransformer();
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
         return transformer;
@@ -248,9 +245,6 @@ public class MagentoNewModule implements StageController {
         writer.println("$installer->endSetup();");
         writer.close();
     }
-
-    private DocumentBuilder builder = null;
-    private TransformerFactory transfFact = null;
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
