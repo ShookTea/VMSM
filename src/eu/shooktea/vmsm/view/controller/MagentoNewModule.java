@@ -165,6 +165,14 @@ public class MagentoNewModule implements StageController {
             createInstaller(moduleRoot, moduleName, versionText);
         }
 
+        if (block.isSelected()) {
+            Element block = createChild("blocks", global);
+            Element mBlock = createChild(moduleName.toLowerCase(), block);
+            Element clazz = createChild("class", mBlock);
+            clazz.setTextContent(moduleName + "_Block");
+            new File(moduleRoot, "Block").mkdirs();
+        }
+
         version.setTextContent(versionText);
 
         saveDocument(configFile, doc);
