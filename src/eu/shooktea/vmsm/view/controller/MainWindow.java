@@ -127,12 +127,12 @@ public class MainWindow {
         }
         items.add(new SeparatorMenuItem());
 
-        MenuItem createNewVM = new MenuItem("New VM");
+        MenuItem createNewVM = new MenuItem("New VM...");
         createNewVM.setAccelerator(KeyCombination.valueOf("Ctrl+N"));
         createNewVM.setOnAction(NewVM::openNewVmWindow);
         items.add(createNewVM);
 
-        MenuItem vmManager = new MenuItem("VM Manager");
+        MenuItem vmManager = new MenuItem("VM Manager...");
         vmManager.setOnAction(VmManager::openVmManagerWindow);
         items.add(vmManager);
 
@@ -152,14 +152,14 @@ public class MainWindow {
                     vmTypeItems.add(item);
                 }
                 if (type.getModules().isPresent()) {
-                    MenuItem modulesDialog = new MenuItem("Managing modules", Start.createMenuImage("run.png"));
+                    MenuItem modulesDialog = new MenuItem("Managing modules...", Start.createMenuImage("run.png"));
                     modulesDialog.setOnAction(ModuleConfig::openModuleConfigWindow);
                     vmTypeItems.addAll(new SeparatorMenuItem(), modulesDialog);
                 }
                 virtualMachineTypeMenu.setVisible(true);
             }, () -> {
                 if (type.getModules().isPresent()) {
-                    MenuItem modulesDialog = new MenuItem("Managing modules", Start.createMenuImage("run.png"));
+                    MenuItem modulesDialog = new MenuItem("Managing modules...", Start.createMenuImage("run.png"));
                     modulesDialog.setOnAction(ModuleConfig::openModuleConfigWindow);
                     vmTypeItems.add(modulesDialog);
                     virtualMachineTypeMenu.setVisible(true);

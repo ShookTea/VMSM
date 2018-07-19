@@ -3,6 +3,7 @@ package eu.shooktea.vmsm.module;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MagentoConfig;
+import eu.shooktea.vmsm.view.controller.MagentoNewModule;
 import eu.shooktea.vmsm.view.controller.MainWindow;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -140,15 +141,19 @@ public class Magento extends Module {
         MenuItem deleteAll = new MenuItem("All");
         deleteAll.setOnAction(e -> deleteAllInVar("cache", "log", "report", "session"));
 
-        Menu removeSubmenu = new Menu("Delete...", Start.createMenuImage("trash_full.png"),
+        Menu removeSubmenu = new Menu("Delete", Start.createMenuImage("trash_full.png"),
                 deleteAll, new SeparatorMenuItem(), deleteCache2, deleteLogs, deleteReports, deleteSession);
 
         MenuItem loginAsAdmin = new MenuItem("Login to admin panel", Start.createMenuImage("user.png"));
         loginAsAdmin.setAccelerator(KeyCombination.valueOf("Ctrl+A"));
         loginAsAdmin.setOnAction(e -> loginAsAdmin());
 
+        MenuItem newMagentoModule = new MenuItem("Create new module...");
+        newMagentoModule.setAccelerator(KeyCombination.valueOf("Ctrl+Shift+N"));
+        newMagentoModule.setOnAction(MagentoNewModule::openMagentoNewModuleWindow);
+
         return new Menu("Magento", Start.createMenuImage("magento.png"),
-                deleteCache, removeSubmenu, loginAsAdmin
+                deleteCache, removeSubmenu, loginAsAdmin, newMagentoModule
         );
     }
 

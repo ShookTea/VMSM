@@ -123,7 +123,7 @@ configuration.
 
 One of the most often removed files in Magento are cache files. You can delete them either by pressing trash button
 on toolbar (next to Magento icon), using `Ctrl+D` shortcut or in `Magento/Delete cache files` menu. You can also delete 
-cache, logs, sessions and exception reports in `Magento/Delete...` menu. `Delete all` removes all of these files.
+cache, logs, sessions and exception reports in `Magento/Delete` menu. `Delete all` removes all of these files.
 
 ### Login to administrator panel
 
