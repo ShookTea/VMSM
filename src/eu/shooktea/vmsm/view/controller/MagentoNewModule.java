@@ -3,6 +3,7 @@ package eu.shooktea.vmsm.view.controller;
 import eu.shooktea.vmsm.Start;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 
@@ -13,6 +14,10 @@ public class MagentoNewModule {
     @FXML private TextField fullModuleNameField;
     @FXML private TextField versionField;
     @FXML private ChoiceBox<String> codePoolField;
+    @FXML private CheckBox model;
+    @FXML private CheckBox installer;
+    @FXML private CheckBox helper;
+    @FXML private CheckBox block;
 
     @FXML
     private void initialize() {
@@ -42,6 +47,11 @@ public class MagentoNewModule {
             String modName = nameField.getText().trim();
             fullModuleNameField.setText(namespace + "_" + modName);
         }
+    }
+
+    @FXML
+    private void createAction() {
+
     }
 
     public static void openMagentoNewModuleWindow(Object... lambdaArgs) {
