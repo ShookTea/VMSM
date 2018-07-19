@@ -24,6 +24,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 
 public class MagentoNewModule implements StageController {
@@ -103,9 +104,11 @@ public class MagentoNewModule implements StageController {
             showError("Module " + fullModuleName + " exists in " + codePool + " code pool already.");
             return;
         }
+        moduleRoot.mkdirs();
 
         try {
             createModuleDeclaration(moduleDeclarationRoot, fullModuleName);
+            createModuleConfigFile(moduleRoot, fullModuleName, version);
         } catch (Exception e) {
             e.printStackTrace();
             showError("IO Exception happened :(");
@@ -115,23 +118,54 @@ public class MagentoNewModule implements StageController {
     private void createModuleDeclaration(File root, String moduleName) throws Exception {
         File entry = new File(root, moduleName + ".xml");
         entry.createNewFile();
+        doc = createNewDocument();
+
+        Element config = doc.createElement("config");
+        doc.appendChild(config);
+
+        Element module = createChild(moduleName, config);
+        Element active = createChild("active", module);
+        Element pool = createChild("codePool", module);
+
+        active.setTextContent(activateModule.isSelected() ? "true" : "false");
+        pool.setTextContent(codePoolField.getValue());
+
+        saveDocument(entry, doc);
+    }
+
+    private void createModuleConfigFile(File moduleRoot, String moduleName, String versionText) throws Exception {
+        File configFile = new File(moduleRoot, "etc/config.xml");
+        configFile.getParentFile().mkdirs();
+        configFile.createNewFile();
         Document doc = createNewDocument();
 
         Element config = doc.createElement("config");
         doc.appendChild(config);
 
-        Element module = doc.createElement(moduleName);
-        config.appendChild(module);
+        Element modules = createChild("modules", config);
+        Element modulesM = createChild(moduleName, modules);
+        Element version = createChild("version", modulesM);
 
-        Element active = doc.createElement("active");
-        active.setTextContent(activateModule.isSelected() ? "true" : "false");
-        module.appendChild(active);
+        Element global = createChild("global", config);
+        if (helper.isSelected()) {
+            Element helpers = createChild("helpers", global);
+            Element helperM = createChild(moduleName.toLowerCase(), helpers);
+            Element clazz = createChild("class", helperM);
+            clazz.setTextContent(moduleName + "_Helper");
+            createHelper(moduleRoot, moduleName);
+        }
 
-        Element pool = doc.createElement("codePool");
-        pool.setTextContent(codePoolField.getValue());
-        module.appendChild(pool);
+        version.setTextContent(versionText);
 
-        saveDocument(entry, doc);
+        saveDocument(configFile, doc);
+    }
+
+    private Document doc;
+
+    private Element createChild(String tagName, Element parent) {
+        Element elem = doc.createElement(tagName);
+        parent.appendChild(elem);
+        return elem;
     }
 
     private Document createNewDocument() throws ParserConfigurationException {
@@ -156,6 +190,21 @@ public class MagentoNewModule implements StageController {
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
         return transformer;
+    }
+
+    private void createHelper(File moduleRoot, String moduleName) throws Exception {
+        File helper = new File(moduleRoot, "Helper/Data.php");
+        helper.getParentFile().mkdirs();
+        helper.createNewFile();
+
+        PrintWriter writer = new PrintWriter(helper);
+        writer.println("<?php");
+        writer.println();
+        writer.println("class " + moduleName + "_Helper_Data extends Mage_Core_Helper_Abstract");
+        writer.println("{");
+        writer.println();
+        writer.println("}");
+        writer.close();
     }
 
     private DocumentBuilder builder = null;
