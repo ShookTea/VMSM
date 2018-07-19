@@ -86,6 +86,18 @@ public class Magento extends Module {
         Start.mainWindow.toolBar.getItems().addAll(toolbarElements);
     }
 
+    @Override
+    public void loopUpdate() {
+        VirtualMachine vm = Start.virtualMachineProperty.get();
+        String rootPath = getSetting(vm, "path");
+        if (rootPath == null) return;
+        File root = new File(rootPath);
+        if (!root.exists()) return;
+
+        File reports = new File(root, "var/report");
+        if (reports.exists()) MagentoReport.update(this, vm, reports);
+    }
+
     public String getAdminAddress(VirtualMachine vm) {
         try {
             String rootPath = getSetting(vm, "path");
