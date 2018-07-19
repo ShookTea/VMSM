@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -76,7 +75,7 @@ public class MagentoNewModule implements StageController {
     private void createAction() {
         VirtualMachine vm = Start.virtualMachineProperty.getValue();
         Magento magento = (Magento)Module.getModuleByName("Magento");
-        String path = magento.getSetting(vm, "path");
+        String path = magento.getStringSetting(vm, "path");
         if (path == null) {
             showError("You haven't configured Magento main directory!");
             return;

@@ -30,7 +30,7 @@ public class MagentoConfig implements StageController {
     }
 
     private void loadSetting(Module module, VirtualMachine vm, TextField field, String name) {
-        String value = module.getSetting(vm, name);
+        String value = module.getStringSetting(vm, name);
         if (value != null) {
             field.setText(value);
         }

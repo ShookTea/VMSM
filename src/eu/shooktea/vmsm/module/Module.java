@@ -30,8 +30,8 @@ public abstract class Module {
 
     public void loadFromJSON(JSONObject obj, VirtualMachine vm) {
         if (!settings.containsKey(vm)) settings.put(vm, new HashMap<>());
-        Map<String, String> values = settings.getOrDefault(vm, new HashMap<>());
-        obj.keySet().forEach(key -> values.put(key, obj.getString(key)));
+        Map<String, Object> values = settings.getOrDefault(vm, new HashMap<>());
+        obj.keySet().forEach(key -> values.put(key, obj.get(key)));
     }
 
     public Optional<Runnable> openConfigWindow() {
@@ -82,14 +82,20 @@ public abstract class Module {
             "Magento", new Magento()
     );
 
-    public void setSetting(VirtualMachine vm, String key, String value) {
+    public void setSetting(VirtualMachine vm, String key, Object value) {
         if (!settings.containsKey(vm)) {
             settings.put(vm, new HashMap<>());
         }
         settings.getOrDefault(vm, new HashMap<>()).put(key, value);
     }
 
-    public String getSetting(VirtualMachine vm, String key) {
+    public String getStringSetting(VirtualMachine vm, String key) {
+        Object ob = getSetting(vm, key);
+        if (ob == null) return null;
+        else return ob.toString();
+    }
+
+    public Object getSetting(VirtualMachine vm, String key) {
         return settings.getOrDefault(vm, new HashMap<>()).getOrDefault(key, null);
     }
 
@@ -98,5 +104,5 @@ public abstract class Module {
     }
 
     private BooleanProperty isInstalled;
-    private Map<VirtualMachine, Map<String, String>> settings = new HashMap<>();
+    private Map<VirtualMachine, Map<String, Object>> settings = new HashMap<>();
 }

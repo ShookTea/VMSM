@@ -89,7 +89,7 @@ public class Magento extends Module {
     @Override
     public void loopUpdate() {
         VirtualMachine vm = Start.virtualMachineProperty.get();
-        String rootPath = getSetting(vm, "path");
+        String rootPath = getStringSetting(vm, "path");
         if (rootPath == null) return;
         File root = new File(rootPath);
         if (!root.exists()) return;
@@ -100,7 +100,7 @@ public class Magento extends Module {
 
     public String getAdminAddress(VirtualMachine vm) {
         try {
-            String rootPath = getSetting(vm, "path");
+            String rootPath = getStringSetting(vm, "path");
             if (rootPath == null) throw new IOException("rootPath == null");
             File rootFile = new File(rootPath);
             if (!rootFile.exists()) throw new IOException("rootFile " + rootFile.toString() + "doesn't exist");
@@ -168,7 +168,7 @@ public class Magento extends Module {
 
     public static void deleteAllInVar(String... varSubdirs) {
         VirtualMachine current = Start.virtualMachineProperty.get();
-        String mainPath = getModuleByName("Magento").getSetting(current, "path");
+        String mainPath = getModuleByName("Magento").getStringSetting(current, "path");
         if (mainPath == null) return;
 
         File root = new File(mainPath);
@@ -231,8 +231,8 @@ public class Magento extends Module {
                 engine.documentProperty().removeListener(this);
                 String currentLocation = engine.getLocation();
                 if (currentLocation.endsWith(address) || currentLocation.endsWith(address + "/")) {
-                    String login = magento.getSetting(vm, "adm_login");
-                    String pass = magento.getSetting(vm, "adm_pass");
+                    String login = magento.getStringSetting(vm, "adm_login");
+                    String pass = magento.getStringSetting(vm, "adm_pass");
 
                     if (login != null)
                         engine.executeScript("document.getElementsByName('login[username]')[0].value = '" + login + "';");
