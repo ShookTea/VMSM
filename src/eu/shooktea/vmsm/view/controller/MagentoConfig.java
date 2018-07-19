@@ -41,6 +41,7 @@ public class MagentoConfig implements StageController {
         String dialogTitle = "Choose path";
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle(dialogTitle);
+        fileChooser.setInitialDirectory(Start.virtualMachineProperty.getValue().getMainPath());
         File file = fileChooser.showDialog(Start.primaryStage);
         if (file == null) return;
 
