@@ -3,8 +3,10 @@ package eu.shooktea.vmsm.view.controller;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.MagentoReport;
 import eu.shooktea.vmsm.module.Module;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -19,6 +21,7 @@ public class MagentoConfig implements StageController {
     @FXML private TextField adminLogin;
     @FXML private PasswordField adminPassword;
     @FXML private Label magentoInfo;
+    @FXML private ChoiceBox<MagentoReport.HoldTime> holdReports;
 
     @FXML
     private void initialize() {
@@ -27,6 +30,14 @@ public class MagentoConfig implements StageController {
         loadSetting(module, vm, magentoPath, "path");
         loadSetting(module, vm, adminLogin, "adm_login");
         loadSetting(module, vm, adminPassword, "adm_pass");
+
+        holdReports.setItems(MagentoReport.HoldTime.createList());
+        Long holdValue = (Long)module.getSetting(vm, "report_keep_time");
+        if (holdValue == null) holdReports.setValue(MagentoReport.HoldTime.MONTH);
+        else {
+            MagentoReport.HoldTime time = MagentoReport.HoldTime.fromTime(holdValue);
+            holdReports.setValue(time == null ? MagentoReport.HoldTime.MONTH : time);
+        }
     }
 
     private void loadSetting(Module module, VirtualMachine vm, TextField field, String name) {
@@ -72,6 +83,8 @@ public class MagentoConfig implements StageController {
 
         saveConf(adminLogin, "adm_login", module, vm);
         saveConf(adminPassword, "adm_pass", module, vm);
+
+        module.setSetting(vm, "report_keep_time", holdReports.getValue().timeMillis);
 
         Storage.saveAll();
         stage.close();

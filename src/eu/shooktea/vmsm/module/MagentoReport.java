@@ -4,6 +4,8 @@ import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MainWindow;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.paint.Paint;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,7 +40,14 @@ public class MagentoReport {
             allReports = new ArrayList<>();
         }
         if (MAX_TIME_DIFFERENCE == -1) {
-            Long value = (Long)module.getSetting(vm, "report_keep_time");
+            Object v = module.getSetting(vm, "report_keep_time");
+            Long value = null;
+            if (v instanceof Long) {
+                value = (Long)v;
+            }
+            else if (v instanceof Integer) {
+                value = ((Integer)v).longValue();
+            }
             MAX_TIME_DIFFERENCE = value == null ? MAX_TIME_DIFFERENCE_DEFAULT : value;
         }
         CHANGES = false;
@@ -116,4 +125,39 @@ public class MagentoReport {
     private static long MAX_TIME_DIFFERENCE = -1;
     private static long MAX_TIME_DIFFERENCE_DEFAULT = 1000L * 60 * 60 * 24 * 30; //30 days
     private static boolean CHANGES = false;
+
+    public enum HoldTime {
+        NEVER("Never", 0),
+        HOUR("1 hour", 1000L * 60 * 60),
+        TWO_HOURS("2 hours", HOUR.timeMillis * 2),
+        SIX_HOURS("6 hours", HOUR.timeMillis * 6),
+        DAY("1 day", HOUR.timeMillis * 24),
+        WEEK("1 week", DAY.timeMillis * 7),
+        MONTH("30 days", DAY.timeMillis * 30),
+        YEAR("1 year", DAY.timeMillis * 365),
+        ETERNITY("Eternity", Long.MAX_VALUE);
+
+        private HoldTime(String name, long timeMillis) {
+            this.name = name;
+            this.timeMillis = timeMillis;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+
+        public final String name;
+        public final long timeMillis;
+
+        public static ObservableList<HoldTime> createList() {
+            return FXCollections.observableArrayList(HoldTime.values());
+        }
+
+        public static HoldTime fromTime(long l) {
+            return Arrays.stream(HoldTime.values())
+                    .filter(t -> t.timeMillis == l)
+                    .findAny().get();
+        }
+    }
 }
