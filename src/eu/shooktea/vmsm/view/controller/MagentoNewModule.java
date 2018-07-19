@@ -1,7 +1,9 @@
 package eu.shooktea.vmsm.view.controller;
 
 import eu.shooktea.vmsm.Start;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 
 public class MagentoNewModule {
@@ -10,12 +12,15 @@ public class MagentoNewModule {
     @FXML private TextField nameField;
     @FXML private TextField fullModuleNameField;
     @FXML private TextField versionField;
+    @FXML private ChoiceBox<String> codePoolField;
 
     @FXML
     private void initialize() {
         namespaceField.setOnKeyTyped(e -> updateTextFields(false));
         nameField.setOnKeyTyped(e -> updateTextFields(false));
         fullModuleNameField.setOnKeyTyped(e -> updateTextFields(true));
+        codePoolField.setItems(FXCollections.observableArrayList("core", "community", "local"));
+        codePoolField.setValue("local");
     }
 
     private void updateTextFields(boolean fullNameUpdated) {
