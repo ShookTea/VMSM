@@ -207,11 +207,12 @@ public class Magento extends Module {
             @Override
             public void changed(ObservableValue<? extends Document> observable, Document oldValue, Document doc) {
                 engine.documentProperty().removeListener(this);
-                engine.executeScript(
-                        "document.getElementsByName('login[username]')[0].value = 'nkowalik';" +
-                        "document.getElementsByName('login[password]')[0].value = 'password';" +
-                        "document.getElementById('loginForm').submit();"
-                );
+                String login = magento.getSetting(vm, "adm_login");
+                String pass = magento.getSetting(vm, "adm_pass");
+
+                if (login != null) engine.executeScript("document.getElementsByName('login[username]')[0].value = '" + login + "';");
+                if (pass != null) engine.executeScript("document.getElementsByName('login[password]')[0].value = '" + pass + "';");
+                if (login != null && pass != null) engine.executeScript("document.getElementById('loginForm').submit();");
             }
         };
         engine.documentProperty().addListener(listener);
