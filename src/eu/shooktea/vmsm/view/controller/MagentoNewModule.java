@@ -69,6 +69,8 @@ public class MagentoNewModule implements StageController {
             return;
         }
         File root = new File(path);
+        File codeRoot = new File(root, "app/code");
+        File moduleDeclarationRoot = new File(root, "app/etc/modules");
 
         String namespace = namespaceField.getText().trim();
         String moduleName = nameField.getText().trim();
@@ -79,6 +81,12 @@ public class MagentoNewModule implements StageController {
         }
         String fullModuleName = namespace + "_" + moduleName;
         String codePool = codePoolField.getValue();
+
+        File moduleRoot = new File(codeRoot, codePool + "/" + namespace + "/" + moduleName);
+        if (moduleRoot.exists()) {
+            showError("Module " + fullModuleName + " exists in " + codePool + " code pool already.");
+            return;
+        }
     }
 
     private void showError(String message) {
