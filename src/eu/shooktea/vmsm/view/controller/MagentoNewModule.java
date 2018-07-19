@@ -147,12 +147,22 @@ public class MagentoNewModule implements StageController {
         Element version = createChild("version", modulesM);
 
         Element global = createChild("global", config);
+
         if (helper.isSelected()) {
             Element helpers = createChild("helpers", global);
             Element helperM = createChild(moduleName.toLowerCase(), helpers);
             Element clazz = createChild("class", helperM);
             clazz.setTextContent(moduleName + "_Helper");
             createHelper(moduleRoot, moduleName);
+        }
+
+        if (installer.isSelected()) {
+            Element resources = createChild("resources", global);
+            Element mSetup = createChild(moduleName.toLowerCase() + "_setup", resources);
+            Element setup = createChild("setup", mSetup);
+            Element module = createChild("module", setup);
+            module.setTextContent(moduleName);
+            createInstaller(moduleRoot, moduleName, versionText);
         }
 
         version.setTextContent(versionText);
@@ -199,11 +209,25 @@ public class MagentoNewModule implements StageController {
 
         PrintWriter writer = new PrintWriter(helper);
         writer.println("<?php");
-        writer.println();
+        writer.println("");
         writer.println("class " + moduleName + "_Helper_Data extends Mage_Core_Helper_Abstract");
         writer.println("{");
-        writer.println();
+        writer.println("\t");
         writer.println("}");
+        writer.close();
+    }
+
+    private void createInstaller(File moduleRoot, String moduleName, String version) throws Exception {
+        File installer = new File(moduleRoot, "sql/" + moduleName.toLowerCase() + "_setup/install-" + version + ".php");
+        installer.getParentFile().mkdirs();
+        installer.createNewFile();
+
+        PrintWriter writer = new PrintWriter(installer);
+        writer.println("<?php");
+        writer.println("$installer = $this;");
+        writer.println("$installer->startSetup();");
+        writer.println("");
+        writer.println("$installer->endSetup();");
         writer.close();
     }
 
