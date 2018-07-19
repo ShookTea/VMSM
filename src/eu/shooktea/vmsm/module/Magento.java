@@ -143,7 +143,8 @@ public class Magento extends Module {
         Menu removeSubmenu = new Menu("Delete...", Start.createMenuImage("trash_full.png"),
                 deleteAll, new SeparatorMenuItem(), deleteCache2, deleteLogs, deleteReports, deleteSession);
 
-        MenuItem loginAsAdmin = new MenuItem("Login as administrator");
+        MenuItem loginAsAdmin = new MenuItem("Login to admin panel", Start.createMenuImage("user.png"));
+        loginAsAdmin.setAccelerator(KeyCombination.valueOf("Ctrl+A"));
         loginAsAdmin.setOnAction(e -> loginAsAdmin());
 
         return new Menu("Magento", Start.createMenuImage("magento.png"),
@@ -185,10 +186,16 @@ public class Magento extends Module {
         Tooltip.install(removeCache, removeCacheTip);
         removeCache.setOnMouseClicked(e -> deleteAllInVar("cache"));
 
+        ImageView loginAsAdmin = Start.createToolbarImage("user.png");
+        Tooltip loginAsAdminTip = new Tooltip("Login to admin panel");
+        Tooltip.install(loginAsAdmin, loginAsAdminTip);
+        loginAsAdmin.setOnMouseClicked(e -> loginAsAdmin());
+
         return Arrays.asList(
                 new Separator(Orientation.VERTICAL),
                 Start.createToolbarImage("magento.png"),
-                removeCache
+                removeCache,
+                loginAsAdmin
         );
     }
 
