@@ -206,13 +206,20 @@ public class Magento extends Module {
         final ChangeListener<Document> listener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends Document> observable, Document oldValue, Document doc) {
+                if (doc == null) return;
                 engine.documentProperty().removeListener(this);
-                String login = magento.getSetting(vm, "adm_login");
-                String pass = magento.getSetting(vm, "adm_pass");
+                String currentLocation = engine.getLocation();
+                if (currentLocation.endsWith(address) || currentLocation.endsWith(address + "/")) {
+                    String login = magento.getSetting(vm, "adm_login");
+                    String pass = magento.getSetting(vm, "adm_pass");
 
-                if (login != null) engine.executeScript("document.getElementsByName('login[username]')[0].value = '" + login + "';");
-                if (pass != null) engine.executeScript("document.getElementsByName('login[password]')[0].value = '" + pass + "';");
-                if (login != null && pass != null) engine.executeScript("document.getElementById('loginForm').submit();");
+                    if (login != null)
+                        engine.executeScript("document.getElementsByName('login[username]')[0].value = '" + login + "';");
+                    if (pass != null)
+                        engine.executeScript("document.getElementsByName('login[password]')[0].value = '" + pass + "';");
+                    if (login != null && pass != null)
+                        engine.executeScript("document.getElementById('loginForm').submit();");
+                }
             }
         };
         engine.documentProperty().addListener(listener);
