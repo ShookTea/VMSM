@@ -3,6 +3,8 @@ package eu.shooktea.vmsm.module;
 import eu.shooktea.vmsm.VirtualMachine;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +22,6 @@ public class MagentoReport {
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .map(s -> new File(reportsDir, s))
-                .filter(File::exists)
                 .collect(Collectors.toCollection(ArrayList::new));
 
         List<File> newReports = new ArrayList<>();
@@ -29,6 +30,14 @@ public class MagentoReport {
             reportFiles.add(reportFile);
             newReports.add(reportFile);
             module.setSetting(vm, "report_" + reportFile.getName() + "_time", Long.toString(System.currentTimeMillis()));
+            try {
+                String report = new String(Files.readAllBytes(reportFile.toPath())).trim();
+                module.setSetting(vm, "report_" + reportFile.getName() + "_text", report);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+
         }
 
         reportsString = reportFiles.stream()
@@ -37,6 +46,7 @@ public class MagentoReport {
                     if (checkReportTime(module, vm, num)) return num;
                     else {
                         module.removeSetting(vm, "report_" + num + "_time");
+                        module.removeSetting(vm, "report_" + num + "_text");
                         return null;
                     }
                 })
