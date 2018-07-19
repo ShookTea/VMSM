@@ -1,5 +1,5 @@
 # VMSM
-[![Semver](http://img.shields.io/VMSM/1.0.png)](http://semver.org/VMSM/v1.0.html)
+![Semver](http://img.shields.io/VMSM/1.0.png)
 
 Virtual Machine Server Manager
 
@@ -13,6 +13,11 @@ Virtual Machine Server Manager
     * [Checking and changing VM state](#checking-and-changing-vm-state)
     * [Switching between VMs](#switching-between-vms)
     * [Editing and deleting VMs](#editing-and-deleting-vms)
+    * [Managing modules](#managing-modules)
+1. [Magento](#magento)
+    * [Magento Module configuration](#magento-module-configuration)
+    * [Clearing var files](#clearing-var-files)
+    * [Login to administrator panel](#login-to-administrator-panel)
 
 ## Installation
 **System requirements:**
@@ -90,3 +95,45 @@ In VM Manager screen (`Virtual machines/VM Manager`) you can see more detailed l
 * To remove existing VM, right-click entry in table and confirm your decision.
 
 Editing and removing VMs are permanent actions.
+
+### Managing modules
+After choosing virtual machine, open it's menu and select `Managing modules`. Here you can turn on and off modules
+available for your VM and configure them.
+
+## Magento
+
+Magento is an open-source e-commerce platform written in PHP. Magento module can work with Vagrant VM.
+
+After successful installation and configuration of module, new menu and toolbar icons are displayed.
+
+### Magento Module configuration
+
+![Magento config](doc_img/magento_config.png)
+
+* **Path to Magento root directory** is required to use most of the features of Magento module. Root directory contains
+`index.php` file, `app/code` and `var` directories.
+* **Admin login** and **Admin password** to Magento admin panel are not required, but writing them allows VMSM to autologin
+when you need.
+
+*Important note*: For now, modules configuration (including password to admin panel) is stored in plain text file. If
+your password needs to be safe (for example because you're using it in other places as well), do not write it in module 
+configuration.
+
+### Clearing var files
+
+One of the most often removed files in Magento are cache files. You can delete them either by pressing trash button
+on toolbar (next to Magento icon), using `Ctrl+D` shortcut or in `Magento/Delete cache files` menu. You can also delete 
+cache, logs, sessions and exception reports in `Magento/Delete...` menu. `Delete all` removes all of these files.
+
+### Login to administrator panel
+
+After pressing green person icon in toolbar, selecting `Magento/Login to admin panel` menu or using `Ctrl+A` shortcut
+you will be redirected to Magento admin panel. Address to that panel is taken from `MAGENTO_ROOT/app/etc/local.xml` file,
+from `config/admin/routers/adminhtml/args/frontName` node, and appended to VM main URL. For example, if your main URL
+is `https://magento.local` and front name in `local.xml` file is declared as `adm`, then after pressing Login button you will
+be redirected to `https://magento.local/adm` webpage. If front name is not declared, it's default value is `admin`.
+
+If you have stored your login and/or password in [configuration](#magento-module-configuration), pressing Login button
+will also automatically fill input fields in login form. If you've stored both login and password, form will be also
+submitted, which means that after correct configuration of module pressing that button will log you in to administrator
+panel automatically.
