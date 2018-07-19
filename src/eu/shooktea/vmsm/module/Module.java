@@ -47,6 +47,8 @@ public abstract class Module {
     public void afterModuleTurnedOff() {}
     /** regular action after clearing toolbar */
     public void reloadToolbar() {}
+    /** update run every 5 seconds */
+    public void loopUpdate() {}
 
     @Override
     public boolean equals(Object ob) {

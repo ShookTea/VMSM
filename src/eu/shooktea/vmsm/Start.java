@@ -81,7 +81,7 @@ public class Start extends Application {
         Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, (ev) -> {
             if (virtualMachineProperty.isNotNull().get()) virtualMachineProperty.get().update();
             mainWindow.reloadGUI();
-        }), new KeyFrame(Duration.seconds(10)));
+        }), new KeyFrame(Duration.seconds(5)));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
         ChangeListener<VirtualMachine> cl = ((observable, oldValue, newValue) -> {

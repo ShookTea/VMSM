@@ -118,6 +118,7 @@ public class VirtualMachine {
 
     public void update() {
         getType().update(this);
+        modules.forEach(Module::loopUpdate);
     }
 
     private ReadOnlyStringProperty name;
