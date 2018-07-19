@@ -9,6 +9,7 @@ public class MagentoNewModule {
     @FXML private TextField namespaceField;
     @FXML private TextField nameField;
     @FXML private TextField fullModuleNameField;
+    @FXML private TextField versionField;
 
     @FXML
     private void initialize() {
