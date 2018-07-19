@@ -51,9 +51,14 @@ public class MagentoReport {
                     }
                     MagentoReport newReport = new MagentoReport(name, timestamp, text);
                     reports.add(newReport);
+                    if (timestamp - file.lastModified() < 1000 * 60) notifyNewReport(newReport); //not notify if report is older than one minute
                     CHANGES = true;
                 });
         storeReportsInConfig(module, vm, reports);
+    }
+
+    private static void notifyNewReport(MagentoReport report) {
+
     }
 
     private static void storeReportsInConfig(Magento module, VirtualMachine vm, List<MagentoReport> reports) {
