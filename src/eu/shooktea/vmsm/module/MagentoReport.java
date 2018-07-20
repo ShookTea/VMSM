@@ -1,11 +1,8 @@
 package eu.shooktea.vmsm.module;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.view.controller.MainWindow;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
@@ -28,10 +24,8 @@ public class MagentoReport {
         this.name = new SimpleStringProperty(name);
         this.timestamp = new SimpleLongProperty(timestamp);
         this.text = new SimpleStringProperty(text);
-        this.stringDate = new SimpleStringProperty(
-                LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), TimeZone.getDefault().toZoneId())
-                        .format(DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss"))
-        );
+        this.time = new SimpleObjectProperty(
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), TimeZone.getDefault().toZoneId()));
     }
 
     public String getName() {
@@ -58,18 +52,18 @@ public class MagentoReport {
         return text;
     }
 
-    public String getStringDate() {
-        return stringDate.getValue();
+    public LocalDateTime getTime() {
+        return time.getValue();
     }
 
-    public ReadOnlyStringProperty stringDateProperty() {
-        return stringDate;
+    public ReadOnlyObjectProperty<LocalDateTime> timeProperty() {
+        return time;
     }
 
     private final ReadOnlyStringProperty name;
     private final ReadOnlyLongProperty timestamp;
     private final ReadOnlyStringProperty text;
-    private final ReadOnlyStringProperty stringDate;
+    private final ReadOnlyObjectProperty<LocalDateTime> time;
 
     public static void update(Magento module, VirtualMachine vm, File reportsDir) {
         if (previousMachine != vm) {

@@ -7,9 +7,13 @@ import eu.shooktea.vmsm.module.MagentoReport;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class MagentoReportsList {
 
@@ -31,8 +35,21 @@ public class MagentoReportsList {
         ObservableList<TableColumn<MagentoReport, ?>> columns = exceptionTable.getColumns();
         columns.clear();
 
-        TableColumn<MagentoReport, String> date = new TableColumn<>("Time");
-        date.setCellValueFactory(new PropertyValueFactory<>("stringDate"));
+        TableColumn<MagentoReport, LocalDateTime> date = new TableColumn<>("Time");
+        date.setCellValueFactory(new PropertyValueFactory<>("time"));
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss");
+        date.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(LocalDateTime item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                }
+                else {
+                    setText(dateFormatter.format(item));
+                }
+            }
+        });
 
         columns.add(date);
 
