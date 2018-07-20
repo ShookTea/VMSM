@@ -52,7 +52,10 @@ public class MagentoReportsList {
         TableColumn<MagentoReport, String> text = new TableColumn<>("Text");
         text.setCellValueFactory(new PropertyValueFactory<>("message"));
 
-        columns.addAll(date, text);
+        TableColumn<MagentoReport, String> name = new TableColumn<>("File name");
+        name.setCellValueFactory(new PropertyValueFactory<>("fileName"));
+
+        columns.addAll(date, text, name);
 
         exceptionTable.setItems(MagentoReport.allReports);
     }

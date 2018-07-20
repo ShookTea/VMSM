@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.module;
 
+import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.binding.Bindings;
@@ -61,11 +62,27 @@ public class MagentoReport {
     }
 
     public String getMessage() {
-        return getText().replaceFirst("^.:.:\\{.:.;.:.:\"([^\"]*)\"[\\s\\S]*$", "$1");
+        return getText().replaceFirst("^.:\\d+:\\{.:\\d+;.:\\d*:\"([^\"]*)\"[\\s\\S]*$", "$1");
     }
 
     public ReadOnlyStringProperty messageProperty() {
         return new SimpleStringProperty(getMessage());
+    }
+
+    public String getFileName() {
+        Magento magento = (Magento)Magento.getModuleByName("Magento");
+        File root = new File(magento.getStringSetting(Start.virtualMachineProperty.get(), "path"));
+        File report = new File(root, "var/report/" + getName());
+        if (report.exists()) {
+            return report.toString();
+        }
+        else {
+            return "(removed) " + report.toString();
+        }
+    }
+
+    public ReadOnlyStringProperty fileNameProperty() {
+        return new SimpleStringProperty(getFileName());
     }
 
     private final ReadOnlyStringProperty name;
