@@ -62,10 +62,5 @@
          </children>
       </VBox>
       <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-      <Label fx:id="statusLabel">
-         <VBox.margin>
-            <Insets left="5.0" />
-         </VBox.margin>
-      </Label>
    </children>
 </VBox>

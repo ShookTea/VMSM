@@ -72,18 +72,10 @@ public class MagentoReport {
                     }
                     MagentoReport newReport = new MagentoReport(name, timestamp, text);
                     allReports.add(newReport);
-                    notifyNewReport(newReport);
+                    notifyReports.add(newReport);
                     CHANGES = true;
                 });
         storeReportsInConfig(module, vm, allReports);
-    }
-
-    private static void notifyNewReport(MagentoReport report) {
-        notifyReports.add(report);
-        MainWindow mw = Start.mainWindow;
-        mw.statusLabel.setText(notifyReports.size() + " new exception report" + (notifyReports.size() > 1 ? "s" : ""));
-        mw.statusLabel.setTextFill(Paint.valueOf("RED"));
-        mw.statusLabel.setOnMouseClicked(e -> {});
     }
 
     public static ObservableList<MagentoReport> notifyReports = FXCollections.observableArrayList();
