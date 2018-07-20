@@ -106,7 +106,7 @@ public class Vagrant extends VMType {
                     while ((line = input.readLine()) != null) {
                         if (!isMachineStateChanging && line.contains("The VM is running."))
                             statusProperty.setValue(Status.RUNNING);
-                        if (!isMachineStateChanging &&line.contains("The VM is powered off."))
+                        if (!isMachineStateChanging && (line.contains("The VM is powered off.") || line.contains("The VM is in an aborted state.")))
                             statusProperty.setValue(Status.STOPPED);
                     }
                     process.waitFor();
