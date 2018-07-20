@@ -50,15 +50,7 @@ public class MagentoReportsList {
         });
 
         TableColumn<MagentoReport, String> text = new TableColumn<>("Text");
-        text.setCellValueFactory(new PropertyValueFactory<>("text"));
-        text.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) setText(null);
-                else setText(item.replaceFirst("^.:.:\\{.:.;.:.:\"([^\"]*)\"[\\s\\S]*$", "$1"));
-            }
-        });
+        text.setCellValueFactory(new PropertyValueFactory<>("message"));
 
         columns.addAll(date, text);
 

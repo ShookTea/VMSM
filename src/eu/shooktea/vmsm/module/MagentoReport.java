@@ -60,6 +60,14 @@ public class MagentoReport {
         return time;
     }
 
+    public String getMessage() {
+        return getText().replaceFirst("^.:.:\\{.:.;.:.:\"([^\"]*)\"[\\s\\S]*$", "$1");
+    }
+
+    public ReadOnlyStringProperty messageProperty() {
+        return new SimpleStringProperty(getMessage());
+    }
+
     private final ReadOnlyStringProperty name;
     private final ReadOnlyLongProperty timestamp;
     private final ReadOnlyStringProperty text;
