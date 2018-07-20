@@ -1,5 +1,5 @@
 # VMSM
-![Semver](http://img.shields.io/VMSM/1.0.png)
+![VMSM version 1.1](http://img.shields.io/VMSM/1.1.png)
 
 Virtual Machine Server Manager
 
