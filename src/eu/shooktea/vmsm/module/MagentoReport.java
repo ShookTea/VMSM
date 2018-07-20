@@ -4,6 +4,10 @@ import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MainWindow;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Paint;
@@ -36,8 +40,8 @@ public class MagentoReport {
     public static void update(Magento module, VirtualMachine vm, File reportsDir) {
         if (previousMachine != vm) {
             previousMachine = vm;
-            notifyReports = new ArrayList<>();
-            allReports = new ArrayList<>();
+            notifyReports.clear();
+            allReports.clear();
         }
         if (MAX_TIME_DIFFERENCE == -1) {
             Object v = module.getSetting(vm, "report_keep_time");
@@ -82,9 +86,14 @@ public class MagentoReport {
         mw.statusLabel.setOnMouseClicked(e -> {});
     }
 
-    private static List<MagentoReport> notifyReports = new ArrayList<>();
-    private static List<MagentoReport> allReports = new ArrayList<>();
+    public static ObservableList<MagentoReport> notifyReports = FXCollections.observableArrayList();
+    public static List<MagentoReport> allReports = new ArrayList<>();
+    public static IntegerProperty newReportsCount = new SimpleIntegerProperty();
     private static VirtualMachine previousMachine = null;
+
+    static {
+        newReportsCount.bind(Bindings.createIntegerBinding(() -> notifyReports.size(), notifyReports));
+    }
 
     private static void storeReportsInConfig(Magento module, VirtualMachine vm, List<MagentoReport> reports) {
         JSONArray array = new JSONArray();

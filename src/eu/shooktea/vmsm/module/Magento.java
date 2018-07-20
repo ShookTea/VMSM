@@ -11,9 +11,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.web.WebEngine;
+import org.reactfx.value.Val;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -205,11 +207,29 @@ public class Magento extends Module {
         Tooltip.install(loginAsAdmin, loginAsAdminTip);
         loginAsAdmin.setOnMouseClicked(e -> loginAsAdmin());
 
+        ImageView reportsInfo = Start.createToolbarImage("reports/0.png");
+        Tooltip reportsInfoTip = new Tooltip("There are no new exception reports");
+        Tooltip.install(reportsInfo, reportsInfoTip);
+        reportsInfo.imageProperty().bind(
+                Val.map(MagentoReport.newReportsCount, number -> { if (((Integer)number) > 3) return 3; else return (Integer)number; })
+                .map(number -> { if (number == 3) return "3plus.png"; else return number + ".png"; })
+                .map(fileString -> "/eu/shooktea/vmsm/resources/reports/" + fileString)
+                .map(path -> new Image(Magento.class.getResourceAsStream(path)))
+        );
+        reportsInfoTip.textProperty().bind(Val.map(MagentoReport.newReportsCount, number -> (Integer)number )
+                .map(number -> {
+                    if (number == 0) return "There are no new exception reports";
+                    else if (number == 1) return "There is one new exception report";
+                    else return "There are " + number + " new exception reports";
+                })
+        );
+
         return Arrays.asList(
                 new Separator(Orientation.VERTICAL),
                 Start.createToolbarImage("magento.png"),
                 removeCache,
-                loginAsAdmin
+                loginAsAdmin,
+                reportsInfo
         );
     }
 
