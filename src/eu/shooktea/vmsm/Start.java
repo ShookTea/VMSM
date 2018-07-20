@@ -131,7 +131,7 @@ public class Start extends Application {
 
     public static ObjectProperty<VirtualMachine> virtualMachineProperty = new SimpleObjectProperty<>();
 
-    public static <T extends Region, C>void createNewWindow(String fxmlPath, String title, boolean isModal) {
+    public static <T extends Region, C> C createNewWindow(String fxmlPath, String title, boolean isModal) {
         try {
             URL location = Start.class.getResource(fxmlPath);
             FXMLLoader loader = new FXMLLoader(location);
@@ -152,9 +152,11 @@ public class Start extends Application {
             else {
                 stage.show();
             }
+            return controller;
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
+            return null;
         }
     }
 }

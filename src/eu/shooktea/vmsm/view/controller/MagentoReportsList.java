@@ -6,10 +6,7 @@ import eu.shooktea.vmsm.module.Magento;
 import eu.shooktea.vmsm.module.MagentoReport;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.time.LocalDateTime;
@@ -27,11 +24,13 @@ public class MagentoReportsList {
     private void initialize() {
         vm = Start.virtualMachineProperty.get();
         magento = (Magento)Magento.getModuleByName("Magento");
-        MagentoReport.HoldTime time = MagentoReport.HoldTime.fromTime(MagentoReport.MAX_TIME_DIFFERENCE);
-        if (time == MagentoReport.HoldTime.NEVER) timeLabel.setText("");
-        else if (time == MagentoReport.HoldTime.ETERNITY) timeLabel.setText("From eternity");
-        else timeLabel.setText("From the last " + time.toString());
+        initColumns();
+        initTableEvents();
+        initLabel();
+        exceptionTable.setItems(MagentoReport.allReports);
+    }
 
+    private void initColumns() {
         ObservableList<TableColumn<MagentoReport, ?>> columns = exceptionTable.getColumns();
         columns.clear();
 
@@ -56,8 +55,21 @@ public class MagentoReportsList {
         name.setCellValueFactory(new PropertyValueFactory<>("fileName"));
 
         columns.addAll(date, text, name);
+    }
 
-        exceptionTable.setItems(MagentoReport.allReports);
+    private void initTableEvents() {
+        exceptionTable.setRowFactory(tv -> {
+            TableRow<MagentoReport> row = new TableRow<>();
+            row.setOnMouseClicked(event -> MagentoReportStackTrace.openStackTraceWindow(row.getItem()));
+            return row;
+        });
+    }
+
+    private void initLabel() {
+        MagentoReport.HoldTime time = MagentoReport.HoldTime.fromTime(MagentoReport.MAX_TIME_DIFFERENCE);
+        if (time == MagentoReport.HoldTime.NEVER) timeLabel.setText("");
+        else if (time == MagentoReport.HoldTime.ETERNITY) timeLabel.setText("From eternity");
+        else timeLabel.setText("From the last " + time.toString());
     }
 
     public static void openMagentoReportsList(Object... lambdaArgs) {
