@@ -42,16 +42,25 @@ public class MagentoReportsList {
             @Override
             protected void updateItem(LocalDateTime item, boolean empty) {
                 super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText(null);
-                }
+                if (item == null || empty) setText(null);
                 else {
                     setText(dateFormatter.format(item));
                 }
             }
         });
 
-        columns.add(date);
+        TableColumn<MagentoReport, String> text = new TableColumn<>("Text");
+        text.setCellValueFactory(new PropertyValueFactory<>("text"));
+        text.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) setText(null);
+                else setText(item.replaceFirst("^.:.:\\{.:.;.:.:\"([^\"]*)\"[\\s\\S]*$", "$1"));
+            }
+        });
+
+        columns.addAll(date, text);
 
         exceptionTable.setItems(MagentoReport.allReports);
     }
