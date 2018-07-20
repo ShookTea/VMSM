@@ -32,7 +32,15 @@ public class MagentoConfig implements StageController {
         loadSetting(module, vm, adminPassword, "adm_pass");
 
         holdReports.setItems(MagentoReport.HoldTime.createList());
-        Long holdValue = (Long)module.getSetting(vm, "report_keep_time");
+        Long holdValue = null;
+        Object readHoldValue = module.getSetting(vm, "report_keep_time");
+        if (readHoldValue instanceof Long) {
+            holdValue = (Long)readHoldValue;
+        }
+        if (readHoldValue instanceof Integer) {
+            holdValue = ((Integer)readHoldValue).longValue();
+        }
+
         if (holdValue == null) holdReports.setValue(MagentoReport.HoldTime.MONTH);
         else {
             MagentoReport.HoldTime time = MagentoReport.HoldTime.fromTime(holdValue);

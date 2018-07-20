@@ -19,6 +19,7 @@ Virtual Machine Server Manager
     * [Clearing var files](#clearing-var-files)
     * [Login to administrator panel](#login-to-administrator-panel)
     * [Creation of modules](#creation-of-modules)
+    * [Exception notifications](#exception-notifications)
 
 ## Installation
 **System requirements:**
@@ -112,9 +113,11 @@ After successful installation and configuration of module, new menu and toolbar 
 ![Magento config](doc_img/magento_config.png)
 
 * **Path to Magento root directory** is required to use most of the features of Magento module. Root directory contains
-`index.php` file, `app/code` and `var` directories.
+    `index.php` file, `app/code` and `var` directories.
 * **Admin login** and **Admin password** to Magento admin panel are not required, but writing them allows VMSM to autologin
-when you need.
+    when you need.
+* **Hold exception reports** - displays how long after removing [exception report file](#exception-notifications) information
+    about that exception will be kept by VMSM.
 
 *Important note*: For now, modules configuration (including password to admin panel) is stored in plain text file. If
 your password needs to be safe (for example because you're using it in other places as well), do not write it in module 
