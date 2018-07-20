@@ -175,3 +175,10 @@ class Namespace_ModuleName_Helper_Data extends Mage_Core_Helper_Abstract
 * Configuration file in `etc/config.xml` will contain all basic information about modules, including configuration of models, blocks, helpers and installers.
 * If `Activate module` is selected, module will be marked as active by default. Turning it on in Magento configuration won't be necessary.
 * If `Remove cache after creation` is selected, cache files will be removed after creating new module.
+
+### Exception notifications
+
+Every time new exception report is created in `MAGENTO ROOT/var/report` you will get a notification in toolbar - small 
+icon will turn red and display number of exceptions. After pressing that icon or `Magento/Exception reports...` menu,
+list of exceptions will appear with their time, message and report file. After pressing any of these exceptions
+stack trace will be displayed.

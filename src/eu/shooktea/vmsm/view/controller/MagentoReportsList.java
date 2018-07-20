@@ -73,6 +73,7 @@ public class MagentoReportsList {
     }
 
     public static void openMagentoReportsList(Object... lambdaArgs) {
+        MagentoReport.notifyReports.clear();
         Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/MagentoReportsList.fxml", "Exception reports", true);
     }
 }
