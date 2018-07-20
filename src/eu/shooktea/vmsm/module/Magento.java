@@ -4,6 +4,7 @@ import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MagentoConfig;
 import eu.shooktea.vmsm.view.controller.MagentoNewModule;
+import eu.shooktea.vmsm.view.controller.MagentoReportsList;
 import eu.shooktea.vmsm.view.controller.MainWindow;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -163,8 +164,13 @@ public class Magento extends Module {
         newMagentoModule.setAccelerator(KeyCombination.valueOf("Ctrl+Shift+N"));
         newMagentoModule.setOnAction(MagentoNewModule::openMagentoNewModuleWindow);
 
+        MenuItem reportsList = new MenuItem("Exception reports...");
+        reportsList.setOnAction(MagentoReportsList::openMagentoReportsList);
+
         return new Menu("Magento", Start.createMenuImage("magento.png"),
-                deleteCache, removeSubmenu, loginAsAdmin, newMagentoModule
+                deleteCache, removeSubmenu, loginAsAdmin,
+                new SeparatorMenuItem(),
+                newMagentoModule, reportsList
         );
     }
 
@@ -223,6 +229,8 @@ public class Magento extends Module {
                     else return "There are " + number + " new exception reports";
                 })
         );
+        reportsInfo.setOnMouseClicked(MagentoReportsList::openMagentoReportsList);
+        reportsInfo.setPickOnBounds(true);
 
         return Arrays.asList(
                 new Separator(Orientation.VERTICAL),
