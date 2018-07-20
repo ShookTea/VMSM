@@ -6,42 +6,75 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MainWindow;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.IntegerBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.paint.Paint;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 public class MagentoReport {
     private MagentoReport(String name, long timestamp, String text) {
-        this.name = name;
-        this.timestamp = timestamp;
-        this.text = text;
+        this.name = new SimpleStringProperty(name);
+        this.timestamp = new SimpleLongProperty(timestamp);
+        this.text = new SimpleStringProperty(text);
+        this.stringDate = new SimpleStringProperty(
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), TimeZone.getDefault().toZoneId())
+                        .format(DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss"))
+        );
     }
 
     public String getName() {
+        return name.getValue();
+    }
+
+    public ReadOnlyStringProperty nameProperty() {
         return name;
     }
 
-    public final String name;
-    public final long timestamp;
-    public final String text;
+    public long getTimestamp() {
+        return timestamp.getValue();
+    }
+
+    public ReadOnlyLongProperty timestampProperty() {
+        return timestamp;
+    }
+
+    public String getText() {
+        return text.getValue();
+    }
+
+    public ReadOnlyStringProperty textProperty() {
+        return text;
+    }
+
+    public String getStringDate() {
+        return stringDate.getValue();
+    }
+
+    public ReadOnlyStringProperty stringDateProperty() {
+        return stringDate;
+    }
+
+    private final ReadOnlyStringProperty name;
+    private final ReadOnlyLongProperty timestamp;
+    private final ReadOnlyStringProperty text;
+    private final ReadOnlyStringProperty stringDate;
 
     public static void update(Magento module, VirtualMachine vm, File reportsDir) {
         if (previousMachine != vm) {
             previousMachine = vm;
             notifyReports.clear();
-            allReports.clear();
         }
         if (MAX_TIME_DIFFERENCE == -1) {
             Object v = module.getSetting(vm, "report_keep_time");
@@ -55,7 +88,8 @@ public class MagentoReport {
             MAX_TIME_DIFFERENCE = value == null ? MAX_TIME_DIFFERENCE_DEFAULT : value;
         }
         CHANGES = false;
-        allReports = getReportsFromConfig(module, vm, reportsDir);
+        allReports.clear();
+        allReports.addAll(getReportsFromConfig(module, vm, reportsDir));
         List<String> reportNames = allReports.stream()
                 .map(MagentoReport::getName)
                 .collect(Collectors.toList());
@@ -79,7 +113,7 @@ public class MagentoReport {
     }
 
     public static ObservableList<MagentoReport> notifyReports = FXCollections.observableArrayList();
-    public static List<MagentoReport> allReports = new ArrayList<>();
+    public static ObservableList<MagentoReport> allReports = FXCollections.observableArrayList();
     public static IntegerProperty newReportsCount = new SimpleIntegerProperty();
     private static VirtualMachine previousMachine = null;
 
@@ -91,21 +125,21 @@ public class MagentoReport {
         JSONArray array = new JSONArray();
         for (MagentoReport report : reports) {
             JSONObject obj = new JSONObject();
-            obj.put("name", report.name);
-            obj.put("timestamp", report.timestamp);
-            obj.put("text", report.text);
+            obj.put("name", report.getName());
+            obj.put("timestamp", report.getTimestamp());
+            obj.put("text", report.getText());
             array.put(obj);
         }
         module.setSetting(vm, "reports", array);
         if (CHANGES) Storage.saveAll();
     }
 
-    private static List<MagentoReport> getReportsFromConfig(Magento module, VirtualMachine vm, File reportsDir) {
+    private static ObservableList<MagentoReport> getReportsFromConfig(Magento module, VirtualMachine vm, File reportsDir) {
         Object reportsObj = module.getSetting(vm, "reports");
         if (reportsObj == null) reportsObj = new JSONArray();
         if (!(reportsObj instanceof JSONArray)) throw new RuntimeException("Magento reports are not array; reports.toString = \"" + reportsObj.toString() + "\"");
         JSONArray reports = (JSONArray)reportsObj;
-        List<MagentoReport> reportsFromConfig = new ArrayList<>();
+        ObservableList<MagentoReport> reportsFromConfig = FXCollections.observableArrayList();
         long currentTimestamp = System.currentTimeMillis();
         reports.iterator().forEachRemaining(obj -> {
             JSONObject json = (JSONObject)obj;
@@ -123,7 +157,7 @@ public class MagentoReport {
         return reportsFromConfig;
     }
 
-    private static long MAX_TIME_DIFFERENCE = -1;
+    public static long MAX_TIME_DIFFERENCE = -1;
     private static long MAX_TIME_DIFFERENCE_DEFAULT = 1000L * 60 * 60 * 24 * 30; //30 days
     private static boolean CHANGES = false;
 
