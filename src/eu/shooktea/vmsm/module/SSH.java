@@ -3,6 +3,7 @@ package eu.shooktea.vmsm.module;
 import com.jcraft.jsch.*;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.controller.SshConfig;
 import eu.shooktea.vmsm.view.controller.SshTerminal;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
@@ -13,6 +14,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class SSH extends Module {
     @Override
@@ -23,6 +25,11 @@ public class SSH extends Module {
     @Override
     public String getDescription() {
         return "SSH client";
+    }
+
+    @Override
+    public Optional<Runnable> openConfigWindow() {
+        return Optional.of(SshConfig::openSshConfigWindow);
     }
 
     @Override
