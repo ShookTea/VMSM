@@ -54,9 +54,6 @@ public class BrowserProgressBar implements LoadListener {
         return somethingHasChanged;
     }
 
-    private int framesLoading = 0;
-    private int framesLoaded = 0;
-    private boolean isMainFrameLoaded = false;
     private BooleanProperty somethingHasChanged = new SimpleBooleanProperty(false);
     private DoubleProperty progress = new SimpleDoubleProperty(0.0);
 }
