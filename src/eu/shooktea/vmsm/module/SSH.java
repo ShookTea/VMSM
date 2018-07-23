@@ -1,6 +1,8 @@
 package eu.shooktea.vmsm.module;
 
+import com.jcraft.jsch.*;
 import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.SshTerminal;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
@@ -35,6 +37,19 @@ public class SSH extends Module {
         Platform.runLater(() -> {
             Start.mainWindow.toolBar.getItems().removeAll(toolbarElements);
         });
+    }
+
+    public Channel openChannel(VirtualMachine vm, UserInfo ui, String type) throws JSchException {
+        JSch jsch = new JSch();
+        String user = "vagrant";
+        String passwd = "vagrant";
+        String host = "sklep.energa.dev";
+        Session session = jsch.getSession(user, host, 22);
+        session.setPassword(passwd);
+        session.setUserInfo(ui);
+        session.connect(30000);
+        Channel channel = session.openChannel(type);
+        return channel;
     }
 
     @Override
