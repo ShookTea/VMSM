@@ -1,5 +1,5 @@
 # VMSM
-![VMSM version 1.1](http://img.shields.io/VMSM/1.1.png)
+![VMSM version 1.1.1](http://img.shields.io/VMSM/1.1.1.png)
 
 Virtual Machine Server Manager
 
@@ -40,7 +40,7 @@ java -jar VMSM.jar
 
 1. Download source code (`git clone https://github.com/ShookTea/VMSM.git`),
 1. Import to IntelliJ IDEA,
-1. Solve all dependencies from Maven,
+1. Solve all dependencies from Maven:
     * `org.json:json:20180130`
     * `org.reactfx:reactfx:2.0-M5`
 1. Compile and run.
