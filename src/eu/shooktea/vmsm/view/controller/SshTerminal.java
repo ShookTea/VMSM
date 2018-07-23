@@ -12,6 +12,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -22,18 +23,19 @@ public class SshTerminal implements UserInfo, StageController {
     @FXML private TextField input;
 
     private ChannelShell channel;
+    private PrintStream printStream;
 
     @FXML
     private void initialize() {
         Console console = new Console(output);
-        PrintStream ps = new PrintStream(console, true);
+        printStream = new PrintStream(console, true);
         try {
             VirtualMachine vm = Start.virtualMachineProperty.get();
             SSH ssh = (SSH)SSH.getModuleByName("SSH");
             channel = (ChannelShell)ssh.openChannel(vm, this, "shell");
-            channel.setOutputStream(ps);
+            channel.setOutputStream(printStream);
         } catch (JSchException e) {
-            e.printStackTrace(ps);
+            e.printStackTrace(printStream);
         }
     }
 
@@ -48,32 +50,39 @@ public class SshTerminal implements UserInfo, StageController {
 
     @Override
     public String getPassphrase() {
-        return null;
+        return JOptionPane.showInputDialog("SSH terminal requested passphrase. Your passphrase: ");
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return JOptionPane.showInputDialog("SSH terminal requested password. Your password: ");
     }
 
     @Override
     public boolean promptPassword(String message) {
-        return false;
+        return promptYesNo(message);
     }
 
     @Override
     public boolean promptPassphrase(String message) {
-        return false;
+        return promptYesNo(message);
     }
 
     @Override
     public boolean promptYesNo(String message) {
-        return false;
+        Object[] options={ "yes", "no" };
+        int foo=JOptionPane.showOptionDialog(null,
+                message,
+                "Warning",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.WARNING_MESSAGE,
+                null, options, options[0]);
+        return foo==0;
     }
 
     @Override
     public void showMessage(String message) {
-
+        printStream.println(message);
     }
 
     @Override
