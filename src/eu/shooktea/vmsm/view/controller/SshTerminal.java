@@ -7,6 +7,7 @@ import com.jcraft.jsch.UserInfo;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.SSH;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -131,7 +132,7 @@ public class SshTerminal implements UserInfo, StageController {
         }
 
         public void write(int i) throws IOException {
-            output.appendText(String.valueOf((char)i));
+            Platform.runLater(() -> output.appendText(String.valueOf((char)i)));
         }
     }
 }
