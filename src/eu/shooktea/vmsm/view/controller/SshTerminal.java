@@ -33,6 +33,8 @@ public class SshTerminal implements UserInfo, StageController {
             VirtualMachine vm = Start.virtualMachineProperty.get();
             SSH ssh = (SSH)SSH.getModuleByName("SSH");
             channel = (ChannelShell)ssh.openChannel(vm, this, "shell");
+            channel.setAgentForwarding(true);
+            channel.setPtyType("vt102");
             channel.setOutputStream(printStream);
 
             BlockingQueue<Integer> stdInQueue = new LinkedBlockingQueue<>();
@@ -41,21 +43,27 @@ public class SshTerminal implements UserInfo, StageController {
                     stdInQueue.add(Integer.valueOf(c));
                 }
                 stdInQueue.add(Integer.valueOf('\n'));
-                System.out.println(channel.isClosed());
                 input.clear();
             });
 
-            channel.setInputStream(new InputStream() {
-                @Override
-                public int read() throws IOException {
-                    try {
-                        int c = stdInQueue.take().intValue();
-                        return c;
-                    } catch (InterruptedException e) {
-                        return -1;
-                    }
-                }
-            });
+//            channel.setInputStream(new InputStream() {
+//                @Override
+//                public int read() throws IOException {
+//                    try {
+//                        int c = stdInQueue.take().intValue();
+//                        return c;
+//                    } catch (InterruptedException e) {
+//                        return -1;
+//                    }
+//                }
+//            });
+            channel.setInputStream(System.in);
+            channel.setOutputStream(System.out);
+//            channel.setInputStream(new FilterInputStream(System.in){
+//            public int read(byte[] b, int off, int len)throws IOException{
+//                return in.read(b, off, (len>1024?1024:len));
+//            }
+//        });
             channel.connect(3000);
         } catch (JSchException e) {
             e.printStackTrace(printStream);
