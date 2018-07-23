@@ -61,7 +61,7 @@
       </VBox>
       <HBox fx:id="browserContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <children>
-            <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <WebView prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>

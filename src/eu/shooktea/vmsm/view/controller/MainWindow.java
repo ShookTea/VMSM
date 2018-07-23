@@ -41,8 +41,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import org.reactfx.value.Val;
 
 import java.net.URL;
@@ -54,7 +52,6 @@ public class MainWindow {
 
     @FXML public MenuBar menuBar;
     @FXML public ToolBar toolBar;
-    @FXML private WebView webView;
     @FXML private HBox browserContainer;
     @FXML private TextField addressField;
     @FXML private ProgressBar progressBar;
@@ -62,7 +59,6 @@ public class MainWindow {
     @FXML private ImageView homeButton;
     @FXML private Menu virtualMachineTypeMenu;
 
-    public WebEngine webEngine;
     public Browser browser;
     private ToggleGroup chooseVmToggleGroup = new ToggleGroup();
     private BrowserProgressBar progressListener;
