@@ -54,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainWindow implements LoadListener {
+public class MainWindow {
 
     @FXML public MenuBar menuBar;
     @FXML public ToolBar toolBar;
@@ -69,12 +69,15 @@ public class MainWindow implements LoadListener {
     public WebEngine webEngine;
     public Browser browser;
     private ToggleGroup chooseVmToggleGroup = new ToggleGroup();
+    private BrowserProgressBar progressListener;
 
     @FXML
     private void initialize() {
         Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> reloadGUI()));
+
+        progressListener = new BrowserProgressBar();
         browser = new Browser(BrowserType.HEAVYWEIGHT, BrowserContext.defaultContext());
-        browser.addLoadListener(this);
+        browser.addLoadListener(progressListener);
         BrowserView view = new BrowserView(browser);
         browserContainer.getChildren().clear();
         browserContainer.getChildren().add(view);
@@ -116,7 +119,7 @@ public class MainWindow implements LoadListener {
 
     private void bindProgressBar() {
         progressBar.setStyle("-fx-accent: blue;");
-        progressBar.progressProperty().bind(this.progress);
+        progressBar.progressProperty().bind(progressListener.progressProperty());
     }
 
     private void bindHomeButton() {
@@ -231,76 +234,4 @@ public class MainWindow implements LoadListener {
     }
 
     private VirtualMachine previousMachine = null;
-
-    @Override
-    public void onStartLoadingFrame(StartLoadingEvent startLoadingEvent) {
-        addProgress();
-    }
-
-    @Override
-    public void onProvisionalLoadingFrame(ProvisionalLoadingEvent provisionalLoadingEvent) {
-        addProgress();
-    }
-
-    @Override
-    public void onFinishLoadingFrame(FinishLoadingEvent finishLoadingEvent) {
-        subtractProgress();
-    }
-
-    @Override
-    public void onFailLoadingFrame(FailLoadingEvent failLoadingEvent) {
-        resetProgress();
-    }
-
-    @Override
-    public void onDocumentLoadedInFrame(FrameLoadEvent frameLoadEvent) {
-        subtractProgress();
-    }
-
-    @Override
-    public void onDocumentLoadedInMainFrame(LoadEvent loadEvent) {
-        displayProgress();
-    }
-
-    private void addProgress() {
-        if (framesLoading == 0) isMainFrameLoaded = false;
-        framesLoading++;
-        updateProgressProperty();
-    }
-
-    private void subtractProgress() {
-        framesLoaded++;
-        updateProgressProperty();
-    }
-
-    private void resetProgress() {
-        isMainFrameLoaded = false;
-        framesLoaded = 0;
-        framesLoading = 0;
-        updateProgressProperty();
-    }
-
-    private void displayProgress() {
-        isMainFrameLoaded = true;
-        updateProgressProperty();
-    }
-
-    private void updateProgressProperty() {
-        Runnable r;
-        if (isMainFrameLoaded) {
-            r = () -> progress.setValue(framesLoaded / framesLoading);
-        }
-        else if (framesLoading > 0) {
-            r = () -> progress.setValue(-1);
-        }
-        else {
-            r = () -> progress.setValue(0);
-        }
-        Platform.runLater(r);
-    }
-
-    private int framesLoading = 0;
-    private int framesLoaded = 0;
-    private boolean isMainFrameLoaded = false;
-    private DoubleProperty progress = new SimpleDoubleProperty(0.0);
 }
