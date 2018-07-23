@@ -77,6 +77,7 @@ public class Start extends Application {
         primaryStage.setScene(new Scene(vbox));
 //        primaryStage.setMaximized(true);
         primaryStage.setTitle("VMSM");
+        primaryStage.setOnCloseRequest(e -> mainWindow.close());
         primaryStage.show();
         Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, (ev) -> {
             if (virtualMachineProperty.isNotNull().get()) virtualMachineProperty.get().update();

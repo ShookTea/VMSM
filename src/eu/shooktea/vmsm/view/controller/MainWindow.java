@@ -23,6 +23,10 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
+import com.teamdev.jxbrowser.chromium.Browser;
+import com.teamdev.jxbrowser.chromium.BrowserContext;
+import com.teamdev.jxbrowser.chromium.BrowserType;
+import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
@@ -35,6 +39,8 @@ import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.reactfx.value.Val;
@@ -49,6 +55,7 @@ public class MainWindow {
     @FXML public MenuBar menuBar;
     @FXML public ToolBar toolBar;
     @FXML private WebView webView;
+    @FXML private HBox browserContainer;
     @FXML private TextField addressField;
     @FXML private ProgressBar progressBar;
     @FXML private Menu vmListMenu;
@@ -56,10 +63,17 @@ public class MainWindow {
     @FXML private Menu virtualMachineTypeMenu;
 
     public WebEngine webEngine;
+    public Browser browser;
     private ToggleGroup chooseVmToggleGroup = new ToggleGroup();
 
     @FXML
     private void initialize() {
+        browser = new Browser(BrowserType.LIGHTWEIGHT, BrowserContext.defaultContext());
+        BrowserView view = new BrowserView(browser);
+        browserContainer.getChildren().clear();
+        browserContainer.getChildren().add(view);
+        HBox.setHgrow(view, Priority.ALWAYS);
+        browser.loadURL("http://google.com");
         Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> reloadGUI()));
         webEngine = webView.getEngine();
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
@@ -77,6 +91,11 @@ public class MainWindow {
                     .get();
             Start.virtualMachineProperty.setValue(chosenMachine);
         }));
+    }
+
+    public void close() {
+        browser.dispose();
+        Start.primaryStage.close();
     }
 
     private void displayErrorMessage(Throwable error) {
@@ -178,11 +197,6 @@ public class MainWindow {
             toolBar.getItems().addAll(vm.getType().getToolBarElements());
             vm.getModules().forEach(module -> module.reloadToolbar());
         }
-    }
-
-    @FXML
-    private void exit() {
-        System.exit(0);
     }
 
     @FXML
