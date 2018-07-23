@@ -1,6 +1,5 @@
 package eu.shooktea.vmsm.view.controller;
 
-import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.UserInfo;
@@ -17,9 +16,6 @@ import javax.swing.*;
 import java.io.*;
 import java.util.ArrayDeque;
 import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
 
 public class SshTerminal implements UserInfo, StageController {
 
