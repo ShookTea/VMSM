@@ -56,7 +56,6 @@ public class SshTerminal implements UserInfo, StageController {
             });
 
             channel.setInputStream(pin);
-            channel.setOutputStream(System.out);
             channel.connect(3000);
         } catch (JSchException e) {
             e.printStackTrace(printStream);
