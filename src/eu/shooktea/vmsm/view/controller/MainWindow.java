@@ -80,10 +80,6 @@ public class MainWindow {
         browserContainer.getChildren().add(view);
         HBox.setHgrow(view, Priority.ALWAYS);
 
-        webEngine = webView.getEngine();
-        webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
-        webEngine.getLoadWorker().exceptionProperty().addListener(
-                (observable, oldValue, newValue) -> displayErrorMessage(newValue));
         bindProgressBar();
         bindHomeButton();
 
@@ -106,12 +102,6 @@ public class MainWindow {
 
     private boolean isWindows() {
         return System.getProperty("os.name").toUpperCase().contains("WINDOWS");
-    }
-
-    private void displayErrorMessage(Throwable error) {
-        if (error == null) return;
-        String message = error.getMessage();
-        webEngine.loadContent("<b>" + message + "</b>");
     }
 
     private void bindProgressBar() {
