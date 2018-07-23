@@ -40,10 +40,12 @@ public class SSH extends Module {
     }
 
     public Channel openChannel(VirtualMachine vm, UserInfo ui, String type) throws JSchException {
+        String user = getStringSetting(vm, "user");
+        String passwd = getStringSetting(vm, "password");
+        String host = getStringSetting(vm, "host");
+        if (user == null || passwd == null || host == null) return null;
+
         JSch jsch = new JSch();
-        String user = "vagrant";
-        String passwd = "vagrant";
-        String host = "sklep.energa.dev";
         Session session = jsch.getSession(user, host, 22);
         session.setPassword(passwd);
         session.setUserInfo(ui);
