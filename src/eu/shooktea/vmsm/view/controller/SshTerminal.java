@@ -14,8 +14,11 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 
 public class SshTerminal implements UserInfo, StageController {
 
@@ -24,6 +27,7 @@ public class SshTerminal implements UserInfo, StageController {
 
     private ChannelShell channel;
     private PrintStream printStream;
+    private Queue<Character> inputStream = new ArrayDeque<>();
 
     @FXML
     private void initialize() {
@@ -37,35 +41,26 @@ public class SshTerminal implements UserInfo, StageController {
             channel.setPtyType("vt102");
             channel.setOutputStream(printStream);
 
-            BlockingQueue<Integer> stdInQueue = new LinkedBlockingQueue<>();
+            PipedInputStream pin = new PipedInputStream();
+            PipedOutputStream pout = new PipedOutputStream(pin);
+
             input.setOnAction(e -> {
-                for (char c : input.getText().toCharArray()) {
-                    stdInQueue.add(Integer.valueOf(c));
-                }
-                stdInQueue.add(Integer.valueOf('\n'));
+                byte[] line = input.getText().getBytes();
                 input.clear();
+                try {
+                    pout.write(line, 0, line.length);
+                    pout.write('\n');
+                } catch (IOException e1) {
+                    e1.printStackTrace(printStream);
+                }
             });
 
-//            channel.setInputStream(new InputStream() {
-//                @Override
-//                public int read() throws IOException {
-//                    try {
-//                        int c = stdInQueue.take().intValue();
-//                        return c;
-//                    } catch (InterruptedException e) {
-//                        return -1;
-//                    }
-//                }
-//            });
-            channel.setInputStream(System.in);
+            channel.setInputStream(pin);
             channel.setOutputStream(System.out);
-//            channel.setInputStream(new FilterInputStream(System.in){
-//            public int read(byte[] b, int off, int len)throws IOException{
-//                return in.read(b, off, (len>1024?1024:len));
-//            }
-//        });
             channel.connect(3000);
         } catch (JSchException e) {
+            e.printStackTrace(printStream);
+        } catch (IOException e) {
             e.printStackTrace(printStream);
         }
     }
