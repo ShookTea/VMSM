@@ -128,7 +128,18 @@ public class SshTerminal implements UserInfo, StageController {
         }
 
         public void write(int i) throws IOException {
-            Platform.runLater(() -> output.appendText(String.valueOf((char)i)));
+            Platform.runLater(() -> {
+                output.appendText(String.valueOf((char)i));
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace(printStream);
+                    }
+                    if (channel.isClosed() || !channel.isConnected()) Platform.runLater(stage::close);
+
+                }).start();
+            });
         }
     }
 }
