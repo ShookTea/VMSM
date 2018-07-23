@@ -1,5 +1,11 @@
 package eu.shooktea.vmsm.module;
 
+import com.teamdev.jxbrowser.chromium.Browser;
+import com.teamdev.jxbrowser.chromium.LoadURLParams;
+import com.teamdev.jxbrowser.chromium.dom.*;
+import com.teamdev.jxbrowser.chromium.events.FinishLoadingEvent;
+import com.teamdev.jxbrowser.chromium.events.LoadAdapter;
+import com.teamdev.jxbrowser.chromium.events.LoadListener;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MagentoConfig;
@@ -251,28 +257,33 @@ public class Magento extends Module {
         if (!currentAddress.endsWith("/")) currentAddress = currentAddress + "/";
         currentAddress = currentAddress + address;
 
-        WebEngine engine = mw.webEngine;
-        final ChangeListener<Document> listener = new ChangeListener<>() {
-            @Override
-            public void changed(ObservableValue<? extends Document> observable, Document oldValue, Document doc) {
-                if (doc == null) return;
-                engine.documentProperty().removeListener(this);
-                String currentLocation = engine.getLocation();
-                if (currentLocation.endsWith(address) || currentLocation.endsWith(address + "/")) {
-                    String login = magento.getStringSetting(vm, "adm_login");
-                    String pass = magento.getStringSetting(vm, "adm_pass");
+        String login = magento.getStringSetting(vm, "adm_login");
+        String pass = magento.getStringSetting(vm, "adm_pass");
 
-                    if (login != null)
-                        engine.executeScript("document.getElementsByName('login[username]')[0].value = '" + login + "';");
-                    if (pass != null)
-                        engine.executeScript("document.getElementsByName('login[password]')[0].value = '" + pass + "';");
-                    if (login != null && pass != null)
-                        engine.executeScript("document.getElementById('loginForm').submit();");
+        Browser browser = mw.browser;
+
+        LoadListener listener = new LoadAdapter() {
+            @Override
+            public void onFinishLoadingFrame(FinishLoadingEvent event) {
+                super.onFinishLoadingFrame(event);
+                if (event.isMainFrame()) {
+                    browser.removeLoadListener(this);
+                    DOMDocument document = browser.getDocument();
+                    DOMFormElement form = (DOMFormElement)document.findElement(By.id("loginForm"));
+                    if (form != null) {
+                        if (login != null)
+                            document.findElement(By.name("login[username]")).setAttribute("value", login);
+                        if( pass != null)
+                            document.findElement(By.name("login[password]")).setAttribute("value", pass);
+                        if (login != null && pass != null)
+                            form.submit();
+                    }
                 }
             }
         };
-        engine.documentProperty().addListener(listener);
 
-        mw.goTo(currentAddress);
+        browser.addLoadListener(listener);
+        browser.loadURL(currentAddress);
+
     }
 }

@@ -23,20 +23,24 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
+import com.teamdev.jxbrowser.chromium.Browser;
+import com.teamdev.jxbrowser.chromium.BrowserContext;
+import com.teamdev.jxbrowser.chromium.BrowserType;
+import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.vmtype.VMType;
-import javafx.beans.binding.When;
-import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import org.reactfx.value.Val;
 
 import java.net.URL;
@@ -48,23 +52,30 @@ public class MainWindow {
 
     @FXML public MenuBar menuBar;
     @FXML public ToolBar toolBar;
-    @FXML private WebView webView;
+    @FXML private HBox browserContainer;
     @FXML private TextField addressField;
     @FXML private ProgressBar progressBar;
     @FXML private Menu vmListMenu;
     @FXML private ImageView homeButton;
     @FXML private Menu virtualMachineTypeMenu;
 
-    public WebEngine webEngine;
+    public Browser browser;
     private ToggleGroup chooseVmToggleGroup = new ToggleGroup();
+    private BrowserProgressBar progressListener;
 
     @FXML
     private void initialize() {
         Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> reloadGUI()));
-        webEngine = webView.getEngine();
-        webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
-        webEngine.getLoadWorker().exceptionProperty().addListener(
-                (observable, oldValue, newValue) -> displayErrorMessage(newValue));
+
+        progressListener = new BrowserProgressBar();
+        browser = new Browser(BrowserType.HEAVYWEIGHT, BrowserContext.defaultContext());
+        browser.addLoadListener(progressListener);
+        progressListener.somethingHasChangedProperty().addListener(((observable, oldValue, newValue) -> addressField.setText(browser.getURL())));
+        BrowserView view = new BrowserView(browser);
+        browserContainer.getChildren().clear();
+        browserContainer.getChildren().add(view);
+        HBox.setHgrow(view, Priority.ALWAYS);
+
         bindProgressBar();
         bindHomeButton();
 
@@ -79,23 +90,19 @@ public class MainWindow {
         }));
     }
 
-    private void displayErrorMessage(Throwable error) {
-        if (error == null) return;
-        String message = error.getMessage();
-        webEngine.loadContent("<b>" + message + "</b>");
+    public void close() {
+        Runnable dispose = () -> {browser.dispose(); Platform.runLater(() -> Start.primaryStage.close());};
+        if (isWindows()) new Thread(dispose).start();
+        else Platform.runLater(dispose);
+    }
+
+    private boolean isWindows() {
+        return System.getProperty("os.name").toUpperCase().contains("WINDOWS");
     }
 
     private void bindProgressBar() {
         progressBar.setStyle("-fx-accent: blue;");
-        ReadOnlyDoubleProperty progress = webEngine.getLoadWorker().progressProperty();
-        progressBar.progressProperty().bind(
-                new When(progress.isEqualTo(0))
-                .then(-1)
-                .otherwise(
-                    new When(progress.lessThan(0.0))
-                    .then(0)
-                    .otherwise(progress))
-        );
+        progressBar.progressProperty().bind(progressListener.progressProperty());
     }
 
     private void bindHomeButton() {
@@ -176,13 +183,8 @@ public class MainWindow {
         if (!Start.virtualMachineProperty.isNull().get()) {
             VirtualMachine vm = Start.virtualMachineProperty.getValue();
             toolBar.getItems().addAll(vm.getType().getToolBarElements());
-            vm.getModules().forEach(module -> module.reloadToolbar());
+            vm.getModules().forEach(Module::reloadToolbar);
         }
-    }
-
-    @FXML
-    private void exit() {
-        System.exit(0);
     }
 
     @FXML
@@ -191,7 +193,7 @@ public class MainWindow {
         if (!address.startsWith("http://") && !address.startsWith("https://")) {
             address = "http://" + address;
         }
-        webEngine.load(address);
+        browser.loadURL(address);
     }
 
     @FXML
@@ -201,12 +203,12 @@ public class MainWindow {
         if (vm.getPageRoot() == null) return;
         URL url = vm.getPageRoot();
         addressField.setText(url.toString());
-        webEngine.load(url.toString());
+        browser.loadURL(url.toString());
     }
 
     @FXML
     public void reloadWebpage() {
-        if (!this.addressField.getText().trim().isEmpty()) webEngine.reload();
+        if (!this.addressField.getText().trim().isEmpty()) browser.reload();
     }
 
     public void goTo(String url) {
