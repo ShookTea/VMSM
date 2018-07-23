@@ -31,6 +31,7 @@ import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.vmtype.VMType;
+import javafx.application.Platform;
 import javafx.beans.binding.When;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.collections.ObservableList;
@@ -68,12 +69,12 @@ public class MainWindow {
 
     @FXML
     private void initialize() {
-        browser = new Browser(BrowserType.LIGHTWEIGHT, BrowserContext.defaultContext());
+        browser = new Browser(BrowserType.HEAVYWEIGHT, BrowserContext.defaultContext());
         BrowserView view = new BrowserView(browser);
         browserContainer.getChildren().clear();
         browserContainer.getChildren().add(view);
         HBox.setHgrow(view, Priority.ALWAYS);
-        browser.loadURL("http://google.com");
+        browser.loadURL("sklep.energa.dev");
         Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> reloadGUI()));
         webEngine = webView.getEngine();
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
@@ -94,8 +95,13 @@ public class MainWindow {
     }
 
     public void close() {
-        browser.dispose();
-        Start.primaryStage.close();
+        Runnable dispose = () -> {browser.dispose(); Platform.runLater(() -> Start.primaryStage.close());};
+        if (isWindows()) new Thread(dispose).start();
+        else Platform.runLater(dispose);
+    }
+
+    private boolean isWindows() {
+        return System.getProperty("os.name").toUpperCase().contains("WINDOWS");
     }
 
     private void displayErrorMessage(Throwable error) {
