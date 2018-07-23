@@ -29,12 +29,20 @@ You can either download ready-to-use .JAR file or download source code and compi
 
 ### .JAR file
 
-Download [latest release of VMSM.jar](https://github.com/ShookTea/VMSM/releases/latest) and run it either by
-double click (if your OS support it) or by command:
+Download [latest release of VMSM.jar](https://github.com/ShookTea/VMSM/releases/latest) in your preferred version 
+and run it either by double click (if your OS support it) or by command:
 
 ```
 java -jar VMSM.jar
 ```
+
+There are multiple versions of `VMSM.jar` file, depending on your OS:
+* 64-bit Linux
+* 32-bit Windows
+* 64-bit Windows
+* Mac
+
+And special *all systems* file that work on all of the operating systems above but takes much more place on your disk.
 
 ### Download and compile
 
