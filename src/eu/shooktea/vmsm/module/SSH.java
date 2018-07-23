@@ -24,7 +24,7 @@ public class SSH extends Module {
 
     @Override
     public String getDescription() {
-        return "SSH client";
+        return "SSH terminal client";
     }
 
     @Override

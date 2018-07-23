@@ -20,6 +20,7 @@ Virtual Machine Server Manager
     * [Login to administrator panel](#login-to-administrator-panel)
     * [Creation of modules](#creation-of-modules)
     * [Exception notifications](#exception-notifications)
+1. [SSH](#ssh)
 
 ## Installation
 **System requirements:**
@@ -194,3 +195,15 @@ Every time new exception report is created in `MAGENTO ROOT/var/report` you will
 icon will turn red and display number of exceptions. After pressing that icon or `Magento/Exception reports...` menu,
 list of exceptions will appear with their time, message and report file. After pressing any of these exceptions
 stack trace will be displayed.
+
+## SSH
+
+SSH (secure shell) allows you to gain access to your VM's command line.
+
+After successful configuration of SSH module in `Vagrant/Managing modules...`, you can press terminal icon on toolbar.
+New window will appear, with input text field and output text area.
+
+![SSH client](doc_img/ssh_client.png)
+
+After writing any command in input field and pressing Enter, that command will be sent to your VM. Response from your
+machine will be displayed on output area.
