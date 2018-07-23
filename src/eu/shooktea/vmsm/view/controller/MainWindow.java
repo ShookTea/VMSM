@@ -26,6 +26,7 @@ package eu.shooktea.vmsm.view.controller;
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.BrowserContext;
 import com.teamdev.jxbrowser.chromium.BrowserType;
+import com.teamdev.jxbrowser.chromium.events.*;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
@@ -33,7 +34,9 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.application.Platform;
 import javafx.beans.binding.When;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -51,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainWindow {
+public class MainWindow implements LoadListener {
 
     @FXML public MenuBar menuBar;
     @FXML public ToolBar toolBar;
@@ -69,13 +72,14 @@ public class MainWindow {
 
     @FXML
     private void initialize() {
+        Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> reloadGUI()));
         browser = new Browser(BrowserType.HEAVYWEIGHT, BrowserContext.defaultContext());
+        browser.addLoadListener(this);
         BrowserView view = new BrowserView(browser);
         browserContainer.getChildren().clear();
         browserContainer.getChildren().add(view);
         HBox.setHgrow(view, Priority.ALWAYS);
-        browser.loadURL("sklep.energa.dev");
-        Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> reloadGUI()));
+
         webEngine = webView.getEngine();
         webEngine.locationProperty().addListener((observable, oldValue, newValue) -> addressField.setText(newValue));
         webEngine.getLoadWorker().exceptionProperty().addListener(
@@ -112,15 +116,7 @@ public class MainWindow {
 
     private void bindProgressBar() {
         progressBar.setStyle("-fx-accent: blue;");
-        ReadOnlyDoubleProperty progress = webEngine.getLoadWorker().progressProperty();
-        progressBar.progressProperty().bind(
-                new When(progress.isEqualTo(0))
-                .then(-1)
-                .otherwise(
-                    new When(progress.lessThan(0.0))
-                    .then(0)
-                    .otherwise(progress))
-        );
+        progressBar.progressProperty().bind(this.progress);
     }
 
     private void bindHomeButton() {
@@ -235,4 +231,76 @@ public class MainWindow {
     }
 
     private VirtualMachine previousMachine = null;
+
+    @Override
+    public void onStartLoadingFrame(StartLoadingEvent startLoadingEvent) {
+        addProgress();
+    }
+
+    @Override
+    public void onProvisionalLoadingFrame(ProvisionalLoadingEvent provisionalLoadingEvent) {
+        addProgress();
+    }
+
+    @Override
+    public void onFinishLoadingFrame(FinishLoadingEvent finishLoadingEvent) {
+        subtractProgress();
+    }
+
+    @Override
+    public void onFailLoadingFrame(FailLoadingEvent failLoadingEvent) {
+        resetProgress();
+    }
+
+    @Override
+    public void onDocumentLoadedInFrame(FrameLoadEvent frameLoadEvent) {
+        subtractProgress();
+    }
+
+    @Override
+    public void onDocumentLoadedInMainFrame(LoadEvent loadEvent) {
+        displayProgress();
+    }
+
+    private void addProgress() {
+        if (framesLoading == 0) isMainFrameLoaded = false;
+        framesLoading++;
+        updateProgressProperty();
+    }
+
+    private void subtractProgress() {
+        framesLoaded++;
+        updateProgressProperty();
+    }
+
+    private void resetProgress() {
+        isMainFrameLoaded = false;
+        framesLoaded = 0;
+        framesLoading = 0;
+        updateProgressProperty();
+    }
+
+    private void displayProgress() {
+        isMainFrameLoaded = true;
+        updateProgressProperty();
+    }
+
+    private void updateProgressProperty() {
+        Runnable r;
+        if (isMainFrameLoaded) {
+            r = () -> progress.setValue(framesLoaded / framesLoading);
+        }
+        else if (framesLoading > 0) {
+            r = () -> progress.setValue(-1);
+        }
+        else {
+            r = () -> progress.setValue(0);
+        }
+        Platform.runLater(r);
+    }
+
+    private int framesLoading = 0;
+    private int framesLoaded = 0;
+    private boolean isMainFrameLoaded = false;
+    private DoubleProperty progress = new SimpleDoubleProperty(0.0);
 }
