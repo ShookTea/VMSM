@@ -14,6 +14,7 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/jxbrowser-win32-6.21.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/jxbrowser-linux64-6.21.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/license.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/jcraft/jsch/0.1.54/jsch-0.1.54.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

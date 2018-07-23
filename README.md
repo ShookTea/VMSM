@@ -1,5 +1,5 @@
 # VMSM
-![VMSM version 1.1.1](http://img.shields.io/VMSM/1.1.1.png)
+![VMSM version 1.2](http://img.shields.io/VMSM/1.2.png)
 
 Virtual Machine Server Manager
 
@@ -51,6 +51,7 @@ And special *all systems* file that work on all of the operating systems above b
 1. Solve all dependencies from Maven:
     * `org.json:json:20180130`
     * `org.reactfx:reactfx:2.0-M5`
+    * `com.jcraft:jsch:0.1.54`
 1. Compile and run.
 
 ### (Windows) pin VMSM to task bar / start screen

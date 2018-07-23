@@ -11,6 +11,7 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/jxbrowser-mac-6.21.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/reactfx/reactfx/2.0-M5/reactfx-2.0-M5.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/license.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/jcraft/jsch/0.1.54/jsch-0.1.54.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
