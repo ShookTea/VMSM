@@ -8,78 +8,46 @@ public class BrowserProgressBar implements LoadListener {
 
     @Override
     public void onStartLoadingFrame(StartLoadingEvent startLoadingEvent) {
-        addProgress();
+        updateProgressProperty();
     }
 
     @Override
     public void onProvisionalLoadingFrame(ProvisionalLoadingEvent provisionalLoadingEvent) {
-        addProgress();
+        updateProgressProperty();
     }
 
     @Override
     public void onFinishLoadingFrame(FinishLoadingEvent finishLoadingEvent) {
-        subtractProgress();
+        updateProgressProperty(finishLoadingEvent.isMainFrame());
     }
 
     @Override
     public void onFailLoadingFrame(FailLoadingEvent failLoadingEvent) {
-        resetProgress();
+        updateProgressProperty();
     }
 
     @Override
     public void onDocumentLoadedInFrame(FrameLoadEvent frameLoadEvent) {
-        subtractProgress();
+        updateProgressProperty();
     }
 
     @Override
     public void onDocumentLoadedInMainFrame(LoadEvent loadEvent) {
-        displayProgress();
-    }
-
-    private void addProgress() {
-        if (framesLoading == 0) isMainFrameLoaded = false;
-        framesLoading++;
-        updateProgressProperty();
-    }
-
-    private void subtractProgress() {
-        framesLoaded++;
-        updateProgressProperty();
-    }
-
-    private void resetProgress() {
-        isMainFrameLoaded = false;
-        framesLoaded = 0;
-        framesLoading = 0;
-        updateProgressProperty();
-    }
-
-    private void displayProgress() {
-        isMainFrameLoaded = true;
         updateProgressProperty();
     }
 
     private void updateProgressProperty() {
+        updateProgressProperty(false);
+    }
+
+    private void updateProgressProperty(boolean loaded) {
         somethingHasChanged.setValue(!somethingHasChanged.get());
-        Runnable r;
-        if (isMainFrameLoaded) {
-            r = () -> progress.setValue(framesLoaded / framesLoading);
-        }
-        else if (framesLoading > 0) {
-            r = () -> progress.setValue(-1);
-        }
-        else {
-            r = () -> progress.setValue(0);
-        }
+        Runnable r = () -> progress.setValue(loaded ? 0.0 : -1.0);
         Platform.runLater(r);
     }
 
     public ReadOnlyDoubleProperty progressProperty() {
         return progress;
-    }
-
-    public double getProgress() {
-        return progress.get();
     }
 
     public ReadOnlyBooleanProperty somethingHasChangedProperty() {

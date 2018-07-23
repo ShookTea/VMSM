@@ -75,7 +75,7 @@ public class Start extends Application {
         VBox vbox = loader.load();
         mainWindow = loader.getController();
         primaryStage.setScene(new Scene(vbox));
-//        primaryStage.setMaximized(true);
+        primaryStage.setMaximized(true);
         primaryStage.setTitle("VMSM");
         primaryStage.setOnCloseRequest(e -> mainWindow.close());
         primaryStage.show();
