@@ -30,6 +30,7 @@ import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -73,6 +74,7 @@ public class MainWindow {
         progressListener = new BrowserProgressBar();
         browser = new Browser(BrowserType.HEAVYWEIGHT, BrowserContext.defaultContext());
         browser.addLoadListener(progressListener);
+        progressListener.somethingHasChangedProperty().addListener(((observable, oldValue, newValue) -> addressField.setText(browser.getURL())));
         BrowserView view = new BrowserView(browser);
         browserContainer.getChildren().clear();
         browserContainer.getChildren().add(view);
@@ -195,7 +197,7 @@ public class MainWindow {
         if (!Start.virtualMachineProperty.isNull().get()) {
             VirtualMachine vm = Start.virtualMachineProperty.getValue();
             toolBar.getItems().addAll(vm.getType().getToolBarElements());
-            vm.getModules().forEach(module -> module.reloadToolbar());
+            vm.getModules().forEach(Module::reloadToolbar);
         }
     }
 
@@ -205,7 +207,7 @@ public class MainWindow {
         if (!address.startsWith("http://") && !address.startsWith("https://")) {
             address = "http://" + address;
         }
-        webEngine.load(address);
+        browser.loadURL(address);
     }
 
     @FXML
@@ -215,12 +217,12 @@ public class MainWindow {
         if (vm.getPageRoot() == null) return;
         URL url = vm.getPageRoot();
         addressField.setText(url.toString());
-        webEngine.load(url.toString());
+        browser.loadURL(url.toString());
     }
 
     @FXML
     public void reloadWebpage() {
-        if (!this.addressField.getText().trim().isEmpty()) webEngine.reload();
+        if (!this.addressField.getText().trim().isEmpty()) browser.reload();
     }
 
     public void goTo(String url) {

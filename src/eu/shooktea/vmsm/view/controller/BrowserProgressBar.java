@@ -2,9 +2,7 @@ package eu.shooktea.vmsm.view.controller;
 
 import com.teamdev.jxbrowser.chromium.events.*;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 
 public class BrowserProgressBar implements LoadListener {
 
@@ -62,6 +60,7 @@ public class BrowserProgressBar implements LoadListener {
     }
 
     private void updateProgressProperty() {
+        somethingHasChanged.setValue(!somethingHasChanged.get());
         Runnable r;
         if (isMainFrameLoaded) {
             r = () -> progress.setValue(framesLoaded / framesLoading);
@@ -83,8 +82,13 @@ public class BrowserProgressBar implements LoadListener {
         return progress.get();
     }
 
+    public ReadOnlyBooleanProperty somethingHasChangedProperty() {
+        return somethingHasChanged;
+    }
+
     private int framesLoading = 0;
     private int framesLoaded = 0;
     private boolean isMainFrameLoaded = false;
+    private BooleanProperty somethingHasChanged = new SimpleBooleanProperty(false);
     private DoubleProperty progress = new SimpleDoubleProperty(0.0);
 }
