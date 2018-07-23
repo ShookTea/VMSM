@@ -68,13 +68,14 @@ public class MainWindow {
         Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> reloadGUI()));
 
         progressListener = new BrowserProgressBar();
-        browser = new Browser(BrowserType.HEAVYWEIGHT, BrowserContext.defaultContext());
+        browser = new Browser(BrowserType.LIGHTWEIGHT, BrowserContext.defaultContext());
         browser.addLoadListener(progressListener);
         progressListener.somethingHasChangedProperty().addListener(((observable, oldValue, newValue) -> addressField.setText(browser.getURL())));
         BrowserView view = new BrowserView(browser);
         browserContainer.getChildren().clear();
         browserContainer.getChildren().add(view);
         HBox.setHgrow(view, Priority.ALWAYS);
+        browser.loadURL("google.pl");
 
         bindProgressBar();
         bindHomeButton();
@@ -91,7 +92,10 @@ public class MainWindow {
     }
 
     public void close() {
-        Runnable dispose = () -> {browser.dispose(); Platform.runLater(() -> Start.primaryStage.close());};
+        Runnable dispose = () -> {
+            browser.dispose();
+            System.exit(0);
+        };
         if (isWindows()) new Thread(dispose).start();
         else Platform.runLater(dispose);
     }

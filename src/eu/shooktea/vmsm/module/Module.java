@@ -79,7 +79,8 @@ public abstract class Module {
     }
 
     private static Map<String, Module> modules = Map.of(
-            "Magento", new Magento()
+            "Magento", new Magento(),
+            "SSH", new SSH()
     );
 
     public void setSetting(VirtualMachine vm, String key, Object value) {

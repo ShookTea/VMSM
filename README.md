@@ -1,5 +1,5 @@
 # VMSM
-![VMSM version 1.1.1](http://img.shields.io/VMSM/1.1.1.png)
+![VMSM version 1.2](http://img.shields.io/VMSM/1.2.png)
 
 Virtual Machine Server Manager
 
@@ -20,6 +20,7 @@ Virtual Machine Server Manager
     * [Login to administrator panel](#login-to-administrator-panel)
     * [Creation of modules](#creation-of-modules)
     * [Exception notifications](#exception-notifications)
+1. [SSH](#ssh)
 
 ## Installation
 **System requirements:**
@@ -51,6 +52,7 @@ And special *all systems* file that work on all of the operating systems above b
 1. Solve all dependencies from Maven:
     * `org.json:json:20180130`
     * `org.reactfx:reactfx:2.0-M5`
+    * `com.jcraft:jsch:0.1.54`
 1. Compile and run.
 
 ### (Windows) pin VMSM to task bar / start screen
@@ -193,3 +195,15 @@ Every time new exception report is created in `MAGENTO ROOT/var/report` you will
 icon will turn red and display number of exceptions. After pressing that icon or `Magento/Exception reports...` menu,
 list of exceptions will appear with their time, message and report file. After pressing any of these exceptions
 stack trace will be displayed.
+
+## SSH
+
+SSH (secure shell) allows you to gain access to your VM's command line.
+
+After successful configuration of SSH module in `Vagrant/Managing modules...`, you can press terminal icon on toolbar.
+New window will appear, with input text field and output text area.
+
+![SSH client](doc_img/ssh_client.png)
+
+After writing any command in input field and pressing Enter, that command will be sent to your VM. Response from your
+machine will be displayed on output area.

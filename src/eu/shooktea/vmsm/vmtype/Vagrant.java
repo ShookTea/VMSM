@@ -189,7 +189,7 @@ public class Vagrant extends VMType {
     @Override
     public Optional<String[]> getModules() {
         return Optional.of(new String[]{
-            "Magento"
+            "Magento", "SSH"
         });
     }
 
