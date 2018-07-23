@@ -13,9 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import javax.swing.*;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class SshTerminal implements UserInfo, StageController {
 
@@ -34,14 +34,32 @@ public class SshTerminal implements UserInfo, StageController {
             SSH ssh = (SSH)SSH.getModuleByName("SSH");
             channel = (ChannelShell)ssh.openChannel(vm, this, "shell");
             channel.setOutputStream(printStream);
+
+            BlockingQueue<Integer> stdInQueue = new LinkedBlockingQueue<>();
+            input.setOnAction(e -> {
+                for (char c : input.getText().toCharArray()) {
+                    stdInQueue.add(Integer.valueOf(c));
+                }
+                stdInQueue.add(Integer.valueOf('\n'));
+                System.out.println(channel.isClosed());
+                input.clear();
+            });
+
+            channel.setInputStream(new InputStream() {
+                @Override
+                public int read() throws IOException {
+                    try {
+                        int c = stdInQueue.take().intValue();
+                        return c;
+                    } catch (InterruptedException e) {
+                        return -1;
+                    }
+                }
+            });
+            channel.connect(3000);
         } catch (JSchException e) {
             e.printStackTrace(printStream);
         }
-    }
-
-    @FXML
-    private void writeInput() {
-
     }
 
     public static void openSshTerminal(Object... lambdaArgs) {
@@ -70,14 +88,14 @@ public class SshTerminal implements UserInfo, StageController {
 
     @Override
     public boolean promptYesNo(String message) {
-        Object[] options={ "yes", "no" };
-        int foo=JOptionPane.showOptionDialog(null,
+        Object[] options={ "Yes", "No" };
+        int option = JOptionPane.showOptionDialog(null,
                 message,
                 "Warning",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.WARNING_MESSAGE,
                 null, options, options[0]);
-        return foo==0;
+        return option==0;
     }
 
     @Override

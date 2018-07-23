@@ -91,7 +91,10 @@ public class MainWindow {
     }
 
     public void close() {
-        Runnable dispose = () -> {browser.dispose(); Platform.runLater(() -> Start.primaryStage.close());};
+        Runnable dispose = () -> {
+            browser.dispose();
+            System.exit(0);
+        };
         if (isWindows()) new Thread(dispose).start();
         else Platform.runLater(dispose);
     }
