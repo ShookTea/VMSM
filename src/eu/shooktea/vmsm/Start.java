@@ -23,6 +23,10 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.view.controller.MainWindow;
 import eu.shooktea.vmsm.view.controller.StageController;
@@ -45,6 +49,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import javax.net.ssl.*;
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
@@ -67,6 +72,8 @@ public class Start extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        test();
+        System.exit(0);
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
         Storage.loadAll();
         Start.primaryStage = primaryStage;
@@ -159,5 +166,59 @@ public class Start extends Application {
             System.exit(1);
             return null;
         }
+    }
+
+    private static void test() throws Exception {
+        JSch jsch = new JSch();
+        String user = "vagrant";
+        String host = "sklep.energa.dev";
+        Session session = jsch.getSession(user, host, 22);
+        String passwd = "vagrant";
+        session.setPassword(passwd);
+        session.setUserInfo(new UserInfo() {
+            @Override
+            public String getPassphrase() {
+                return null;
+            }
+
+            @Override
+            public String getPassword() {
+                return null;
+            }
+
+            @Override
+            public boolean promptPassword(String message) {
+                System.out.println("PASSWORD: " + message);
+                return false;
+            }
+
+            @Override
+            public boolean promptPassphrase(String message) {
+                System.out.println("PASSPHRASE: " + message);
+                return false;
+            }
+
+            @Override
+            public boolean promptYesNo(String message) {
+                Object[] options={ "yes", "no" };
+                int foo=JOptionPane.showOptionDialog(null,
+                        message,
+                        "Warning",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.WARNING_MESSAGE,
+                        null, options, options[0]);
+                return foo==0;
+            }
+
+            @Override
+            public void showMessage(String message) {
+                System.out.println("MESSAGE: " + message);
+            }
+        });
+        session.connect(30000);
+        Channel channel = session.openChannel("shell");
+        channel.setInputStream(System.in);
+        channel.setOutputStream(System.out);
+        channel.connect(3 * 1000);
     }
 }
