@@ -1,5 +1,6 @@
 # VMSM
-![VMSM version 1.2.1](http://img.shields.io/VMSM/1.2.1.png)
+
+[![VMSM version 1.3](http://img.shields.io/VMSM/1.3.png)](https://github.com/ShookTea/VMSM/releases/latest)
 
 Virtual Machine Server Manager
 
@@ -143,7 +144,7 @@ cache, logs, sessions and exception reports in `Magento/Delete` menu. `Delete al
 
 ### Login to administrator panel
 
-After pressing green person icon in toolbar, selecting `Magento/Login to admin panel` menu or using `Ctrl+A` shortcut
+After pressing green person icon in toolbar, selecting `Magento/Login to admin panel` menu or using `Ctrl+Shift+A` shortcut
 you will be redirected to Magento admin panel. Address to that panel is taken from `MAGENTO_ROOT/app/etc/local.xml` file,
 from `config/admin/routers/adminhtml/args/frontName` node, and appended to VM main URL. For example, if your main URL
 is `https://magento.local` and front name in `local.xml` file is declared as `adm`, then after pressing Login button you will

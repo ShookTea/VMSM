@@ -27,7 +27,10 @@ import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.BrowserContext;
 import com.teamdev.jxbrowser.chromium.BrowserType;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
-import eu.shooktea.vmsm.*;
+import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.Toolkit;
+import eu.shooktea.vmsm.VM;
+import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
@@ -44,11 +47,11 @@ import org.reactfx.value.Val;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-
+import java.util.Objects;
 
 public class MainWindow {
-
     @FXML public MenuBar menuBar;
     @FXML public ToolBar toolBar;
     @FXML private HBox browserContainer;
@@ -57,6 +60,7 @@ public class MainWindow {
     @FXML private Menu vmListMenu;
     @FXML private ImageView homeButton;
     @FXML private Menu virtualMachineTypeMenu;
+    @FXML private MenuItem goToRootWebpageMenuItem;
 
     public Browser browser;
     private ToggleGroup chooseVmToggleGroup = new ToggleGroup();
@@ -69,6 +73,7 @@ public class MainWindow {
         progressListener = new BrowserProgressBar();
         browser = new Browser(BrowserType.LIGHTWEIGHT, BrowserContext.defaultContext());
         browser.addLoadListener(progressListener);
+        browser.addConsoleListener(e -> JsConsole.outputText.setValue(JsConsole.outputText.getValue() + e.getMessage() + "\n"));
         progressListener.somethingHasChangedProperty().addListener(((observable, oldValue, newValue) -> addressField.setText(browser.getURL())));
         BrowserView view = new BrowserView(browser);
         browserContainer.getChildren().clear();
@@ -114,6 +119,11 @@ public class MainWindow {
                 Val.flatMap(VM.getProperty(), VirtualMachine::pageRootProperty)
                 .map(url -> url == null ? -1.0 : 0.0)
                 .orElseConst(-1.0)
+        );
+        goToRootWebpageMenuItem.disableProperty().bind(
+                Val.flatMap(VM.getProperty(), VirtualMachine::pageRootProperty)
+                        .map(Objects::isNull)
+                        .orElseConst(true)
         );
     }
 
@@ -185,7 +195,9 @@ public class MainWindow {
         if (VM.isSet()) {
             VirtualMachine vm = VM.get();
             toolBar.getItems().addAll(vm.getType().getToolBarElements());
-            vm.getModules().forEach(Module::reloadToolbar);
+            vm.getModules()
+                    .sorted(Comparator.comparingInt(Module::toolbarOrder))
+                    .forEach(Module::reloadToolbar);
         }
     }
 
@@ -214,4 +226,8 @@ public class MainWindow {
     }
 
     private VirtualMachine previousMachine = null;
+
+    public void openJsConsole() {
+        JsConsole.openJsConsole();
+    }
 }
