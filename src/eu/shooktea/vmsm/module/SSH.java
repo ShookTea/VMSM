@@ -57,7 +57,12 @@ public class SSH extends Module {
         Session session = jsch.getSession(user, host, 22);
         session.setPassword(passwd);
         session.setUserInfo(ui);
-        session.connect(5000);
+        try {
+            session.connect(5000);
+        }
+        catch (JSchException ex) {
+            return null;
+        }
         Channel channel = session.openChannel(type);
         return channel;
     }
