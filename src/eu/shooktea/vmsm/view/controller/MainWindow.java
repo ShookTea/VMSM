@@ -27,13 +27,15 @@ import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.BrowserContext;
 import com.teamdev.jxbrowser.chromium.BrowserType;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
-import eu.shooktea.vmsm.*;
+import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.Toolkit;
+import eu.shooktea.vmsm.VM;
+import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
@@ -70,6 +72,7 @@ public class MainWindow {
         progressListener = new BrowserProgressBar();
         browser = new Browser(BrowserType.LIGHTWEIGHT, BrowserContext.defaultContext());
         browser.addLoadListener(progressListener);
+        browser.addConsoleListener(e -> JsConsole.outputText.setValue(JsConsole.outputText.getValue() + e.getMessage() + "\n"));
         progressListener.somethingHasChangedProperty().addListener(((observable, oldValue, newValue) -> addressField.setText(browser.getURL())));
         BrowserView view = new BrowserView(browser);
         browserContainer.getChildren().clear();
@@ -220,4 +223,8 @@ public class MainWindow {
     }
 
     private VirtualMachine previousMachine = null;
+
+    public void openJsConsole() {
+        JsConsole.openJsConsole();
+    }
 }

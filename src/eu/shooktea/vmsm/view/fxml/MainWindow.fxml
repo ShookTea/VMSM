@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
+<?import javafx.scene.control.SeparatorMenuItem?>
 <VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.MainWindow">
    <children>
       <MenuBar fx:id="menuBar">
@@ -27,6 +28,8 @@
                         <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                     </accelerator>
                 </MenuItem>
+                <MenuItem mnemonicParsing="false" onAction="#openJsConsole" text="Open JS console"/>
+                <SeparatorMenuItem/>
               <MenuItem mnemonicParsing="false" onAction="#close" text="Exit">
                      <accelerator>
                         <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
