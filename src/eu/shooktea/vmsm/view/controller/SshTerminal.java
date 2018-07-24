@@ -38,6 +38,10 @@ public class SshTerminal implements UserInfo, StageController {
                 output.setText("SSH is not configured.");
                 return;
             }
+            if (channel.isClosed() || !channel.isConnected()) {
+                output.setText("Connection not established.");
+                return;
+            }
             channel.setAgentForwarding(true);
             channel.setPtyType("vt102");
             channel.setOutputStream(printStream);
@@ -140,7 +144,7 @@ public class SshTerminal implements UserInfo, StageController {
                     } catch (InterruptedException e) {
                         e.printStackTrace(printStream);
                     }
-                    if (channel.isClosed() || !channel.isConnected()) Platform.runLater(stage::close);
+                    if (channel == null || channel.isClosed() || !channel.isConnected()) Platform.runLater(stage::close);
 
                 }).start();
             });
