@@ -22,6 +22,8 @@ Virtual Machine Server Manager
     * [Exception notifications](#exception-notifications)
 1. [SSH](#ssh)
 
+JavaDoc documentation can be found at [shooktea.github.io/VMSM](https://shooktea.github.io/VMSM)
+
 ## Installation
 **System requirements:**
 * Newest version of Java Runtime Environment
