@@ -33,6 +33,7 @@ import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
@@ -45,10 +46,9 @@ import org.reactfx.value.Val;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 
 public class MainWindow {
-
     @FXML public MenuBar menuBar;
     @FXML public ToolBar toolBar;
     @FXML private HBox browserContainer;
@@ -57,6 +57,7 @@ public class MainWindow {
     @FXML private Menu vmListMenu;
     @FXML private ImageView homeButton;
     @FXML private Menu virtualMachineTypeMenu;
+    @FXML private MenuItem goToRootWebpageMenuItem;
 
     public Browser browser;
     private ToggleGroup chooseVmToggleGroup = new ToggleGroup();
@@ -114,6 +115,11 @@ public class MainWindow {
                 Val.flatMap(VM.getProperty(), VirtualMachine::pageRootProperty)
                 .map(url -> url == null ? -1.0 : 0.0)
                 .orElseConst(-1.0)
+        );
+        goToRootWebpageMenuItem.disableProperty().bind(
+                Val.flatMap(VM.getProperty(), VirtualMachine::pageRootProperty)
+                        .map(Objects::isNull)
+                        .orElseConst(true)
         );
     }
 

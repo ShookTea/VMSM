@@ -22,6 +22,11 @@
           <Menu fx:id="vmsmApplicationMenu" mnemonicParsing="false" text="Application">
             <items>
                   <MenuItem accelerator="F5" mnemonicParsing="false" onAction="#reloadWebpage" text="Reload web page" />
+                <MenuItem fx:id="goToRootWebpageMenuItem" mnemonicParsing="false" onAction="#goToHomeUrl" text="Go to root webpage">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                    </accelerator>
+                </MenuItem>
               <MenuItem mnemonicParsing="false" onAction="#close" text="Exit">
                      <accelerator>
                         <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
