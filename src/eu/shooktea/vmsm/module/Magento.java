@@ -6,6 +6,7 @@ import com.teamdev.jxbrowser.chromium.events.FinishLoadingEvent;
 import com.teamdev.jxbrowser.chromium.events.LoadAdapter;
 import com.teamdev.jxbrowser.chromium.events.LoadListener;
 import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
@@ -136,7 +137,7 @@ public class Magento extends Module {
     private static final List<Node> toolbarElements = createToolbar();
 
     private static Menu createMenu() {
-        MenuItem deleteCache = new MenuItem("Delete cache files", Start.createMenuImage("trash_full.png"));
+        MenuItem deleteCache = new MenuItem("Delete cache files", Toolkit.createMenuImage("trash_full.png"));
         deleteCache.setAccelerator(KeyCombination.valueOf("Ctrl+D"));
         deleteCache.setOnAction(e -> deleteAllInVar("cache"));
 
@@ -155,10 +156,10 @@ public class Magento extends Module {
         MenuItem deleteAll = new MenuItem("All");
         deleteAll.setOnAction(e -> deleteAllInVar("cache", "log", "report", "session"));
 
-        Menu removeSubmenu = new Menu("Delete", Start.createMenuImage("trash_full.png"),
+        Menu removeSubmenu = new Menu("Delete", Toolkit.createMenuImage("trash_full.png"),
                 deleteAll, new SeparatorMenuItem(), deleteCache2, deleteLogs, deleteReports, deleteSession);
 
-        MenuItem loginAsAdmin = new MenuItem("Login to admin panel", Start.createMenuImage("user.png"));
+        MenuItem loginAsAdmin = new MenuItem("Login to admin panel", Toolkit.createMenuImage("user.png"));
         loginAsAdmin.setAccelerator(KeyCombination.valueOf("Ctrl+A"));
         loginAsAdmin.setOnAction(e -> loginAsAdmin());
 
@@ -169,7 +170,7 @@ public class Magento extends Module {
         MenuItem reportsList = new MenuItem("Exception reports...");
         reportsList.setOnAction(MagentoReportsList::openMagentoReportsList);
 
-        return new Menu("Magento", Start.createMenuImage("magento.png"),
+        return new Menu("Magento", Toolkit.createMenuImage("magento.png"),
                 deleteCache, removeSubmenu, loginAsAdmin,
                 new SeparatorMenuItem(),
                 newMagentoModule, reportsList
@@ -205,17 +206,17 @@ public class Magento extends Module {
     }
 
     private static List<Node> createToolbar() {
-        ImageView removeCache = Start.createToolbarImage("trash_full.png");
+        ImageView removeCache = Toolkit.createToolbarImage("trash_full.png");
         Tooltip removeCacheTip = new Tooltip("Delete cache");
         Tooltip.install(removeCache, removeCacheTip);
         removeCache.setOnMouseClicked(e -> deleteAllInVar("cache"));
 
-        ImageView loginAsAdmin = Start.createToolbarImage("user.png");
+        ImageView loginAsAdmin = Toolkit.createToolbarImage("user.png");
         Tooltip loginAsAdminTip = new Tooltip("Login to admin panel");
         Tooltip.install(loginAsAdmin, loginAsAdminTip);
         loginAsAdmin.setOnMouseClicked(e -> loginAsAdmin());
 
-        ImageView reportsInfo = Start.createToolbarImage("reports/0.png");
+        ImageView reportsInfo = Toolkit.createToolbarImage("reports/0.png");
         Tooltip reportsInfoTip = new Tooltip("There are no new exception reports");
         Tooltip.install(reportsInfo, reportsInfoTip);
         reportsInfo.imageProperty().bind(
@@ -236,7 +237,7 @@ public class Magento extends Module {
 
         return Arrays.asList(
                 new Separator(Orientation.VERTICAL),
-                Start.createToolbarImage("magento.png"),
+                Toolkit.createToolbarImage("magento.png"),
                 removeCache,
                 loginAsAdmin,
                 reportsInfo

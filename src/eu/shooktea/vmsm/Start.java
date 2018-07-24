@@ -26,7 +26,6 @@ package eu.shooktea.vmsm;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.view.controller.MainWindow;
 import eu.shooktea.vmsm.view.controller.StageController;
-import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -36,8 +35,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -50,20 +47,6 @@ import java.net.URL;
 import java.security.GeneralSecurityException;
 
 public class Start extends Application {
-
-    public static ImageView createToolbarImage(String resourceFileName) {
-        resourceFileName = "/eu/shooktea/vmsm/resources/" + resourceFileName;
-        ImageView iv = new ImageView(new Image(VMType.class.getResourceAsStream(resourceFileName)));
-        iv.setPreserveRatio(true);
-        iv.setFitWidth(20);
-        return iv;
-    }
-
-    public static ImageView createMenuImage(String resourceFileName) {
-        ImageView iv = createToolbarImage(resourceFileName);
-        iv.setFitWidth(15);
-        return iv;
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {

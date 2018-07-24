@@ -2,6 +2,7 @@ package eu.shooktea.vmsm.module;
 
 import com.jcraft.jsch.*;
 import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.SshConfig;
 import eu.shooktea.vmsm.view.controller.SshTerminal;
@@ -67,7 +68,7 @@ public class SSH extends Module {
     }
 
     private List<Node> createToolbarElements() {
-        ImageView openTerminal = Start.createToolbarImage("terminal.png");
+        ImageView openTerminal = Toolkit.createToolbarImage("terminal.png");
         Tooltip removeCacheTip = new Tooltip("Open SSH terminal");
         Tooltip.install(openTerminal, removeCacheTip);
         openTerminal.setOnMouseClicked(SshTerminal::openSshTerminal);

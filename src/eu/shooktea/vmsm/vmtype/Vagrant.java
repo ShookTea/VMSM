@@ -24,6 +24,7 @@ SOFTWARE.
 package eu.shooktea.vmsm.vmtype;
 
 import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -55,13 +56,13 @@ public class Vagrant extends VMType {
     }
 
     private List<Node> createToolBarElements() {
-        ImageView vagrantIcon = Start.createToolbarImage("vagrant_icon.png");
-        statusIcon = Start.createToolbarImage(statusProperty.get().getResourceName());
+        ImageView vagrantIcon = Toolkit.createToolbarImage("vagrant_icon.png");
+        statusIcon = Toolkit.createToolbarImage(statusProperty.get().getResourceName());
         Tooltip tooltip = new Tooltip(statusProperty.get().getTooltipText());
         Tooltip.install(statusIcon, tooltip);
 
         statusProperty.addListener(((observable, oldValue, newValue) -> Platform.runLater(() -> {
-            statusIcon.setImage(Start.createToolbarImage(newValue.getResourceName()).getImage());
+            statusIcon.setImage(Toolkit.createToolbarImage(newValue.getResourceName()).getImage());
             tooltip.setText(newValue.getTooltipText());
         })));
 
@@ -166,21 +167,21 @@ public class Vagrant extends VMType {
 
     @Override
     public Optional<Menu> getMenu() {
-        MenuItem launch = new MenuItem("Start VM", Start.createMenuImage("play.png"));
+        MenuItem launch = new MenuItem("Start VM", Toolkit.createMenuImage("play.png"));
         launch.disableProperty().bind(statusProperty.isNotEqualTo(Status.STOPPED));
         launch.setOnAction((event) -> switchMachine(previousUpdateVm, "up"));
 
-        MenuItem restart = new MenuItem("Restart VM", Start.createMenuImage("play_all.png"));
+        MenuItem restart = new MenuItem("Restart VM", Toolkit.createMenuImage("play_all.png"));
         restart.disableProperty().bind(statusProperty.isNotEqualTo(Status.RUNNING));
         restart.setOnAction((event) -> switchMachine(previousUpdateVm, "reload"));
 
-        MenuItem stop = new MenuItem("Stop VM", Start.createMenuImage("stop.png"));
+        MenuItem stop = new MenuItem("Stop VM", Toolkit.createMenuImage("stop.png"));
         stop.disableProperty().bind(statusProperty.isNotEqualTo(Status.RUNNING));
         stop.setOnAction((event) -> switchMachine(previousUpdateVm, "halt"));
 
         Menu menu = new Menu(
                 "Vagrant",
-                Start.createMenuImage("vagrant_icon.png"),
+                Toolkit.createMenuImage("vagrant_icon.png"),
                 launch, restart, stop
         );
         return Optional.of(menu);

@@ -29,6 +29,7 @@ import com.teamdev.jxbrowser.chromium.BrowserType;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.vmtype.VMType;
@@ -163,14 +164,14 @@ public class MainWindow {
                     vmTypeItems.add(item);
                 }
                 if (type.getModules().isPresent()) {
-                    MenuItem modulesDialog = new MenuItem("Managing modules...", Start.createMenuImage("run.png"));
+                    MenuItem modulesDialog = new MenuItem("Managing modules...", Toolkit.createMenuImage("run.png"));
                     modulesDialog.setOnAction(ModuleConfig::openModuleConfigWindow);
                     vmTypeItems.addAll(new SeparatorMenuItem(), modulesDialog);
                 }
                 virtualMachineTypeMenu.setVisible(true);
             }, () -> {
                 if (type.getModules().isPresent()) {
-                    MenuItem modulesDialog = new MenuItem("Managing modules...", Start.createMenuImage("run.png"));
+                    MenuItem modulesDialog = new MenuItem("Managing modules...", Toolkit.createMenuImage("run.png"));
                     modulesDialog.setOnAction(ModuleConfig::openModuleConfigWindow);
                     vmTypeItems.add(modulesDialog);
                     virtualMachineTypeMenu.setVisible(true);
