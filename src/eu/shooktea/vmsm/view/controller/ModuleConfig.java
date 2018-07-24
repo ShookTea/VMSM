@@ -71,6 +71,6 @@ public class ModuleConfig {
     }
 
     public static void openModuleConfigWindow(Object... lambdaArgs) {
-        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/ModuleConfig.fxml", "Module configuration", true);
+        MainView.createNewWindow("/eu/shooktea/vmsm/view/fxml/ModuleConfig.fxml", "Module configuration", true);
     }
 }

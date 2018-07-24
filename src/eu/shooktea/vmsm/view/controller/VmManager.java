@@ -73,6 +73,6 @@ public class VmManager {
     }
 
     public static void openVmManagerWindow(Object... lambdaArgs) {
-        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/VmManager.fxml", "VM Manager", true);
+        MainView.createNewWindow("/eu/shooktea/vmsm/view/fxml/VmManager.fxml", "VM Manager", true);
     }
 }

@@ -6,6 +6,7 @@ import com.jcraft.jsch.UserInfo;
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.SSH;
+import eu.shooktea.vmsm.view.controller.MainView;
 import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -66,7 +67,7 @@ public class SshTerminal implements UserInfo, StageController {
     }
 
     public static void openSshTerminal(Object... lambdaArgs) {
-        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/ssh/SshTerminal.fxml", "SSH Terminal", false);
+        MainView.createNewWindow("/eu/shooktea/vmsm/view/fxml/ssh/SshTerminal.fxml", "SSH Terminal", false);
     }
 
     @Override

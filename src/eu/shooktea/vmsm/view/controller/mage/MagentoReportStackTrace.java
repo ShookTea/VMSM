@@ -1,7 +1,7 @@
 package eu.shooktea.vmsm.view.controller.mage;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.module.MagentoReport;
+import eu.shooktea.vmsm.view.controller.MainView;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
@@ -17,7 +17,7 @@ public class MagentoReportStackTrace {
     public static void openStackTraceWindow(MagentoReport report) {
         if (report == null) return;
         MagentoReportStackTrace mrst =
-                Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoReportStackTrace.fxml", "Stack trace \"" + report.getText() + "\"", false);
+                MainView.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoReportStackTrace.fxml", "Stack trace \"" + report.getText() + "\"", false);
         mrst.setReport(report);
     }
 }
