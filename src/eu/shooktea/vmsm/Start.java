@@ -41,10 +41,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 
 public class Start extends Application {
 
@@ -78,38 +76,11 @@ public class Start extends Application {
         cl.changed(virtualMachineProperty, null, virtualMachineProperty.get());
     }
 
-    private static void turnOffSSL() {
-        TrustManager[] trustAllCerts = new TrustManager[] {
-                new X509TrustManager() {
-                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
-                    public void checkClientTrusted(
-                            java.security.cert.X509Certificate[] certs, String authType) {
-                    }
-                    public void checkServerTrusted(
-                            java.security.cert.X509Certificate[] certs, String authType) {
-                    }
-                }
-        };
-        try {
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-            HostnameVerifier allHostsValid = (s, sslSession) -> true;
-            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
     public static Stage primaryStage;
     public static MainWindow mainWindow;
 
     public static void main(String[] args) {
-        turnOffSSL();
+        Toolkit.turnOffSSL();
         launch(args);
     }
 
