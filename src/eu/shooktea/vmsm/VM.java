@@ -17,6 +17,10 @@ public class VM {
         }
     }
 
+    public static void unset() {
+        set(null);
+    }
+
     public static VirtualMachine get() {
         return currentVm;
     }
