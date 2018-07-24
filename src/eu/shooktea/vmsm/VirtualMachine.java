@@ -34,7 +34,18 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * Single virtual machine with HTTP server on it.
+ */
 public class VirtualMachine {
+
+    /**
+     * Main constructor for virtual machine.
+     * @param name displayed name of virtual machine. Should be unique but doesn't need to be.
+     * @param mainPath main path to virtual machine. More information about correct virtual machines are stored in {@link VMType}.
+     * @param pageRoot page root of VM that is used by modules. It can be either domain or IP address.
+     * @param type type of virtual machine.
+     */
     public VirtualMachine(String name, File mainPath, URL pageRoot, VMType type) {
         this.name = new SimpleStringProperty(name);
         this.mainPath = new SimpleObjectProperty<>(mainPath);
@@ -43,6 +54,12 @@ public class VirtualMachine {
         this.modules = new SimpleListProperty<>(FXCollections.observableArrayList());
     }
 
+    /**
+     * Converts virtual machine to JSON object. That JSON object is then stored in configuration file. During loading,
+     * virtual machine should be fully recoverable from that JSON.
+     * @return JSON representation of virtual machine
+     * @see #fromJSON(JSONObject)
+     */
     public JSONObject toJSON() {
         JSONObject obj = new JSONObject();
         obj.put("name", name.get());
@@ -60,38 +77,73 @@ public class VirtualMachine {
         return obj;
     }
 
+    /**
+     * Returns display name of virtual machine.
+     * @return name of virtual machine
+     */
     public String getName() {
         return name.getValue();
     }
 
+    /**
+     * Returns main path to virtual machine.
+     * @return main path to virtual machine
+     */
     public File getMainPath() {
         return mainPath.getValue();
     }
 
+    /**
+     * Sets new main path to virtual machine.
+     * @param f new main path
+     */
     public void setMainPath(File f) {
         mainPath.setValue(f);
     }
 
+    /**
+     * Returns page root of virtual machine. Can be {@code null}.
+     * @return page root
+     */
     public URL getPageRoot() {
         return pageRoot.get();
     }
 
+    /**
+     * Sets new page root of virtual machine. Can be {@code null}.
+     * @param url new page root
+     */
     public void setPageRoot(URL url) {
         pageRoot.set(url);
     }
 
+    /**
+     * Returns page root property.
+     */
     public ObjectProperty<URL> pageRootProperty() {
         return pageRoot;
     }
 
+    /**
+     * Returns type of virtual machine.
+     * @return type of VM
+     */
     public VMType getType() {
         return type.getValue();
     }
 
+    /**
+     * Returns list of all modules installed currently on that virtual machine.
+     * @return list of installed modules
+     */
     public ObservableList<Module> getModules() {
         return modules.getValue();
     }
 
+    /**
+     * Runs update of virtual machine. Update of VM consists of two parts: updating VM's type and all VM's modules.
+     * This method can be runned every time, but it's also called for currently displayed VM in 5-second loop.
+     */
     public void update() {
         getType().update(this);
         modules.forEach(Module::loopUpdate);
@@ -103,6 +155,13 @@ public class VirtualMachine {
     private ObjectProperty<VMType> type;
     private ListProperty<Module> modules;
 
+    /**
+     * Loads virtual machine from its JSON representation.
+     * @param json JSON representation of virtual machine
+     * @return virtual machine loaded from JSON
+     * @throws MalformedURLException if JSON contains URL of virtual machine, but that URL is invalid
+     * @see #toJSON()
+     */
     public static VirtualMachine fromJSON(JSONObject json) throws MalformedURLException {
         String name = json.getString("name");
         File path = new File(json.getString("path"));
