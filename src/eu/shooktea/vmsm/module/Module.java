@@ -1,7 +1,7 @@
 package eu.shooktea.vmsm.module;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -16,8 +16,7 @@ public abstract class Module {
     public Module() {
         isInstalled = new SimpleBooleanProperty();
         isInstalled.bind(Bindings.createBooleanBinding(() ->
-                Start.virtualMachineProperty.isNotNull().get()
-                && Start.virtualMachineProperty.get().getModules().contains(this)
+                VM.isSet() && VM.getOrThrow().getModules().contains(this)
         ));
     }
 

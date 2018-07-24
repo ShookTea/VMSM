@@ -1,7 +1,7 @@
 package eu.shooktea.vmsm.view.controller.ssh;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.SSH;
 import eu.shooktea.vmsm.view.controller.MainView;
@@ -18,7 +18,7 @@ public class SshConfig implements StageController {
 
     @FXML
     private void initialize() {
-        VirtualMachine vm = Start.virtualMachineProperty.get();
+        VirtualMachine vm = VM.getOrThrow();
         SSH ssh = (SSH)SSH.getModuleByName("SSH");
         String hostAddress = ssh.getStringSetting(vm, "host");
         String userName = ssh.getStringSetting(vm, "user");
@@ -32,7 +32,7 @@ public class SshConfig implements StageController {
 
     @FXML
     private void save() {
-        VirtualMachine vm = Start.virtualMachineProperty.get();
+        VirtualMachine vm = VM.getOrThrow();
         SSH ssh = (SSH)SSH.getModuleByName("SSH");
         ssh.setSetting(vm, "host", host.getText());
         ssh.setSetting(vm, "user", username.getText());

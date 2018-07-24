@@ -83,9 +83,7 @@ public class Storage {
                 .collect(Collectors.toList());
         JSONArray vms = new JSONArray(list);
         root.put("VMs", vms);
-        if (Start.virtualMachineProperty.isNotNull().get()) {
-            root.put("current_vm", Start.virtualMachineProperty.getValue().getName());
-        }
+        VM.ifNotNull(vm -> root.put("current_vm", vm.getName()));
 
         PrintWriter pw = new PrintWriter(vmsmFile);
         pw.println(root.toString());
@@ -122,10 +120,10 @@ public class Storage {
             String currentVmName = obj.getString("current_vm");
             List<VirtualMachine> filtered = Storage.vmList.filtered(vm -> vm.getName().equals(currentVmName));
             if (filtered.size() == 1) {
-                Start.virtualMachineProperty.setValue(filtered.get(0));
+                VM.set(filtered.get(0));
             }
             else if (vmList.size() > 0) {
-                Start.virtualMachineProperty.setValue(vmList.get(0));
+                VM.set(vmList.get(0));
             }
         }
     }

@@ -1,6 +1,6 @@
 package eu.shooktea.vmsm.view.controller.mage;
 
-import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Magento;
 import eu.shooktea.vmsm.module.MagentoReport;
@@ -23,7 +23,7 @@ public class MagentoReportsList {
 
     @FXML
     private void initialize() {
-        vm = Start.virtualMachineProperty.get();
+        vm = VM.getOrThrow();
         magento = (Magento)Magento.getModuleByName("Magento");
         initColumns();
         initTableEvents();

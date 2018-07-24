@@ -23,7 +23,6 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import javafx.application.Platform;

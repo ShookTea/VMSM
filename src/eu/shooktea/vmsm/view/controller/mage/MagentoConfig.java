@@ -1,7 +1,7 @@
 package eu.shooktea.vmsm.view.controller.mage;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.MagentoReport;
 import eu.shooktea.vmsm.module.Module;
@@ -27,7 +27,7 @@ public class MagentoConfig implements StageController {
 
     @FXML
     private void initialize() {
-        VirtualMachine vm = Start.virtualMachineProperty.getValue();
+        VirtualMachine vm = VM.getOrThrow();
         Module module = Module.getModuleByName("Magento");
         loadSetting(module, vm, magentoPath, "path");
         loadSetting(module, vm, adminLogin, "adm_login");
@@ -62,8 +62,8 @@ public class MagentoConfig implements StageController {
         String dialogTitle = "Choose path";
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle(dialogTitle);
-        fileChooser.setInitialDirectory(Start.virtualMachineProperty.getValue().getMainPath());
-        File file = fileChooser.showDialog(Start.primaryStage);
+        fileChooser.setInitialDirectory(VM.getOrThrow().getMainPath());
+        File file = fileChooser.showDialog(MainView.getMainWindowStage());
         if (file == null) return;
 
         if (checkFile(file)) {
@@ -81,7 +81,7 @@ public class MagentoConfig implements StageController {
 
     @FXML
     private void saveSettings() {
-        VirtualMachine vm = Start.virtualMachineProperty.getValue();
+        VirtualMachine vm = VM.getOrThrow();
         Module module = Module.getModuleByName("Magento");
         File file = new File(magentoPath.getText().trim());
         if (!checkFile(file)) {

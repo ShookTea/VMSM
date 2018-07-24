@@ -1,7 +1,7 @@
 package eu.shooktea.vmsm.view.controller;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.fxml.FXML;
@@ -56,10 +56,10 @@ public class VmManager {
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
                         Storage.removeVM(vm);
-                        if (Start.virtualMachineProperty.isEqualTo(vm).get())
-                            Start.virtualMachineProperty.set(null);
+                        if (VM.isEqual(vm))
+                            VM.unset();
                         else
-                            Start.mainWindow.reloadGUI();
+                            MainView.reloadGUI();
                     }
                 }
             });

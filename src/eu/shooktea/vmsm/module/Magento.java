@@ -5,9 +5,10 @@ import com.teamdev.jxbrowser.chromium.dom.*;
 import com.teamdev.jxbrowser.chromium.events.FinishLoadingEvent;
 import com.teamdev.jxbrowser.chromium.events.LoadAdapter;
 import com.teamdev.jxbrowser.chromium.events.LoadListener;
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Toolkit;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.controller.MainView;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
 import eu.shooktea.vmsm.view.controller.mage.MagentoReportsList;
@@ -56,24 +57,24 @@ public class Magento extends Module {
     @Override
     public void afterModuleInstalled() {
         super.afterModuleInstalled();
-        if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu)) {
-            Start.mainWindow.menuBar.getMenus().add(magentoMenu);
+        if (!MainView.getMainWindowController().menuBar.getMenus().contains(magentoMenu)) {
+            MainView.getMainWindowController().menuBar.getMenus().add(magentoMenu);
         }
     }
 
     @Override
     public void afterModuleRemoved() {
         super.afterModuleRemoved();
-        Start.mainWindow.menuBar.getMenus().remove(magentoMenu);
-        Start.mainWindow.toolBar.getItems().removeAll(toolbarElements);
+        MainView.getMainWindowController().menuBar.getMenus().remove(magentoMenu);
+        MainView.getMainWindowController().toolBar.getItems().removeAll(toolbarElements);
     }
 
     @Override
     public void afterModuleLoaded() {
         super.afterModuleLoaded();
         Platform.runLater(() -> {
-            if (!Start.mainWindow.menuBar.getMenus().contains(magentoMenu)) {
-                Start.mainWindow.menuBar.getMenus().add(magentoMenu);
+            if (!MainView.getMainWindowController().menuBar.getMenus().contains(magentoMenu)) {
+                MainView.getMainWindowController().menuBar.getMenus().add(magentoMenu);
             }
         });
     }
@@ -82,19 +83,19 @@ public class Magento extends Module {
     public void afterModuleTurnedOff() {
         super.afterModuleTurnedOff();
         Platform.runLater(() -> {
-            Start.mainWindow.menuBar.getMenus().remove(magentoMenu);
-            Start.mainWindow.toolBar.getItems().removeAll(toolbarElements);
+            MainView.getMainWindowController().menuBar.getMenus().remove(magentoMenu);
+            MainView.getMainWindowController().toolBar.getItems().removeAll(toolbarElements);
         });
     }
 
     @Override
     public void reloadToolbar() {
-        Start.mainWindow.toolBar.getItems().addAll(toolbarElements);
+        MainView.getMainWindowController().toolBar.getItems().addAll(toolbarElements);
     }
 
     @Override
     public void loopUpdate() {
-        VirtualMachine vm = Start.virtualMachineProperty.get();
+        VirtualMachine vm = VM.getOrThrow();
         String rootPath = getStringSetting(vm, "path");
         if (rootPath == null) return;
         File root = new File(rootPath);
@@ -178,7 +179,7 @@ public class Magento extends Module {
     }
 
     public static void deleteAllInVar(String... varSubdirs) {
-        VirtualMachine current = Start.virtualMachineProperty.get();
+        VirtualMachine current = VM.getOrThrow();
         String mainPath = getModuleByName("Magento").getStringSetting(current, "path");
         if (mainPath == null) return;
 
@@ -245,11 +246,11 @@ public class Magento extends Module {
     }
 
     private static void loginAsAdmin() {
-        VirtualMachine vm = Start.virtualMachineProperty.get();
+        VirtualMachine vm = VM.getOrThrow();
         Magento magento = (Magento)Module.getModuleByName("Magento");
         String address = magento.getAdminAddress(vm);
         if (address == null) return;
-        MainWindow mw = Start.mainWindow;
+        MainWindow mw = MainView.getMainWindowController();
         String currentAddress = vm.getPageRoot().toString();
         if (!currentAddress.endsWith("/")) currentAddress = currentAddress + "/";
         currentAddress = currentAddress + address;

@@ -23,8 +23,8 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.Bindings;
@@ -88,12 +88,12 @@ public class NewVM implements StageController {
         if (vmType.getValue().isMainPathDirectory()) {
             DirectoryChooser fileChooser = new DirectoryChooser();
             fileChooser.setTitle(dialogTitle);
-            file = fileChooser.showDialog(Start.primaryStage);
+            file = fileChooser.showDialog(MainView.getMainWindowStage());
         }
         else {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle(dialogTitle);
-            file = fileChooser.showOpenDialog(Start.primaryStage);
+            file = fileChooser.showOpenDialog(MainView.getMainWindowStage());
         }
         if (file != null) vmPath.setText(file.getAbsolutePath());
         vmType.getValue().checkVmRootFile(file);
@@ -139,7 +139,7 @@ public class NewVM implements StageController {
             VirtualMachine machine = new VirtualMachine(name, file, url, vmType.getValue());
             Storage.registerVM(machine);
             stage.close();
-            Start.virtualMachineProperty.setValue(machine);
+            VM.set(machine);
         }
     }
 

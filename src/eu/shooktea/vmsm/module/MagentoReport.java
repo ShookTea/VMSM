@@ -1,7 +1,7 @@
 package eu.shooktea.vmsm.module;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -71,7 +71,7 @@ public class MagentoReport {
 
     public String getFileName() {
         Magento magento = (Magento)Magento.getModuleByName("Magento");
-        File root = new File(magento.getStringSetting(Start.virtualMachineProperty.get(), "path"));
+        File root = new File(magento.getStringSetting(VM.getOrThrow(), "path"));
         File report = new File(root, "var/report/" + getName());
         if (report.exists()) {
             return report.toString();

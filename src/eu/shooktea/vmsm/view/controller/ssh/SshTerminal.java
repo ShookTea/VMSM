@@ -3,7 +3,7 @@ package eu.shooktea.vmsm.view.controller.ssh;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.UserInfo;
-import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.SSH;
 import eu.shooktea.vmsm.view.controller.MainView;
@@ -33,7 +33,7 @@ public class SshTerminal implements UserInfo, StageController {
         Console console = new Console(output);
         printStream = new PrintStream(console, true);
         try {
-            VirtualMachine vm = Start.virtualMachineProperty.get();
+            VirtualMachine vm = VM.getOrThrow();
             SSH ssh = (SSH)SSH.getModuleByName("SSH");
             channel = (ChannelShell)ssh.openChannel(vm, this, "shell");
             if (channel == null) {

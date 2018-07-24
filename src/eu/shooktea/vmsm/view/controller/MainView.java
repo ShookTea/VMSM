@@ -1,6 +1,7 @@
 package eu.shooktea.vmsm.view.controller;
 
-import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.VM;
+import eu.shooktea.vmsm.VirtualMachine;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -39,7 +40,7 @@ public class MainView {
     private static void initializeApplicationLoop() {
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, (ev) -> {
-                    if (Start.virtualMachineProperty.isNotNull().get()) Start.virtualMachineProperty.get().update();
+                    VM.ifNotNull(VirtualMachine::update);
                     getMainWindowController().reloadGUI();
                 }),
                 new KeyFrame(Duration.seconds(5))
@@ -58,7 +59,7 @@ public class MainView {
 
     public static <T extends Region, C> C createNewWindow(String fxmlPath, String title, boolean isModal) {
         try {
-            URL location = Start.class.getResource(fxmlPath);
+            URL location = MainView.class.getResource(fxmlPath);
             FXMLLoader loader = new FXMLLoader(location);
             T element = loader.load();
             C controller = loader.getController();
@@ -83,6 +84,10 @@ public class MainView {
             System.exit(1);
             return null;
         }
+    }
+
+    public static void reloadGUI() {
+        if (mainWindow != null) mainWindow.reloadGUI();
     }
 
     private static Stage primaryStage;

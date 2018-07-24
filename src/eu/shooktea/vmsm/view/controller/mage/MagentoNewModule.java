@@ -1,6 +1,6 @@
 package eu.shooktea.vmsm.view.controller.mage;
 
-import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.module.Magento;
@@ -75,7 +75,7 @@ public class MagentoNewModule implements StageController {
 
     @FXML
     private void createAction() {
-        VirtualMachine vm = Start.virtualMachineProperty.getValue();
+        VirtualMachine vm = VM.getOrThrow();
         Magento magento = (Magento)Module.getModuleByName("Magento");
         String path = magento.getStringSetting(vm, "path");
         if (path == null) {

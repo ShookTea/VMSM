@@ -25,11 +25,7 @@ package eu.shooktea.vmsm;
 
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.view.controller.MainView;
-import eu.shooktea.vmsm.view.controller.MainWindow;
 import javafx.application.Application;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
 
 /**
@@ -40,20 +36,13 @@ public class Start extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         MainView.initialize(stage);
-        primaryStage = MainView.getMainWindowStage();
-        mainWindow = MainView.getMainWindowController();
-        ChangeListener<VirtualMachine> cl = ((observable, oldValue, newValue) -> {
-            if (oldValue != null) for (Module m : oldValue.getModules()) m.afterModuleTurnedOff();
-            if (newValue != null) for (Module m : newValue.getModules()) m.afterModuleLoaded();
-            if (virtualMachineProperty.isNotNull().get()) virtualMachineProperty.get().update();
-            Storage.saveAll();
-        });
-        Start.virtualMachineProperty.addListener(cl);
-        cl.changed(virtualMachineProperty, null, virtualMachineProperty.get());
-    }
 
-    public static Stage primaryStage;
-    public static MainWindow mainWindow;
+        VM.addListener((oldVM, newVM) -> {
+            if (oldVM != null) for (Module m : oldVM.getModules()) m.afterModuleTurnedOff();
+            if (newVM != null) for (Module m : newVM.getModules()) m.afterModuleLoaded();
+            VM.ifNotNull(VirtualMachine::update);
+        }).vmChanged(null, VM.get());
+    }
 
     public static void main(String[] args) {
         Toolkit.turnOffSSL();
@@ -61,6 +50,4 @@ public class Start extends Application {
         Storage.loadAll();
         launch(args);
     }
-
-    public static ObjectProperty<VirtualMachine> virtualMachineProperty = new SimpleObjectProperty<>();
 }
