@@ -119,6 +119,7 @@ public class VirtualMachine {
 
     /**
      * Returns page root property.
+     * @return page root property
      */
     public ObjectProperty<URL> pageRootProperty() {
         return pageRoot;
