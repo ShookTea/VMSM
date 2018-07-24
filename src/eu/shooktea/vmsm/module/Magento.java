@@ -249,6 +249,11 @@ public class Magento extends Module {
         );
     }
 
+    @Override
+    public int toolbarOrder() {
+        return -5;
+    }
+
     private static void loginAsAdmin() {
         VirtualMachine vm = VM.getOrThrow();
         Magento magento = Module.getModuleByName("Magento");

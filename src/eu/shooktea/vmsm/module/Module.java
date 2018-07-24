@@ -182,6 +182,14 @@ public abstract class Module {
         settings.getOrDefault(vm, new HashMap<>()).remove(key);
     }
 
+    /**
+     * Returns order in which modules' toolbars should be displayed
+     * @return order in toolbar
+     */
+    public int toolbarOrder() {
+        return 0;
+    }
+
     private BooleanProperty isInstalled;
     private Map<VirtualMachine, Map<String, Object>> settings = new HashMap<>();
 }

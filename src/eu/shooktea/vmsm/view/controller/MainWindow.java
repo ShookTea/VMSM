@@ -47,6 +47,7 @@ import org.reactfx.value.Val;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -194,7 +195,9 @@ public class MainWindow {
         if (VM.isSet()) {
             VirtualMachine vm = VM.get();
             toolBar.getItems().addAll(vm.getType().getToolBarElements());
-            vm.getModules().forEach(Module::reloadToolbar);
+            vm.getModules()
+                    .sorted(Comparator.comparingInt(Module::toolbarOrder))
+                    .forEach(Module::reloadToolbar);
         }
     }
 
