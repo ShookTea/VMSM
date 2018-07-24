@@ -161,7 +161,7 @@ public class Magento extends Module {
                 deleteAll, new SeparatorMenuItem(), deleteCache2, deleteLogs, deleteReports, deleteSession);
 
         MenuItem loginAsAdmin = new MenuItem("Login to admin panel", Toolkit.createMenuImage("user.png"));
-        loginAsAdmin.setAccelerator(KeyCombination.valueOf("Ctrl+A"));
+        loginAsAdmin.setAccelerator(KeyCombination.valueOf("Ctrl+Shift+A"));
         loginAsAdmin.setOnAction(e -> loginAsAdmin());
 
         MenuItem newMagentoModule = new MenuItem("Create new module...");
