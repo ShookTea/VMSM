@@ -64,20 +64,12 @@ public class VirtualMachine {
         return name.getValue();
     }
 
-    public ReadOnlyStringProperty nameProperty() {
-        return name;
-    }
-
     public File getMainPath() {
         return mainPath.getValue();
     }
 
     public void setMainPath(File f) {
         mainPath.setValue(f);
-    }
-
-    public ObjectProperty<File> mainPathProperty() {
-        return mainPath;
     }
 
     public URL getPageRoot() {
@@ -96,24 +88,8 @@ public class VirtualMachine {
         return type.getValue();
     }
 
-    public void setType(VMType type) {
-        this.type.setValue(type);
-    }
-
-    public ObjectProperty<VMType> typeProperty() {
-        return type;
-    }
-
     public ObservableList<Module> getModules() {
         return modules.getValue();
-    }
-
-    public void setModules(ObservableList<Module> m) {
-        modules.setValue(m);
-    }
-
-    public ListProperty<Module> modulesProperty() {
-        return modules;
     }
 
     public void update() {
