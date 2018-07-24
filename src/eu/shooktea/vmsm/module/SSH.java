@@ -17,6 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Module representing SSH connection with VM.
+ */
 public class SSH extends Module {
     @Override
     public String getName() {
@@ -47,6 +50,14 @@ public class SSH extends Module {
         });
     }
 
+    /**
+     * Opens new channel of SSH communication protocol.
+     * @param vm virtual machine
+     * @param ui user info
+     * @param type type of connection, i.e. "shell"
+     * @return new channel of communication or {@code null} if connection timed out.
+     * @throws JSchException if anything wrong happens during connection
+     */
     public Channel openChannel(VirtualMachine vm, UserInfo ui, String type) throws JSchException {
         String user = getStringSetting(vm, "user");
         String passwd = getStringSetting(vm, "password");

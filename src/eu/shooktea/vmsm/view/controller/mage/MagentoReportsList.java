@@ -24,7 +24,7 @@ public class MagentoReportsList {
     @FXML
     private void initialize() {
         vm = VM.getOrThrow();
-        magento = (Magento)Magento.getModuleByName("Magento");
+        magento = Magento.getModuleByName("Magento");
         initColumns();
         initTableEvents();
         initLabel();

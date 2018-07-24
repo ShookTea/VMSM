@@ -76,7 +76,7 @@ public class MagentoNewModule implements StageController {
     @FXML
     private void createAction() {
         VirtualMachine vm = VM.getOrThrow();
-        Magento magento = (Magento)Module.getModuleByName("Magento");
+        Magento magento = Module.getModuleByName("Magento");
         String path = magento.getStringSetting(vm, "path");
         if (path == null) {
             showError("You haven't configured Magento main directory!");

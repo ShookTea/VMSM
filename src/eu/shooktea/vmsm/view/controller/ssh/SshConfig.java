@@ -19,7 +19,7 @@ public class SshConfig implements StageController {
     @FXML
     private void initialize() {
         VirtualMachine vm = VM.getOrThrow();
-        SSH ssh = (SSH)SSH.getModuleByName("SSH");
+        SSH ssh = SSH.getModuleByName("SSH");
         String hostAddress = ssh.getStringSetting(vm, "host");
         String userName = ssh.getStringSetting(vm, "user");
         String password = ssh.getStringSetting(vm, "password");
@@ -33,7 +33,7 @@ public class SshConfig implements StageController {
     @FXML
     private void save() {
         VirtualMachine vm = VM.getOrThrow();
-        SSH ssh = (SSH)SSH.getModuleByName("SSH");
+        SSH ssh = SSH.getModuleByName("SSH");
         ssh.setSetting(vm, "host", host.getText());
         ssh.setSetting(vm, "user", username.getText());
         ssh.setSetting(vm, "password", password.getText());

@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+/**
+ * Class representing single exception report in Magento.
+ */
 public class MagentoReport {
     private MagentoReport(String name, long timestamp, String text) {
         this.name = new SimpleStringProperty(name);
@@ -29,60 +32,44 @@ public class MagentoReport {
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), TimeZone.getDefault().toZoneId()));
     }
 
+    /**
+     * Returns name of report.
+     * @return name
+     */
     public String getName() {
         return name.getValue();
     }
 
-    public ReadOnlyStringProperty nameProperty() {
-        return name;
-    }
-
+    /**
+     * Returns Unix timestamp when report has been made.
+     * @return Unix timestamp in millis
+     */
     public long getTimestamp() {
         return timestamp.getValue();
     }
 
-    public ReadOnlyLongProperty timestampProperty() {
-        return timestamp;
-    }
-
+    /**
+     * Returns text containing stack trace of exception
+     * @return exception text
+     */
     public String getText() {
         return text.getValue();
     }
 
-    public ReadOnlyStringProperty textProperty() {
-        return text;
-    }
-
+    /**
+     * Returns parsed timestamp
+     * @return local date time
+     */
     public LocalDateTime getTime() {
         return time.getValue();
     }
 
-    public ReadOnlyObjectProperty<LocalDateTime> timeProperty() {
-        return time;
-    }
-
+    /**
+     * Returns message of exception, loaded from its text.
+     * @return message of exception
+     */
     public String getMessage() {
         return getText().replaceFirst("^.:\\d+:\\{.:\\d+;.:\\d*:\"([^\"]*)\"[\\s\\S]*$", "$1");
-    }
-
-    public ReadOnlyStringProperty messageProperty() {
-        return new SimpleStringProperty(getMessage());
-    }
-
-    public String getFileName() {
-        Magento magento = (Magento)Magento.getModuleByName("Magento");
-        File root = new File(magento.getStringSetting(VM.getOrThrow(), "path"));
-        File report = new File(root, "var/report/" + getName());
-        if (report.exists()) {
-            return report.toString();
-        }
-        else {
-            return "(removed) " + report.toString();
-        }
-    }
-
-    public ReadOnlyStringProperty fileNameProperty() {
-        return new SimpleStringProperty(getFileName());
     }
 
     private final ReadOnlyStringProperty name;
@@ -90,6 +77,12 @@ public class MagentoReport {
     private final ReadOnlyStringProperty text;
     private final ReadOnlyObjectProperty<LocalDateTime> time;
 
+    /**
+     * Checks if there are any new reports.
+     * @param module magento module
+     * @param vm virtual machine
+     * @param reportsDir directory with reports
+     */
     public static void update(Magento module, VirtualMachine vm, File reportsDir) {
         if (previousMachine != vm) {
             previousMachine = vm;
@@ -104,6 +97,8 @@ public class MagentoReport {
             else if (v instanceof Integer) {
                 value = ((Integer)v).longValue();
             }
+            //30 days
+            long MAX_TIME_DIFFERENCE_DEFAULT = 1000L * 60 * 60 * 24 * 30;
             MAX_TIME_DIFFERENCE = value == null ? MAX_TIME_DIFFERENCE_DEFAULT : value;
         }
         CHANGES = false;
@@ -177,7 +172,6 @@ public class MagentoReport {
     }
 
     public static long MAX_TIME_DIFFERENCE = -1;
-    private static long MAX_TIME_DIFFERENCE_DEFAULT = 1000L * 60 * 60 * 24 * 30; //30 days
     private static boolean CHANGES = false;
 
     public enum HoldTime {

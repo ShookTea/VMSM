@@ -34,10 +34,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Module representing Magento e-commerce.
+ */
 public class Magento extends Module {
-    public Magento() {
-        super();
-    }
 
     @Override
     public String getName() {
@@ -105,7 +105,7 @@ public class Magento extends Module {
         if (reports.exists()) MagentoReport.update(this, vm, reports);
     }
 
-    public String getAdminAddress(VirtualMachine vm) {
+    private String getAdminAddress(VirtualMachine vm) {
         try {
             String rootPath = getStringSetting(vm, "path");
             if (rootPath == null) throw new IOException("rootPath == null");
@@ -178,6 +178,10 @@ public class Magento extends Module {
         );
     }
 
+    /**
+     * Removes all files in {@code /var/X} directories, where X are loaded from arguments.
+     * @param varSubdirs subdirectories in {@code /var} directory that should be cleaned.
+     */
     public static void deleteAllInVar(String... varSubdirs) {
         VirtualMachine current = VM.getOrThrow();
         String mainPath = getModuleByName("Magento").getStringSetting(current, "path");
@@ -247,9 +251,8 @@ public class Magento extends Module {
 
     private static void loginAsAdmin() {
         VirtualMachine vm = VM.getOrThrow();
-        Magento magento = (Magento)Module.getModuleByName("Magento");
+        Magento magento = Module.getModuleByName("Magento");
         String address = magento.getAdminAddress(vm);
-        if (address == null) return;
         MainWindow mw = View.controller();
         String currentAddress = vm.getPageRoot().toString();
         if (!currentAddress.endsWith("/")) currentAddress = currentAddress + "/";
@@ -282,6 +285,5 @@ public class Magento extends Module {
 
         browser.addLoadListener(listener);
         browser.loadURL(currentAddress);
-
     }
 }

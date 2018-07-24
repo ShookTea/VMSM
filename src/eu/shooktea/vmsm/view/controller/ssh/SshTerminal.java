@@ -34,7 +34,7 @@ public class SshTerminal implements UserInfo, StageController {
         printStream = new PrintStream(console, true);
         try {
             VirtualMachine vm = VM.getOrThrow();
-            SSH ssh = (SSH)SSH.getModuleByName("SSH");
+            SSH ssh = SSH.getModuleByName("SSH");
             channel = (ChannelShell)ssh.openChannel(vm, this, "shell");
             if (channel == null) {
                 output.setText("SSH is not configured.");
