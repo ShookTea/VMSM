@@ -3,7 +3,7 @@ package eu.shooktea.vmsm.module;
 import com.jcraft.jsch.*;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.view.controller.MainView;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.ssh.SshConfig;
 import eu.shooktea.vmsm.view.controller.ssh.SshTerminal;
 import javafx.application.Platform;
@@ -36,14 +36,14 @@ public class SSH extends Module {
     @Override
     public void afterModuleRemoved() {
         super.afterModuleRemoved();
-        MainView.getMainWindowController().toolBar.getItems().removeAll(toolbarElements);
+        View.controller().toolBar.getItems().removeAll(toolbarElements);
     }
 
     @Override
     public void afterModuleTurnedOff() {
         super.afterModuleTurnedOff();
         Platform.runLater(() -> {
-            MainView.getMainWindowController().toolBar.getItems().removeAll(toolbarElements);
+            View.controller().toolBar.getItems().removeAll(toolbarElements);
         });
     }
 
@@ -69,7 +69,7 @@ public class SSH extends Module {
 
     @Override
     public void reloadToolbar() {
-        MainView.getMainWindowController().toolBar.getItems().addAll(toolbarElements);
+        View.controller().toolBar.getItems().addAll(toolbarElements);
     }
 
     private List<Node> createToolbarElements() {

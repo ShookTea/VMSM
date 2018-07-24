@@ -8,7 +8,7 @@ import com.teamdev.jxbrowser.chromium.events.LoadListener;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.view.controller.MainView;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
 import eu.shooktea.vmsm.view.controller.mage.MagentoReportsList;
@@ -57,24 +57,24 @@ public class Magento extends Module {
     @Override
     public void afterModuleInstalled() {
         super.afterModuleInstalled();
-        if (!MainView.getMainWindowController().menuBar.getMenus().contains(magentoMenu)) {
-            MainView.getMainWindowController().menuBar.getMenus().add(magentoMenu);
+        if (!View.controller().menuBar.getMenus().contains(magentoMenu)) {
+            View.controller().menuBar.getMenus().add(magentoMenu);
         }
     }
 
     @Override
     public void afterModuleRemoved() {
         super.afterModuleRemoved();
-        MainView.getMainWindowController().menuBar.getMenus().remove(magentoMenu);
-        MainView.getMainWindowController().toolBar.getItems().removeAll(toolbarElements);
+        View.controller().menuBar.getMenus().remove(magentoMenu);
+        View.controller().toolBar.getItems().removeAll(toolbarElements);
     }
 
     @Override
     public void afterModuleLoaded() {
         super.afterModuleLoaded();
         Platform.runLater(() -> {
-            if (!MainView.getMainWindowController().menuBar.getMenus().contains(magentoMenu)) {
-                MainView.getMainWindowController().menuBar.getMenus().add(magentoMenu);
+            if (!View.controller().menuBar.getMenus().contains(magentoMenu)) {
+                View.controller().menuBar.getMenus().add(magentoMenu);
             }
         });
     }
@@ -83,14 +83,14 @@ public class Magento extends Module {
     public void afterModuleTurnedOff() {
         super.afterModuleTurnedOff();
         Platform.runLater(() -> {
-            MainView.getMainWindowController().menuBar.getMenus().remove(magentoMenu);
-            MainView.getMainWindowController().toolBar.getItems().removeAll(toolbarElements);
+            View.controller().menuBar.getMenus().remove(magentoMenu);
+            View.controller().toolBar.getItems().removeAll(toolbarElements);
         });
     }
 
     @Override
     public void reloadToolbar() {
-        MainView.getMainWindowController().toolBar.getItems().addAll(toolbarElements);
+        View.controller().toolBar.getItems().addAll(toolbarElements);
     }
 
     @Override
@@ -250,7 +250,7 @@ public class Magento extends Module {
         Magento magento = (Magento)Module.getModuleByName("Magento");
         String address = magento.getAdminAddress(vm);
         if (address == null) return;
-        MainWindow mw = MainView.getMainWindowController();
+        MainWindow mw = View.controller();
         String currentAddress = vm.getPageRoot().toString();
         if (!currentAddress.endsWith("/")) currentAddress = currentAddress + "/";
         currentAddress = currentAddress + address;

@@ -4,7 +4,7 @@ import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.SSH;
-import eu.shooktea.vmsm.view.controller.MainView;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
@@ -49,6 +49,6 @@ public class SshConfig implements StageController {
     private Stage stage;
 
     public static void openSshConfigWindow(Object... lambdaArgs) {
-        MainView.createNewWindow("/eu/shooktea/vmsm/view/fxml/ssh/SshConfig.fxml", "SSH Configuration", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ssh/SshConfig.fxml", "SSH Configuration", true);
     }
 }

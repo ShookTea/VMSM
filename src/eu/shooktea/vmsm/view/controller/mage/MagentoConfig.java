@@ -5,7 +5,7 @@ import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.MagentoReport;
 import eu.shooktea.vmsm.module.Module;
-import eu.shooktea.vmsm.view.controller.MainView;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
@@ -63,7 +63,7 @@ public class MagentoConfig implements StageController {
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle(dialogTitle);
         fileChooser.setInitialDirectory(VM.getOrThrow().getMainPath());
-        File file = fileChooser.showDialog(MainView.getMainWindowStage());
+        File file = fileChooser.showDialog(View.stage());
         if (file == null) return;
 
         if (checkFile(file)) {
@@ -76,7 +76,7 @@ public class MagentoConfig implements StageController {
     }
 
     public static void openMagentoConfig(Object... lambdaArgs) {
-        MainView.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoConfig.fxml", "Magento Config", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoConfig.fxml", "Magento Config", true);
     }
 
     @FXML

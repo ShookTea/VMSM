@@ -1,7 +1,9 @@
-package eu.shooktea.vmsm.view.controller;
+package eu.shooktea.vmsm.view;
 
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.controller.MainWindow;
+import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -16,8 +18,8 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 
-public class MainView {
-    private MainView() {}
+public class View {
+    private View() {}
 
     public static void initialize(Stage stage) throws Exception {
         initializePrimaryStage(stage);
@@ -26,7 +28,7 @@ public class MainView {
 
     private static void initializePrimaryStage(Stage stage) throws Exception {
         primaryStage = stage;
-        URL location = MainView.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
+        URL location = View.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
         FXMLLoader loader = new FXMLLoader(location);
         VBox vbox = loader.load();
         mainWindow = loader.getController();
@@ -41,7 +43,7 @@ public class MainView {
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, (ev) -> {
                     VM.ifNotNull(VirtualMachine::update);
-                    getMainWindowController().reloadGUI();
+                    controller().reloadGUI();
                 }),
                 new KeyFrame(Duration.seconds(5))
         );
@@ -49,17 +51,17 @@ public class MainView {
         timeline.play();
     }
 
-    public static Stage getMainWindowStage() {
+    public static Stage stage() {
         return primaryStage;
     }
 
-    public static MainWindow getMainWindowController() {
+    public static MainWindow controller() {
         return mainWindow;
     }
 
     public static <T extends Region, C> C createNewWindow(String fxmlPath, String title, boolean isModal) {
         try {
-            URL location = MainView.class.getResource(fxmlPath);
+            URL location = View.class.getResource(fxmlPath);
             FXMLLoader loader = new FXMLLoader(location);
             T element = loader.load();
             C controller = loader.getController();

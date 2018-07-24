@@ -24,7 +24,7 @@ SOFTWARE.
 package eu.shooktea.vmsm;
 
 import eu.shooktea.vmsm.module.Module;
-import eu.shooktea.vmsm.view.controller.MainView;
+import eu.shooktea.vmsm.view.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -35,7 +35,7 @@ public class Start extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        MainView.initialize(stage);
+        View.initialize(stage);
 
         VM.addListener((oldVM, newVM) -> {
             if (oldVM != null) for (Module m : oldVM.getModules()) m.afterModuleTurnedOff();

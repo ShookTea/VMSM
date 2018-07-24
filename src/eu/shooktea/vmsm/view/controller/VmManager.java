@@ -3,6 +3,7 @@ package eu.shooktea.vmsm.view.controller;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -59,7 +60,7 @@ public class VmManager {
                         if (VM.isEqual(vm))
                             VM.unset();
                         else
-                            MainView.reloadGUI();
+                            View.reloadGUI();
                     }
                 }
             });
@@ -73,6 +74,6 @@ public class VmManager {
     }
 
     public static void openVmManagerWindow(Object... lambdaArgs) {
-        MainView.createNewWindow("/eu/shooktea/vmsm/view/fxml/VmManager.fxml", "VM Manager", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/VmManager.fxml", "VM Manager", true);
     }
 }

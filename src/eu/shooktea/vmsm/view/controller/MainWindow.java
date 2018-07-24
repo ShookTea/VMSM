@@ -29,6 +29,7 @@ import com.teamdev.jxbrowser.chromium.BrowserType;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
 import eu.shooktea.vmsm.*;
 import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -117,7 +118,7 @@ public class MainWindow {
     }
 
     public void reloadGUI() {
-        MainView.getMainWindowStage().setTitle(
+        View.stage().setTitle(
                 VM.isSet() ? "VMSM - " + VM.get().getName() : "VMSM"
         );
         reloadMenu();

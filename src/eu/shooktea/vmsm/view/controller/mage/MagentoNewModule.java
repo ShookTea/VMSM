@@ -4,7 +4,7 @@ import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.module.Magento;
-import eu.shooktea.vmsm.view.controller.MainView;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -261,6 +261,6 @@ public class MagentoNewModule implements StageController {
     }
 
     public static void openMagentoNewModuleWindow(Object... lambdaArgs) {
-        MainView.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoNewModule.fxml", "New module", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoNewModule.fxml", "New module", true);
     }
 }
