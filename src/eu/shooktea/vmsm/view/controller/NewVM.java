@@ -23,9 +23,10 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.view.controller;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.When;
@@ -88,12 +89,12 @@ public class NewVM implements StageController {
         if (vmType.getValue().isMainPathDirectory()) {
             DirectoryChooser fileChooser = new DirectoryChooser();
             fileChooser.setTitle(dialogTitle);
-            file = fileChooser.showDialog(Start.primaryStage);
+            file = fileChooser.showDialog(View.stage());
         }
         else {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle(dialogTitle);
-            file = fileChooser.showOpenDialog(Start.primaryStage);
+            file = fileChooser.showOpenDialog(View.stage());
         }
         if (file != null) vmPath.setText(file.getAbsolutePath());
         vmType.getValue().checkVmRootFile(file);
@@ -139,7 +140,7 @@ public class NewVM implements StageController {
             VirtualMachine machine = new VirtualMachine(name, file, url, vmType.getValue());
             Storage.registerVM(machine);
             stage.close();
-            Start.virtualMachineProperty.setValue(machine);
+            VM.set(machine);
         }
     }
 
@@ -170,6 +171,6 @@ public class NewVM implements StageController {
         if (lambdaArgs.length > 0 && lambdaArgs[0] instanceof VirtualMachine) {
             machineToEdit = (VirtualMachine)lambdaArgs[0];
         }
-        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/NewVM.fxml", "New VM", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/NewVM.fxml", "New VM", true);
     }
 }

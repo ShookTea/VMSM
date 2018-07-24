@@ -1,10 +1,11 @@
 package eu.shooktea.vmsm.module;
 
 import com.jcraft.jsch.*;
-import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.view.controller.SshConfig;
-import eu.shooktea.vmsm.view.controller.SshTerminal;
+import eu.shooktea.vmsm.view.View;
+import eu.shooktea.vmsm.view.controller.ssh.SshConfig;
+import eu.shooktea.vmsm.view.controller.ssh.SshTerminal;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -16,6 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Module representing SSH connection with VM.
+ */
 public class SSH extends Module {
     @Override
     public String getName() {
@@ -35,17 +39,25 @@ public class SSH extends Module {
     @Override
     public void afterModuleRemoved() {
         super.afterModuleRemoved();
-        Start.mainWindow.toolBar.getItems().removeAll(toolbarElements);
+        View.controller().toolBar.getItems().removeAll(toolbarElements);
     }
 
     @Override
     public void afterModuleTurnedOff() {
         super.afterModuleTurnedOff();
         Platform.runLater(() -> {
-            Start.mainWindow.toolBar.getItems().removeAll(toolbarElements);
+            View.controller().toolBar.getItems().removeAll(toolbarElements);
         });
     }
 
+    /**
+     * Opens new channel of SSH communication protocol.
+     * @param vm virtual machine
+     * @param ui user info
+     * @param type type of connection, i.e. "shell"
+     * @return new channel of communication or {@code null} if connection timed out.
+     * @throws JSchException if anything wrong happens during connection
+     */
     public Channel openChannel(VirtualMachine vm, UserInfo ui, String type) throws JSchException {
         String user = getStringSetting(vm, "user");
         String passwd = getStringSetting(vm, "password");
@@ -56,18 +68,23 @@ public class SSH extends Module {
         Session session = jsch.getSession(user, host, 22);
         session.setPassword(passwd);
         session.setUserInfo(ui);
-        session.connect(5000);
+        try {
+            session.connect(5000);
+        }
+        catch (JSchException ex) {
+            return null;
+        }
         Channel channel = session.openChannel(type);
         return channel;
     }
 
     @Override
     public void reloadToolbar() {
-        Start.mainWindow.toolBar.getItems().addAll(toolbarElements);
+        View.controller().toolBar.getItems().addAll(toolbarElements);
     }
 
     private List<Node> createToolbarElements() {
-        ImageView openTerminal = Start.createToolbarImage("terminal.png");
+        ImageView openTerminal = Toolkit.createToolbarImage("terminal.png");
         Tooltip removeCacheTip = new Tooltip("Open SSH terminal");
         Tooltip.install(openTerminal, removeCacheTip);
         openTerminal.setOnMouseClicked(SshTerminal::openSshTerminal);

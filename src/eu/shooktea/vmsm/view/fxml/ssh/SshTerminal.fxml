@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.ssh.SshTerminal">
+   <children>
+      <Label text="Output:" />
+      <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+         <content>
+            <TextArea fx:id="output" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #DDDDDD;" wrapText="true">
+               <font>
+                  <Font name="Monospaced Regular" size="12.0" />
+               </font>
+            </TextArea>
+         </content>
+      </ScrollPane>
+      <Label text="Input:" />
+      <TextField fx:id="input" maxWidth="1.7976931348623157E308">
+          <font>
+              <Font name="Monospaced Regular" size="12.0" />
+          </font>
+      </TextField>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

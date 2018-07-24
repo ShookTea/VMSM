@@ -27,10 +27,9 @@ import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.BrowserContext;
 import com.teamdev.jxbrowser.chromium.BrowserType;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
-import eu.shooktea.vmsm.Start;
-import eu.shooktea.vmsm.Storage;
-import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.*;
 import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -65,7 +64,7 @@ public class MainWindow {
 
     @FXML
     private void initialize() {
-        Start.virtualMachineProperty.addListener(((observable, oldValue, newValue) -> reloadGUI()));
+        VM.addListener(this::reloadGUI);
 
         progressListener = new BrowserProgressBar();
         browser = new Browser(BrowserType.LIGHTWEIGHT, BrowserContext.defaultContext());
@@ -83,11 +82,11 @@ public class MainWindow {
         chooseVmToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             RadioMenuItem item = (RadioMenuItem)newValue;
             String name = item.getText();
-            VirtualMachine chosenMachine = Storage.vmList.stream()
+            VirtualMachine chosenMachine = Storage.getVmList().stream()
                     .filter(vm -> vm.getName().equals(name))
                     .findFirst()
                     .get();
-            Start.virtualMachineProperty.setValue(chosenMachine);
+            VM.set(chosenMachine);
         }));
     }
 
@@ -112,17 +111,16 @@ public class MainWindow {
     private void bindHomeButton() {
         ColorAdjust effect = (ColorAdjust)homeButton.getEffect();
         effect.saturationProperty().bind(
-                Val.flatMap(Start.virtualMachineProperty, VirtualMachine::pageRootProperty)
+                Val.flatMap(VM.getProperty(), VirtualMachine::pageRootProperty)
                 .map(url -> url == null ? -1.0 : 0.0)
                 .orElseConst(-1.0)
         );
     }
 
     public void reloadGUI() {
-        Start.primaryStage.setTitle(
-                Start.virtualMachineProperty.getValue() == null ?
-                        "VMSM" :
-                        "VMSM - " + Start.virtualMachineProperty.getValue().getName());
+        View.stage().setTitle(
+                VM.isSet() ? "VMSM - " + VM.get().getName() : "VMSM"
+        );
         reloadMenu();
         reloadToolbar();
     }
@@ -130,10 +128,10 @@ public class MainWindow {
     private void reloadMenu() {
         ObservableList<MenuItem> items = vmListMenu.getItems();
         items.clear();
-        for (VirtualMachine vm : Storage.vmList) {
+        for (VirtualMachine vm : Storage.getVmList()) {
             RadioMenuItem item = new RadioMenuItem(vm.getName());
             item.setToggleGroup(chooseVmToggleGroup);
-            item.setSelected(Start.virtualMachineProperty.getValue() == vm);
+            item.setSelected(VM.get() == vm);
             items.add(item);
         }
         items.add(new SeparatorMenuItem());
@@ -147,8 +145,8 @@ public class MainWindow {
         vmManager.setOnAction(VmManager::openVmManagerWindow);
         items.add(vmManager);
 
-        if (Start.virtualMachineProperty.get() != previousMachine) {
-            previousMachine = Start.virtualMachineProperty.get();
+        if (VM.isNotEqual(previousMachine)) {
+            previousMachine = VM.get();
             VMType type = previousMachine.getType();
             ObservableList<MenuItem> vmTypeItems = virtualMachineTypeMenu.getItems();
             vmTypeItems.clear();
@@ -163,14 +161,14 @@ public class MainWindow {
                     vmTypeItems.add(item);
                 }
                 if (type.getModules().isPresent()) {
-                    MenuItem modulesDialog = new MenuItem("Managing modules...", Start.createMenuImage("run.png"));
+                    MenuItem modulesDialog = new MenuItem("Managing modules...", Toolkit.createMenuImage("run.png"));
                     modulesDialog.setOnAction(ModuleConfig::openModuleConfigWindow);
                     vmTypeItems.addAll(new SeparatorMenuItem(), modulesDialog);
                 }
                 virtualMachineTypeMenu.setVisible(true);
             }, () -> {
                 if (type.getModules().isPresent()) {
-                    MenuItem modulesDialog = new MenuItem("Managing modules...", Start.createMenuImage("run.png"));
+                    MenuItem modulesDialog = new MenuItem("Managing modules...", Toolkit.createMenuImage("run.png"));
                     modulesDialog.setOnAction(ModuleConfig::openModuleConfigWindow);
                     vmTypeItems.add(modulesDialog);
                     virtualMachineTypeMenu.setVisible(true);
@@ -184,8 +182,8 @@ public class MainWindow {
 
     private void reloadToolbar() {
         toolBar.getItems().clear();
-        if (!Start.virtualMachineProperty.isNull().get()) {
-            VirtualMachine vm = Start.virtualMachineProperty.getValue();
+        if (VM.isSet()) {
+            VirtualMachine vm = VM.get();
             toolBar.getItems().addAll(vm.getType().getToolBarElements());
             vm.getModules().forEach(Module::reloadToolbar);
         }
@@ -202,8 +200,8 @@ public class MainWindow {
 
     @FXML
     private void goToHomeUrl() {
-        if (Start.virtualMachineProperty.isNull().get()) return;
-        VirtualMachine vm = Start.virtualMachineProperty.getValue();
+        if (!VM.isSet()) return;
+        VirtualMachine vm = VM.get();
         if (vm.getPageRoot() == null) return;
         URL url = vm.getPageRoot();
         addressField.setText(url.toString());
@@ -213,11 +211,6 @@ public class MainWindow {
     @FXML
     public void reloadWebpage() {
         if (!this.addressField.getText().trim().isEmpty()) browser.reload();
-    }
-
-    public void goTo(String url) {
-        addressField.setText(url);
-        addressEnterPressed();
     }
 
     private VirtualMachine previousMachine = null;

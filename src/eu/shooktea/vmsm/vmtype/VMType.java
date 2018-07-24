@@ -45,18 +45,6 @@ public abstract class VMType {
         return typeName.getValue();
     }
 
-    public ReadOnlyStringProperty typeNameProperty() {
-        return typeName;
-    }
-
-    public String getCreationInfo() {
-        return creationInfo.getValue();
-    }
-
-    public ReadOnlyStringProperty creationInfoProperty() {
-        return creationInfo;
-    }
-
     public String getCreationError() {
         return creationError.getValue();
     }
@@ -65,24 +53,12 @@ public abstract class VMType {
         creationError.setValue(err);
     }
 
-    public StringProperty creationErrorProperty() {
-        return creationError;
-    }
-
     public final void checkVmRootFile(File file) {
         setCreationError(checkRootFile(file));
     }
 
     public ObservableList<Node> getToolBarElements() {
         return toolBarElements.getValue();
-    }
-
-    public void setToolBarElements(ObservableList<Node> list) {
-        toolBarElements.setValue(list);
-    }
-
-    public ListProperty<Node> toolBarElementsProperty() {
-        return toolBarElements;
     }
 
     public Optional<Menu> getMenu() {

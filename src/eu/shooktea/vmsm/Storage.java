@@ -36,19 +36,37 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Storage class manages configuration file.
+ */
 public class Storage {
     private Storage() {}
 
+    /**
+     * Register new virtual machine to be used by VMSM and saves configuration data.
+     * @param vm new virtual machine to be added to VMSM
+     */
     public static void registerVM(VirtualMachine vm) {
         vmList.add(vm);
         saveAll();
     }
 
+    /**
+     * Removes virtual machine from VMSM storage and saves configuration data.
+     * @param vm virtual machine to be removed from VMSM
+     */
     public static void removeVM(VirtualMachine vm) {
         vmList.remove(vm);
         saveAll();
     }
 
+    /**
+     * Tries to save configuration data.
+     * If configuration file already exists, first thing method does is creating backup. With backup already existing,
+     * method removes original configuration file and creates a new one.
+     * <p>
+     * This method should be called every time some change in configuration has been introduced, to save it for future load.
+     */
     public static void saveAll() {
         try {
             Files.copy(vmsmFile.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -83,15 +101,17 @@ public class Storage {
                 .collect(Collectors.toList());
         JSONArray vms = new JSONArray(list);
         root.put("VMs", vms);
-        if (Start.virtualMachineProperty.isNotNull().get()) {
-            root.put("current_vm", Start.virtualMachineProperty.getValue().getName());
-        }
+        VM.ifNotNull(vm -> root.put("current_vm", vm.getName()));
 
         PrintWriter pw = new PrintWriter(vmsmFile);
         pw.println(root.toString());
         pw.close();
     }
 
+    /**
+     * Tries to load configuration data. If configuration file doesn't exist, method does nothing. If both configuration file
+     * and backup file exist, but configuration file is empty, data from backup file is used instead.
+     */
     public static void loadAll() {
         try {
             tryLoadAll();
@@ -122,10 +142,10 @@ public class Storage {
             String currentVmName = obj.getString("current_vm");
             List<VirtualMachine> filtered = Storage.vmList.filtered(vm -> vm.getName().equals(currentVmName));
             if (filtered.size() == 1) {
-                Start.virtualMachineProperty.setValue(filtered.get(0));
+                VM.set(filtered.get(0));
             }
             else if (vmList.size() > 0) {
-                Start.virtualMachineProperty.setValue(vmList.get(0));
+                VM.set(vmList.get(0));
             }
         }
     }
@@ -160,7 +180,21 @@ public class Storage {
         return file;
     }
 
+    /**
+     * Returns list of registered virtual machines. That list should be used only to read data; while you can
+     * change content of that list, it won't be saved automatically - added or removed list will be updated in configuration
+     * file only after calling {@link #saveAll()}, either directly or indirectly by doing some action that uses that method.
+     * <p>
+     * If you want to add new virtual machine or remove existing one, use other methods of {@link Storage} class.
+     * @return list of registered virtual machines
+     * @see #registerVM(VirtualMachine)
+     * @see #removeVM(VirtualMachine)
+     */
+    public static ObservableList<VirtualMachine> getVmList() {
+        return vmList;
+    }
+
     private static File vmsmFile = getVmsmFile();
     private static File backupFile = getBackupFile(vmsmFile);
-    public static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
+    private static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
 }

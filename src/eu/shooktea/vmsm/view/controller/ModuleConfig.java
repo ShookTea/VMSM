@@ -1,8 +1,9 @@
 package eu.shooktea.vmsm.view.controller;
 
-import eu.shooktea.vmsm.Start;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.When;
 import javafx.fxml.FXML;
@@ -22,7 +23,7 @@ public class ModuleConfig {
     private void initialize() {
         grid.setStyle("-fx-background-color: lightgray; -fx-vgap: 1; -fx-hgap: 1; -fx-padding: 1;");
 
-        VirtualMachine vm = Start.virtualMachineProperty.getValue();
+        VirtualMachine vm = VM.getOrThrow();
         VMType type = vm.getType();
         String[] modules = type.getModules().get();
         int index = 0;
@@ -71,6 +72,6 @@ public class ModuleConfig {
     }
 
     public static void openModuleConfigWindow(Object... lambdaArgs) {
-        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/ModuleConfig.fxml", "Module configuration", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ModuleConfig.fxml", "Module configuration", true);
     }
 }
