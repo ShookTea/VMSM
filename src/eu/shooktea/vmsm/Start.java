@@ -33,10 +33,17 @@ import javafx.stage.Stage;
  */
 public class Start extends Application {
 
+    /**
+     * Main method for JavaFX application that initializes GUI. You shouldn't call it by your own.
+     * @param stage primary stage
+     * @throws Exception if anything wrong happens during initialization of GUI.
+     */
     @Override
     public void start(Stage stage) throws Exception {
-        View.initialize(stage);
+        if (isStartCalled) return;
+        isStartCalled = true;
 
+        View.initialize(stage);
         VM.addListener((oldVM, newVM) -> {
             if (oldVM != null) for (Module m : oldVM.getModules()) m.afterModuleTurnedOff();
             if (newVM != null) for (Module m : newVM.getModules()) m.afterModuleLoaded();
@@ -44,10 +51,21 @@ public class Start extends Application {
         }).vmChanged(null, VM.get());
     }
 
+    /**
+     * Main method for VMSM, called during start of application. You shouldn't call it by your own.
+     * That method turns off checking SSL certificates, allows for using restricted HTTP headers, loads configuration
+     * and displays VMSM window.
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
+        if (isMainCalled) return;
+        isMainCalled = true;
         Toolkit.turnOffSSL();
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
         Storage.loadAll();
         launch(args);
     }
+
+    private static boolean isStartCalled = false;
+    private static boolean isMainCalled = false;
 }

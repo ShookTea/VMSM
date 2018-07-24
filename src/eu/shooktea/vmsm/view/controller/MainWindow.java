@@ -82,7 +82,7 @@ public class MainWindow {
         chooseVmToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) -> {
             RadioMenuItem item = (RadioMenuItem)newValue;
             String name = item.getText();
-            VirtualMachine chosenMachine = Storage.vmList.stream()
+            VirtualMachine chosenMachine = Storage.getVmList().stream()
                     .filter(vm -> vm.getName().equals(name))
                     .findFirst()
                     .get();
@@ -128,7 +128,7 @@ public class MainWindow {
     private void reloadMenu() {
         ObservableList<MenuItem> items = vmListMenu.getItems();
         items.clear();
-        for (VirtualMachine vm : Storage.vmList) {
+        for (VirtualMachine vm : Storage.getVmList()) {
             RadioMenuItem item = new RadioMenuItem(vm.getName());
             item.setToggleGroup(chooseVmToggleGroup);
             item.setSelected(VM.get() == vm);

@@ -21,7 +21,7 @@ public class VmManager {
     private void initialize() {
         createColumns();
         initEvents();
-        table.setItems(Storage.vmList);
+        table.setItems(Storage.getVmList());
     }
 
     private void createColumns() {
