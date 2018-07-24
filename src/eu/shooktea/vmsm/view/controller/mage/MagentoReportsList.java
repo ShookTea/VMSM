@@ -1,4 +1,4 @@
-package eu.shooktea.vmsm.view.controller;
+package eu.shooktea.vmsm.view.controller.mage;
 
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VirtualMachine;
@@ -74,6 +74,6 @@ public class MagentoReportsList {
 
     public static void openMagentoReportsList(Object... lambdaArgs) {
         MagentoReport.notifyReports.clear();
-        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/MagentoReportsList.fxml", "Exception reports", true);
+        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoReportsList.fxml", "Exception reports", true);
     }
 }

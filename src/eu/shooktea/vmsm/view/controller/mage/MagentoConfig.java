@@ -1,10 +1,11 @@
-package eu.shooktea.vmsm.view.controller;
+package eu.shooktea.vmsm.view.controller.mage;
 
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.MagentoReport;
 import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -74,7 +75,7 @@ public class MagentoConfig implements StageController {
     }
 
     public static void openMagentoConfig(Object... lambdaArgs) {
-        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/MagentoConfig.fxml", "Magento Config", true);
+        Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoConfig.fxml", "Magento Config", true);
     }
 
     @FXML

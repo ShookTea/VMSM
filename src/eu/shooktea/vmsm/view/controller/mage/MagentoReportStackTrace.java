@@ -1,4 +1,4 @@
-package eu.shooktea.vmsm.view.controller;
+package eu.shooktea.vmsm.view.controller.mage;
 
 import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.module.MagentoReport;
@@ -17,7 +17,7 @@ public class MagentoReportStackTrace {
     public static void openStackTraceWindow(MagentoReport report) {
         if (report == null) return;
         MagentoReportStackTrace mrst =
-                Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/MagentoReportStackTrace.fxml", "Stack trace \"" + report.getText() + "\"", false);
+                Start.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoReportStackTrace.fxml", "Stack trace \"" + report.getText() + "\"", false);
         mrst.setReport(report);
     }
 }
