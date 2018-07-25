@@ -142,8 +142,7 @@ public abstract class Module {
 
     private static Map<String, Module> modules = Map.of(
             "Magento", new Magento(),
-            "SSH", new SSH(),
-            "MySQL", new MySQL()
+            "SSH", new SSH()
     );
 
     /**
