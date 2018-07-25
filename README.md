@@ -1,9 +1,9 @@
 # VMSM
 
-[![VMSM version 1.2.2](http://img.shields.io/VMSM/1.2.2.png)](https://github.com/ShookTea/VMSM/releases/latest)
-![License](https://img.shields.io/github/license/ShookTea/VMSM.svg)
-![Stable branch: master](https://img.shields.io/badge/stable%20branch-master-green.svg)
-![Develop branch: develop](https://img.shields.io/badge/dev%20branch-develop-red.svg)
+[![VMSM version 1.2.2](http://img.shields.io/VMSM/1.2.2.png?longCache=true&style=flat-square)](https://github.com/ShookTea/VMSM/releases/latest)
+![License](https://img.shields.io/github/license/ShookTea/VMSM.svg?longCache=true&style=flat-square)
+![Stable branch: master](https://img.shields.io/badge/stable%20branch-master-brightgreen.svg?longCache=true&style=flat-square)
+![Develop branch: develop](https://img.shields.io/badge/dev%20branch-develop-blue.svg?longCache=true&style=flat-square)
 
 Virtual Machine Server Manager
 
