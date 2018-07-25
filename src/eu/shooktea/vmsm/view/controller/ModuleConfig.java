@@ -78,6 +78,10 @@ public class ModuleConfig {
         VirtualMachine vm = VM.getOrThrow();
         switchButtons.forEach((button, module) -> {
             button.setDisable(Arrays.stream(module.getDependencies()).anyMatch(m -> !m.isInstalled(vm)));
+            if (button.isDisable() && button.isSelected()) {
+                button.setSelected(false);
+                button.getOnAction().handle(null);
+            }
         });
     }
 
