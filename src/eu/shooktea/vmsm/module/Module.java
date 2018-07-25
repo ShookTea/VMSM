@@ -46,6 +46,14 @@ public abstract class Module {
     public abstract String getDescription();
 
     /**
+     * Returns list of modules that need to be on in order to allow that module to be turned on.
+     * @return array of dependencies
+     */
+    public Module[] getDependencies() {
+        return new Module[0];
+    }
+
+    /**
      * Stores configuration of module for VM in JSON.
      * @param obj JSON object that will hold configuration of module
      * @param vm virtual machine that contains configuration of module
