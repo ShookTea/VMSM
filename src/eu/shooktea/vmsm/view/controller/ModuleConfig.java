@@ -5,7 +5,6 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.When;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

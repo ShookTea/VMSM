@@ -8,7 +8,7 @@ public class MySQL extends Module {
 
     @Override
     public String getDescription() {
-        return "MySQL client";
+        return "MySQL client. Requires SSH.";
     }
 
     @Override
