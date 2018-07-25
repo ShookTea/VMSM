@@ -49,6 +49,7 @@ public class Start extends Application {
             if (newVM != null) for (Module m : newVM.getModules()) m.afterModuleLoaded();
             VM.ifNotNull(VirtualMachine::update);
         }).vmChanged(null, VM.get());
+        VM.addListener(Storage::saveAll);
     }
 
     /**
