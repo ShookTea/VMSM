@@ -5,6 +5,7 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.When;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,6 +15,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
+
+import java.util.*;
 
 
 public class ModuleConfig {
@@ -63,13 +66,23 @@ public class ModuleConfig {
         switchButton.setOnAction((e) -> {
             module.installOn(vm);
             configButton.setDisable(!module.isInstalled(vm) || !module.openConfigWindow().isPresent());
+            updateSwitchButtons();
         });
-
-
+        switchButtons.put(switchButton, module);
+        updateSwitchButtons();
 
         grid.addRow(rowIndex, name, switchButton);
         grid.addRow(rowIndex + 1, description, configButton);
     }
+
+    private void updateSwitchButtons() {
+        VirtualMachine vm = VM.getOrThrow();
+        switchButtons.forEach((button, module) -> {
+            button.setDisable(Arrays.stream(module.getDependencies()).anyMatch(m -> !m.isInstalled(vm)));
+        });
+    }
+
+    private Map<ToggleButton,Module> switchButtons = new HashMap<>();
 
     public static void openModuleConfigWindow(Object... lambdaArgs) {
         View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ModuleConfig.fxml", "Module configuration", true);
