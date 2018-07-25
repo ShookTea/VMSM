@@ -1,6 +1,6 @@
 # VMSM
 
-[![Version: 1.2.2](http://img.shields.io/badge/Version-1.2.2-brightgreen.png?longCache=true&style=flat-square)](https://github.com/ShookTea/VMSM/releases/latest)
+[![Version: 1.3](http://img.shields.io/badge/Version-1.3-brightgreen.png?longCache=true&style=flat-square)](https://github.com/ShookTea/VMSM/releases/latest)
 [![Stable branch: master](https://img.shields.io/badge/stable%20branch-master-brightgreen.svg?longCache=true&style=flat-square)](https://github.com/ShookTea/VMSM/tree/master)
 [![Develop branch: develop](https://img.shields.io/badge/dev%20branch-develop-red.svg?longCache=true&style=flat-square)](https://github.com/ShookTea/VMSM/tree/develop)
 
