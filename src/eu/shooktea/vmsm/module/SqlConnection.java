@@ -108,7 +108,6 @@ public class SqlConnection {
             throw new SQLException("Connection is not yet established");
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(query);
-        statement.close();
         return result;
     }
 
