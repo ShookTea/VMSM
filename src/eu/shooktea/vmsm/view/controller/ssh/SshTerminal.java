@@ -37,7 +37,7 @@ public class SshTerminal implements UserInfo, StageController {
             SSH ssh = SSH.getModuleByName("SSH");
             channel = (ChannelShell)ssh.openChannel(vm, this, "shell");
             if (channel == null) {
-                output.setText("SSH is not configured.");
+                output.setText("SSH is not configured or virtual machine is off.");
                 return;
             }
             channel.setAgentForwarding(true);
@@ -92,6 +92,9 @@ public class SshTerminal implements UserInfo, StageController {
 
     @Override
     public boolean promptYesNo(String message) {
+        if (message.replace('\n', ' ').replace('\r', ' ').matches(fingerprintSsh)) {
+            return true;
+        }
         Object[] options={ "Yes", "No" };
         int option = JOptionPane.showOptionDialog(null,
                 message,
@@ -101,6 +104,8 @@ public class SshTerminal implements UserInfo, StageController {
                 null, options, options[0]);
         return option==0;
     }
+
+    private static final String fingerprintSsh = "^The authenticity of host '[^']*' can't be established\\..*Are you sure you want to continue connecting\\?$";
 
     @Override
     public void showMessage(String message) {
