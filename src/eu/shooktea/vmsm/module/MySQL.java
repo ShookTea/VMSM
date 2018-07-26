@@ -4,7 +4,7 @@ import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.mysql.MysqlConfig;
-import eu.shooktea.vmsm.view.controller.ssh.SshTerminal;
+import eu.shooktea.vmsm.view.controller.mysql.MysqlTerminal;
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -65,7 +65,7 @@ public class MySQL extends Module {
         ImageView openTerminal = Toolkit.createToolbarImage("db-blue.png");
         Tooltip removeCacheTip = new Tooltip("Open MySQL");
         Tooltip.install(openTerminal, removeCacheTip);
-        openTerminal.setOnMouseClicked(SshTerminal::openSshTerminal);
+        openTerminal.setOnMouseClicked(MysqlTerminal::openMysqlTerminal);
 
         List<Node> nodes = new ArrayList<>();
         if (!SSH.getModuleByName("SSH").isInstalled(VM.getOrThrow()))
