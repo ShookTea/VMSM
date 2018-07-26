@@ -95,5 +95,10 @@ public class SSH extends Module {
         );
     }
 
+    @Override
+    public int toolbarOrder() {
+        return 1000;
+    }
+
     private List<Node> toolbarElements = createToolbarElements();
 }
