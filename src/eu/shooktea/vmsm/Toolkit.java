@@ -22,6 +22,7 @@ public class Toolkit {
         ImageView iv = new ImageView(new Image(Toolkit.class.getResourceAsStream(resourceFileName)));
         iv.setPreserveRatio(true);
         iv.setFitWidth(20);
+        iv.setPickOnBounds(true);
         return iv;
     }
 

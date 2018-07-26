@@ -1,6 +1,6 @@
 # VMSM
 
-[![VMSM version 1.2.2](http://img.shields.io/VMSM/1.2.2.png)](https://github.com/ShookTea/VMSM/releases/latest)
+[![Newest version](https://img.shields.io/github/tag/ShookTea/VMSM.svg?style=for-the-badge)](https://github.com/ShookTea/VMSM/releases/latest)[![Stable branch: master](https://img.shields.io/badge/stable%20branch-master-brightgreen.svg?longCache=true&style=for-the-badge)](https://github.com/ShookTea/VMSM/tree/master)[![Develop branch: develop](https://img.shields.io/badge/dev%20branch-develop-red.svg?longCache=true&style=for-the-badge)](https://github.com/ShookTea/VMSM/tree/develop)
 
 Virtual Machine Server Manager
 
@@ -22,6 +22,7 @@ Virtual Machine Server Manager
     * [Creation of modules](#creation-of-modules)
     * [Exception notifications](#exception-notifications)
 1. [SSH](#ssh)
+1. [MySQL](#mysql)
 
 JavaDoc documentation can be found at [shooktea.github.io/VMSM](https://shooktea.github.io/VMSM)
 
@@ -56,6 +57,7 @@ And special *all systems* file that work on all of the operating systems above b
     * `org.json:json:20180130`
     * `org.reactfx:reactfx:2.0-M5`
     * `com.jcraft:jsch:0.1.54`
+    * `mysql:mysql-connector-java:8.0.11`
 1. Compile and run.
 
 ### (Windows) pin VMSM to task bar / start screen
@@ -210,3 +212,9 @@ New window will appear, with input text field and output text area.
 
 After writing any command in input field and pressing Enter, that command will be sent to your VM. Response from your
 machine will be displayed on output area.
+
+## MySQL
+MySQL module comes with simple terminal. You can configure MySQL server in `Vagrant/Managing modules...`.
+
+If you already have configured SSH module and you'll choose to use SSH tunnelling, configuration of SSH host will be
+used automatically.

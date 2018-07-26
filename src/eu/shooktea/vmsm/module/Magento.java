@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.module;
 
+import com.jcraft.jsch.JSchException;
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.dom.*;
 import com.teamdev.jxbrowser.chromium.events.FinishLoadingEvent;
@@ -14,6 +15,7 @@ import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
 import eu.shooktea.vmsm.view.controller.mage.MagentoReportsList;
 import eu.shooktea.vmsm.view.controller.MainWindow;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -23,13 +25,15 @@ import javafx.scene.input.KeyCombination;
 import org.reactfx.value.Val;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -90,6 +94,7 @@ public class Magento extends Module {
 
     @Override
     public void reloadToolbar() {
+        toolbarElements = createToolbar();
         View.controller().toolBar.getItems().addAll(toolbarElements);
     }
 
@@ -106,36 +111,43 @@ public class Magento extends Module {
     }
 
     private String getAdminAddress(VirtualMachine vm) {
+        return getConfigFromLocalXmlFile(vm, "admin/routers/adminhtml/args/frontName", "admin");
+    }
+
+    public String getConfigFromLocalXmlFile(VirtualMachine vm, String pathString, String defaultValue) {
         try {
-            String rootPath = getStringSetting(vm, "path");
-            if (rootPath == null) throw new IOException("rootPath == null");
-            File rootFile = new File(rootPath);
-            if (!rootFile.exists()) throw new IOException("rootFile " + rootFile.toString() + "doesn't exist");
-            File localXmlFile = new File(rootFile, "app/etc/local.xml");
-            if (!localXmlFile.exists()) throw new IOException("local xml file " + localXmlFile.toString() + " doesn't exist");
+            File localXmlFile = getLocalXmlFile(vm);
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = db.parse(localXmlFile);
-
             Element config = doc.getDocumentElement();
             config.normalize();
-            Element admin = (Element)config.getElementsByTagName("admin").item(0);
-            Element routers = (Element)admin.getElementsByTagName("routers").item(0);
-            Element adminhtml = (Element)routers.getElementsByTagName("adminhtml").item(0);
-            Element args = (Element)adminhtml.getElementsByTagName("args").item(0);
-            Element frontname = (Element)args.getElementsByTagName("frontName").item(0);
-            return frontname.getTextContent().trim();
+            String[] path = pathString.split("/");
+            for (String s : path) {
+                config = (Element)config.getElementsByTagName(s).item(0);
+            }
+            return config.getTextContent().trim();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
             System.exit(1);
-            return "admin";
-        } catch (SAXException | IOException e) {
+            return defaultValue;
+        } catch (Throwable e) {
             e.printStackTrace();
-            return "admin";
+            return defaultValue;
         }
     }
 
+    private File getLocalXmlFile(VirtualMachine vm) throws IOException {
+        String rootPath = getStringSetting(vm, "path");
+        if (rootPath == null) throw new IOException("rootPath == null");
+        File rootFile = new File(rootPath);
+        if (!rootFile.exists()) throw new IOException("rootFile " + rootFile.toString() + "doesn't exist");
+        File localXmlFile = new File(rootFile, "app/etc/local.xml");
+        if (!localXmlFile.exists()) throw new IOException("local xml file " + localXmlFile.toString() + " doesn't exist");
+        return localXmlFile;
+    }
+
     private static final Menu magentoMenu = createMenu();
-    private static final List<Node> toolbarElements = createToolbar();
+    private static List<Node> toolbarElements = createToolbar();
 
     private static Menu createMenu() {
         MenuItem deleteCache = new MenuItem("Delete cache files", Toolkit.createMenuImage("trash_full.png"));
@@ -238,15 +250,48 @@ public class Magento extends Module {
                 })
         );
         reportsInfo.setOnMouseClicked(MagentoReportsList::openMagentoReportsList);
-        reportsInfo.setPickOnBounds(true);
 
-        return Arrays.asList(
+        List<Node> nodes = new ArrayList<>(Arrays.asList(
                 new Separator(Orientation.VERTICAL),
                 Toolkit.createToolbarImage("magento.png"),
                 removeCache,
                 loginAsAdmin,
                 reportsInfo
-        );
+        ));
+
+        if (MySQL.getModuleByName("MySQL").isInstalled(VM.get())) {
+            ImageView debug = Toolkit.createToolbarImage("debug.png");
+            Tooltip debugTooltip = new Tooltip("Switch debugging");
+            Tooltip.install(debug, debugTooltip);
+            debug.setOnMouseClicked(e -> switchDebugging());
+            nodes.add(debug);
+        }
+
+        return nodes;
+    }
+
+    private static void switchDebugging() {
+        MySQL sql = MySQL.getModuleByName("MySQL");
+        VirtualMachine vm = VM.getOrThrow();
+        if (!sql.isInstalled(vm)) return;
+
+        SqlConnection connection = sql.createConnection();
+        try {
+            connection.open();
+            ResultSet set = (ResultSet)connection.query("SELECT value FROM core_config_data WHERE path LIKE \"%dev/debug/temp%\" LIMIT 1");
+            set.next();
+            int value = set.getInt("value");
+            set.close();
+            value = value == 0 ? 1 : 0;
+            connection.query("UPDATE core_config_data SET value=" + value + " WHERE path LIKE \"%dev/debug/temp%\"");
+            connection.close();
+
+            Magento.deleteAllInVar("cache");
+            if (View.controller().getUrl() != null && View.controller().getUrl().getHost().equalsIgnoreCase(vm.getPageRoot().getHost()))
+                View.controller().reloadWebpage();
+        } catch (JSchException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

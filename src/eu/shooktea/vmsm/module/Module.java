@@ -46,6 +46,14 @@ public abstract class Module {
     public abstract String getDescription();
 
     /**
+     * Returns list of modules that need to be on in order to allow that module to be turned on.
+     * @return array of dependencies
+     */
+    public Module[] getDependencies() {
+        return new Module[0];
+    }
+
+    /**
      * Stores configuration of module for VM in JSON.
      * @param obj JSON object that will hold configuration of module
      * @param vm virtual machine that contains configuration of module
@@ -101,6 +109,7 @@ public abstract class Module {
      * @see #installOn(VirtualMachine)
      */
     public boolean isInstalled(VirtualMachine vm) {
+        if (vm == null) return false;
         return vm.getModules().contains(this);
     }
 
@@ -129,13 +138,17 @@ public abstract class Module {
      * @return module with given class
      */
     public static <T extends Module> T getModuleByName(String name) {
-        return (T)modules.get(name);
+        switch (name.toUpperCase()) {
+            case "MAGENTO": return (T)magento;
+            case "SSH": return (T)ssh;
+            case "MYSQL": return (T)mysql;
+            default: return null;
+        }
     }
 
-    private static Map<String, Module> modules = Map.of(
-            "Magento", new Magento(),
-            "SSH", new SSH()
-    );
+    private static final MySQL mysql = new MySQL();
+    private static final Magento magento = new Magento();
+    private static final SSH ssh = new SSH();
 
     /**
      * Sets object to be stored in configuration of virtual machine. It can be any correct JSON value.

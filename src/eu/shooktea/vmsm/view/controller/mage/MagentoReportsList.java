@@ -51,11 +51,7 @@ public class MagentoReportsList {
 
         TableColumn<MagentoReport, String> text = new TableColumn<>("Text");
         text.setCellValueFactory(new PropertyValueFactory<>("message"));
-
-        TableColumn<MagentoReport, String> name = new TableColumn<>("File name");
-        name.setCellValueFactory(new PropertyValueFactory<>("fileName"));
-
-        columns.addAll(date, text, name);
+        columns.addAll(date, text);
     }
 
     private void initTableEvents() {

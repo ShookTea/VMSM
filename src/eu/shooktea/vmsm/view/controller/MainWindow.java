@@ -45,6 +45,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import org.reactfx.value.Val;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -229,5 +230,13 @@ public class MainWindow {
 
     public void openJsConsole() {
         JsConsole.openJsConsole();
+    }
+
+    public URL getUrl() {
+        try {
+            return new URL(browser.getURL());
+        } catch (MalformedURLException e) {
+            return null;
+        }
     }
 }

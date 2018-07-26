@@ -15,6 +15,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 
+import java.util.*;
+
 
 public class ModuleConfig {
     @FXML private GridPane grid;
@@ -63,13 +65,27 @@ public class ModuleConfig {
         switchButton.setOnAction((e) -> {
             module.installOn(vm);
             configButton.setDisable(!module.isInstalled(vm) || !module.openConfigWindow().isPresent());
+            updateSwitchButtons();
         });
-
-
+        switchButtons.put(switchButton, module);
+        updateSwitchButtons();
 
         grid.addRow(rowIndex, name, switchButton);
         grid.addRow(rowIndex + 1, description, configButton);
     }
+
+    private void updateSwitchButtons() {
+        VirtualMachine vm = VM.getOrThrow();
+        switchButtons.forEach((button, module) -> {
+            button.setDisable(Arrays.stream(module.getDependencies()).anyMatch(m -> !m.isInstalled(vm)));
+            if (button.isDisable() && button.isSelected()) {
+                button.setSelected(false);
+                button.getOnAction().handle(null);
+            }
+        });
+    }
+
+    private Map<ToggleButton,Module> switchButtons = new HashMap<>();
 
     public static void openModuleConfigWindow(Object... lambdaArgs) {
         View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ModuleConfig.fxml", "Module configuration", true);

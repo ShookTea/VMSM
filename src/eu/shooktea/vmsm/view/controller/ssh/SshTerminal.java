@@ -28,16 +28,19 @@ public class SshTerminal implements UserInfo, StageController {
     private PrintStream printStream;
     private Queue<Character> inputStream = new ArrayDeque<>();
 
+    private VirtualMachine vm;
+    private SSH ssh;
+
     @FXML
     private void initialize() {
         Console console = new Console(output);
         printStream = new PrintStream(console, true);
         try {
-            VirtualMachine vm = VM.getOrThrow();
-            SSH ssh = SSH.getModuleByName("SSH");
+            vm = VM.getOrThrow();
+            ssh = SSH.getModuleByName("SSH");
             channel = (ChannelShell)ssh.openChannel(vm, this, "shell");
             if (channel == null) {
-                output.setText("SSH is not configured.");
+                output.setText("SSH is not configured or virtual machine is off.");
                 return;
             }
             channel.setAgentForwarding(true);
@@ -92,6 +95,11 @@ public class SshTerminal implements UserInfo, StageController {
 
     @Override
     public boolean promptYesNo(String message) {
+        if (message.replace('\n', ' ').replace('\r', ' ').matches(fingerprintSsh)) {
+            Boolean auto = (Boolean)ssh.getSetting(vm, "auto_fingerprints");
+            if (auto == null || auto)
+                return true;
+        }
         Object[] options={ "Yes", "No" };
         int option = JOptionPane.showOptionDialog(null,
                 message,
@@ -101,6 +109,8 @@ public class SshTerminal implements UserInfo, StageController {
                 null, options, options[0]);
         return option==0;
     }
+
+    private static final String fingerprintSsh = "^The authenticity of host '[^']*' can't be established\\..*Are you sure you want to continue connecting\\?$";
 
     @Override
     public void showMessage(String message) {

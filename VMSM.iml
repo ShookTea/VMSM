@@ -64,5 +64,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="com.jcraft:jsch:0.1.54" level="project" />
+    <orderEntry type="library" name="mysql:mysql-connector-java:8.0.11" level="project" />
   </component>
 </module>

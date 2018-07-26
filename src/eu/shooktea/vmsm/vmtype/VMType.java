@@ -24,6 +24,7 @@ SOFTWARE.
 package eu.shooktea.vmsm.vmtype;
 
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.controller.NewVM;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,6 +48,14 @@ public abstract class VMType {
 
     public String getCreationError() {
         return creationError.getValue();
+    }
+
+    /**
+     * It IS used in {@link NewVM#initialize()}. Do not remove it.
+     * @return creation info
+     */
+    public String getCreationInfo() {
+        return creationInfo.get();
     }
 
     public void setCreationError(String err) {
