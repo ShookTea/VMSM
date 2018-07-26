@@ -5,6 +5,7 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.UserInfo;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.MySQL;
 import eu.shooktea.vmsm.module.SSH;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.StageController;
@@ -30,6 +31,7 @@ public class MysqlTerminal implements UserInfo, StageController {
 
     private VirtualMachine vm;
     private SSH ssh;
+    private MySQL mysql;
 
     @FXML
     private void initialize() {
@@ -38,6 +40,8 @@ public class MysqlTerminal implements UserInfo, StageController {
         try {
             vm = VM.getOrThrow();
             ssh = SSH.getModuleByName("SSH");
+            mysql = MySQL.getModuleByName("MySQL");
+
             channel = (ChannelShell)ssh.openChannel(vm, this, "shell");
             if (channel == null) {
                 output.setText("SSH is not configured or virtual machine is off.");
@@ -63,10 +67,45 @@ public class MysqlTerminal implements UserInfo, StageController {
 
             channel.setInputStream(pin);
             channel.connect(3000);
+
+            new Thread(() -> {
+                try {
+                    String[] lines = createMysqlCommand(vm, mysql);
+                    pout.write((lines[0] + '\n').getBytes());
+                    if (lines[0].endsWith(" -p")) {
+                        while (!output.getText().endsWith("Enter password: ")) {
+                            Thread.sleep(10);
+                        }
+                        pout.write((lines[1] + '\n').getBytes());
+                    }
+                } catch (Throwable thr) {
+                    thr.printStackTrace();
+                    stage.close();
+                }
+            }).start();
         } catch (JSchException | IOException e) {
             e.printStackTrace();
             stage.close();
         }
+    }
+
+    private static String[] createMysqlCommand(VirtualMachine vm, MySQL mysql) {
+        String databaseName = mysql.getStringSetting(vm, "database");
+        String user = mysql.getStringSetting(vm, "username");
+        String pass = mysql.getStringSetting(vm, "password");
+
+        String command = "mysql";
+        if (databaseName != null && !databaseName.trim().isEmpty()) {
+            command = command + " " + databaseName.trim();
+        }
+        if (user != null && !user.trim().isEmpty()) {
+            command = command + " -u " + user.trim();
+        }
+
+        boolean usePass = pass != null && !pass.trim().isEmpty();
+
+        if (!usePass) return new String[]{ command };
+        else return new String[] { command + " -p", pass.trim() };
     }
 
     public static void openMysqlTerminal(Object... lambdaArgs) {
