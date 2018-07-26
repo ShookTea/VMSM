@@ -103,12 +103,18 @@ public class SqlConnection {
         return isOpen;
     }
 
-    public ResultSet query(String query) throws SQLException {
+    public Object query(String query) throws SQLException {
         if (!isOpen || connection == null)
             throw new SQLException("Connection is not yet established");
         Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(query);
-        return result;
+        if (statement.execute(query)) {
+            return statement.getResultSet();
+        }
+        else {
+            Integer i = statement.getUpdateCount();
+            statement.close();
+            return i;
+        }
     }
 
     private int createSshForwarding() throws JSchException {

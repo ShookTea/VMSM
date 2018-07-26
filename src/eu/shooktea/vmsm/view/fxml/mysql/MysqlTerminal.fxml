@@ -15,7 +15,7 @@
          <content>
             <TextArea fx:id="output" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #DDDDDD;" wrapText="true">
                <font>
-                  <Font name="Monospaced Regular" size="12.0" />
+                  <Font name="DejaVu Sans Mono" size="12.0" />
                </font>
             </TextArea>
          </content>
