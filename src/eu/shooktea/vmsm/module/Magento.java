@@ -284,6 +284,9 @@ public class Magento extends Module {
             set.close();
             value = value == 0 ? 1 : 0;
             connection.query("UPDATE core_config_data SET value=" + value + " WHERE path LIKE \"%dev/debug/temp%\"");
+
+            Magento.deleteAllInVar("cache");
+            View.controller().reloadWebpage();
         } catch (JSchException | SQLException e) {
             e.printStackTrace();
         }
