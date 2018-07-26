@@ -72,5 +72,9 @@ public class MySQL extends Module {
         return 1001;
     }
 
+    public SqlConnection createConnection() {
+        return new SqlConnection(this, VM.getOrThrow());
+    }
+
     private List<Node> toolbarElements;
 }
