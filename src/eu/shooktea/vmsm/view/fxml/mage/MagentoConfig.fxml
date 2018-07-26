@@ -46,7 +46,7 @@
                   <TextField fx:id="magentoPath" prefHeight="30.0" prefWidth="399.0" promptText="Path to Magento root directory" HBox.hgrow="ALWAYS" />
                   <ImageView fitHeight="30.0" fitWidth="29.0" onMouseClicked="#openPathWindow" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
                      <image>
-                        <Image url="@/eu/shooktea/vmsm/resources/sekkyumu/Document.png" />
+                        <Image url="@/eu/shooktea/vmsm/resources/document.png" />
                      </image>
                   </ImageView>
                </children>
