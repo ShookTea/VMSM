@@ -56,7 +56,7 @@ public class MySQL extends Module {
 
     private List<Node> createToolbarElements() {
         ImageView openTerminal = Toolkit.createToolbarImage("db-blue.png");
-        Tooltip removeCacheTip = new Tooltip("Open MySQL");
+        Tooltip removeCacheTip = new Tooltip("Open MySQL terminal");
         Tooltip.install(openTerminal, removeCacheTip);
         openTerminal.setOnMouseClicked(MysqlTerminal::openMysqlTerminal);
 

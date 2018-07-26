@@ -24,12 +24,9 @@ SOFTWARE.
 package eu.shooktea.vmsm;
 
 import eu.shooktea.vmsm.module.Module;
-import eu.shooktea.vmsm.module.MySQL;
-import eu.shooktea.vmsm.module.SqlConnection;
 import eu.shooktea.vmsm.view.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import java.sql.ResultSet;
 
 /**
  * Main class for VMSM. Disables SSL certificates check, loads data from configuration file and displays main window.
@@ -67,25 +64,7 @@ public class Start extends Application {
         Toolkit.turnOffSSL();
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
         Storage.loadAll();
-        test();
         launch(args);
-    }
-
-    private static void test() {
-        try {
-            MySQL sql = MySQL.getModuleByName("MySQL");
-            SqlConnection connection = sql.createConnection();
-            connection.open();
-            ResultSet result = connection.query("SELECT path, value FROM core_config_data");
-            while (result.next()) {
-                System.out.println(result.getString("path") + " => " + result.getString("value"));
-            }
-            result.close();
-            connection.close();
-        } catch (Throwable thr) {
-            thr.printStackTrace();
-            System.exit(1);
-        }
     }
 
     private static boolean isStartCalled = false;
