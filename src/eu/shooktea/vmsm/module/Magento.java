@@ -106,32 +106,39 @@ public class Magento extends Module {
     }
 
     private String getAdminAddress(VirtualMachine vm) {
+        return getConfigFromLocalXmlFile(vm, "admin/routers/adminhtml/args/frontName", "admin");
+    }
+
+    public String getConfigFromLocalXmlFile(VirtualMachine vm, String pathString, String defaultValue) {
         try {
-            String rootPath = getStringSetting(vm, "path");
-            if (rootPath == null) throw new IOException("rootPath == null");
-            File rootFile = new File(rootPath);
-            if (!rootFile.exists()) throw new IOException("rootFile " + rootFile.toString() + "doesn't exist");
-            File localXmlFile = new File(rootFile, "app/etc/local.xml");
-            if (!localXmlFile.exists()) throw new IOException("local xml file " + localXmlFile.toString() + " doesn't exist");
+            File localXmlFile = getLocalXmlFile(vm);
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = db.parse(localXmlFile);
-
             Element config = doc.getDocumentElement();
             config.normalize();
-            Element admin = (Element)config.getElementsByTagName("admin").item(0);
-            Element routers = (Element)admin.getElementsByTagName("routers").item(0);
-            Element adminhtml = (Element)routers.getElementsByTagName("adminhtml").item(0);
-            Element args = (Element)adminhtml.getElementsByTagName("args").item(0);
-            Element frontname = (Element)args.getElementsByTagName("frontName").item(0);
-            return frontname.getTextContent().trim();
+            String[] path = pathString.split("/");
+            for (String s : path) {
+                config = (Element)config.getElementsByTagName(s).item(0);
+            }
+            return config.getTextContent().trim();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
             System.exit(1);
-            return "admin";
-        } catch (SAXException | IOException e) {
+            return defaultValue;
+        } catch (Throwable e) {
             e.printStackTrace();
-            return "admin";
+            return defaultValue;
         }
+    }
+
+    private File getLocalXmlFile(VirtualMachine vm) throws IOException {
+        String rootPath = getStringSetting(vm, "path");
+        if (rootPath == null) throw new IOException("rootPath == null");
+        File rootFile = new File(rootPath);
+        if (!rootFile.exists()) throw new IOException("rootFile " + rootFile.toString() + "doesn't exist");
+        File localXmlFile = new File(rootFile, "app/etc/local.xml");
+        if (!localXmlFile.exists()) throw new IOException("local xml file " + localXmlFile.toString() + " doesn't exist");
+        return localXmlFile;
     }
 
     private static final Menu magentoMenu = createMenu();
