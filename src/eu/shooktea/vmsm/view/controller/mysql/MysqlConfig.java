@@ -69,7 +69,7 @@ public class MysqlConfig implements StageController {
         this.username.setText(username == null ? "" : username);
         this.password.setText(password == null ? "" : password);
         this.host.setText(host == null ? "127.0.0.1" : host);
-        this.port.setText(port == null ? "3306" : host);
+        this.port.setText(port == null ? "3306" : port);
     }
 
     private void loadSshSettings() {
@@ -111,6 +111,16 @@ public class MysqlConfig implements StageController {
         mysql.setSetting(vm, "database", database.getText());
         mysql.setSetting(vm, "username", username.getText());
         mysql.setSetting(vm, "password", password.getText());
+        mysql.setSetting(vm, "host", host.getText());
+        mysql.setSetting(vm, "port", port.getText());
+        mysql.setSetting(vm, "ssh_enabled", enableSsh.isSelected());
+        JSONObject ssh = new JSONObject();
+        ssh.put("host", sshHost.getText());
+        ssh.put("port", sshPort.getText());
+        ssh.put("username", sshUsername.getText());
+        ssh.put("password", sshPassword.getText());
+        ssh.put("local_port", localPort.getText());
+        mysql.setSetting(vm, "ssh", ssh);
         Storage.saveAll();
         stage.close();
     }
