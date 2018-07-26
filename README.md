@@ -22,6 +22,7 @@ Virtual Machine Server Manager
     * [Creation of modules](#creation-of-modules)
     * [Exception notifications](#exception-notifications)
 1. [SSH](#ssh)
+1. [MySQL](#mysql)
 
 JavaDoc documentation can be found at [shooktea.github.io/VMSM](https://shooktea.github.io/VMSM)
 
@@ -211,3 +212,9 @@ New window will appear, with input text field and output text area.
 
 After writing any command in input field and pressing Enter, that command will be sent to your VM. Response from your
 machine will be displayed on output area.
+
+## MySQL
+MySQL module comes with simple terminal. You can configure MySQL server in `Vagrant/Managing modules...`.
+
+If you already have configured SSH module and you'll choose to use SSH tunnelling, configuration of SSH host will be
+used automatically.
