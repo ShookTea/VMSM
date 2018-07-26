@@ -28,13 +28,16 @@ public class SshTerminal implements UserInfo, StageController {
     private PrintStream printStream;
     private Queue<Character> inputStream = new ArrayDeque<>();
 
+    private VirtualMachine vm;
+    private SSH ssh;
+
     @FXML
     private void initialize() {
         Console console = new Console(output);
         printStream = new PrintStream(console, true);
         try {
-            VirtualMachine vm = VM.getOrThrow();
-            SSH ssh = SSH.getModuleByName("SSH");
+            vm = VM.getOrThrow();
+            ssh = SSH.getModuleByName("SSH");
             channel = (ChannelShell)ssh.openChannel(vm, this, "shell");
             if (channel == null) {
                 output.setText("SSH is not configured or virtual machine is off.");
@@ -93,7 +96,9 @@ public class SshTerminal implements UserInfo, StageController {
     @Override
     public boolean promptYesNo(String message) {
         if (message.replace('\n', ' ').replace('\r', ' ').matches(fingerprintSsh)) {
-            return true;
+            Boolean auto = (Boolean)ssh.getSetting(vm, "auto_fingerprints");
+            if (auto == null || auto)
+                return true;
         }
         Object[] options={ "Yes", "No" };
         int option = JOptionPane.showOptionDialog(null,
