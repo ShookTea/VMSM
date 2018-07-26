@@ -30,6 +30,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -90,6 +91,7 @@ public class Magento extends Module {
 
     @Override
     public void reloadToolbar() {
+        toolbarElements = createToolbar();
         View.controller().toolBar.getItems().addAll(toolbarElements);
     }
 
@@ -142,7 +144,7 @@ public class Magento extends Module {
     }
 
     private static final Menu magentoMenu = createMenu();
-    private static final List<Node> toolbarElements = createToolbar();
+    private static List<Node> toolbarElements = createToolbar();
 
     private static Menu createMenu() {
         MenuItem deleteCache = new MenuItem("Delete cache files", Toolkit.createMenuImage("trash_full.png"));
@@ -245,15 +247,24 @@ public class Magento extends Module {
                 })
         );
         reportsInfo.setOnMouseClicked(MagentoReportsList::openMagentoReportsList);
-        reportsInfo.setPickOnBounds(true);
 
-        return Arrays.asList(
+        List<Node> nodes = new ArrayList<>(Arrays.asList(
                 new Separator(Orientation.VERTICAL),
                 Toolkit.createToolbarImage("magento.png"),
                 removeCache,
                 loginAsAdmin,
                 reportsInfo
-        );
+        ));
+
+        System.out.println("IT IS!");
+        if (MySQL.getModuleByName("MySQL").isInstalled(VM.get())) {
+            ImageView debug = Toolkit.createToolbarImage("debug.png");
+            Tooltip debugTooltip = new Tooltip("Switch debugging");
+            Tooltip.install(debug, debugTooltip);
+            nodes.add(debug);
+        }
+
+        return nodes;
     }
 
     @Override
