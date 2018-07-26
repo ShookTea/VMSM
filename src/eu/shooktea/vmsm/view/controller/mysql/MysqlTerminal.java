@@ -109,7 +109,7 @@ public class MysqlTerminal implements UserInfo, StageController {
     }
 
     public static void openMysqlTerminal(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/MysqlTerminal.fxml", "MySQL Terminal", false);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/MysqlTerminal.fxml", "SSH Terminal", false);
     }
 
     @Override
