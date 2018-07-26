@@ -1,7 +1,12 @@
 package eu.shooktea.vmsm.module;
 
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import eu.shooktea.vmsm.VirtualMachine;
 import org.json.JSONObject;
+
+import java.sql.*;
 
 public class SqlConnection {
     public SqlConnection(MySQL sql, VirtualMachine vm) {
@@ -75,6 +80,52 @@ public class SqlConnection {
         sqlPassword = passwd == null ? "" : passwd;
         sqlPort = port == null ? 3306 : Integer.parseInt(port);
     }
+
+    public void open() throws JSchException, SQLException {
+        if (isOpen) return;
+        int assignedPort = sqlPort;
+        if (sshEnabled) assignedPort = createSshForwarding();
+
+        String dbUrl = "jdbc:mysql://" + sqlHost + ":" + assignedPort + "/" + sqlDb;
+        connection = DriverManager.getConnection(dbUrl, sqlUsername, sqlPassword);
+
+        isOpen = true;
+    }
+
+    public void close() throws SQLException {
+        if (!isOpen) return;
+        if (session != null) session.disconnect();
+        connection.close();
+        isOpen = false;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public ResultSet query(String query) throws SQLException {
+        if (!isOpen || connection == null)
+            throw new SQLException("Connection is not yet established");
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery(query);
+        statement.close();
+        return result;
+    }
+
+    private int createSshForwarding() throws JSchException {
+        JSch jsch = new JSch();
+        session = jsch.getSession(sshUsername, sshHost, sshPort);
+        session.setPassword(sshPassword);
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.connect();
+
+        int assignedPort = session.setPortForwardingL(localPort, sqlHost, sqlPort);
+        return assignedPort;
+    }
+
+    private boolean isOpen = false;
+    private Session session;
+    private Connection connection;
 
     private final boolean sshEnabled;
     private final String sshHost;
