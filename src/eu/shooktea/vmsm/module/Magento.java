@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.module;
 
+import com.jcraft.jsch.JSchException;
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.dom.*;
 import com.teamdev.jxbrowser.chromium.events.FinishLoadingEvent;
@@ -14,6 +15,7 @@ import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
 import eu.shooktea.vmsm.view.controller.mage.MagentoReportsList;
 import eu.shooktea.vmsm.view.controller.MainWindow;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -23,13 +25,14 @@ import javafx.scene.input.KeyCombination;
 import org.reactfx.value.Val;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -256,15 +259,34 @@ public class Magento extends Module {
                 reportsInfo
         ));
 
-        System.out.println("IT IS!");
         if (MySQL.getModuleByName("MySQL").isInstalled(VM.get())) {
             ImageView debug = Toolkit.createToolbarImage("debug.png");
             Tooltip debugTooltip = new Tooltip("Switch debugging");
             Tooltip.install(debug, debugTooltip);
+            debug.setOnMouseClicked(e -> switchDebugging());
             nodes.add(debug);
         }
 
         return nodes;
+    }
+
+    private static void switchDebugging() {
+        MySQL sql = MySQL.getModuleByName("MySQL");
+        VirtualMachine vm = VM.getOrThrow();
+        if (!sql.isInstalled(vm)) return;
+
+        SqlConnection connection = sql.createConnection();
+        try {
+            connection.open();
+            ResultSet set = (ResultSet)connection.query("SELECT value FROM core_config_data WHERE path LIKE \"%dev/debug/temp%\" LIMIT 1");
+            set.next();
+            int value = set.getInt("value");
+            set.close();
+            value = value == 0 ? 1 : 0;
+            connection.query("UPDATE core_config_data SET value=" + value + " WHERE path LIKE \"%dev/debug/temp%\"");
+        } catch (JSchException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
