@@ -28,13 +28,6 @@ public class MySQL extends Module {
     }
 
     @Override
-    public Module[] getDependencies() {
-        return new Module[] {
-                Module.getModuleByName("SSH")
-        };
-    }
-
-    @Override
     public Optional<Runnable> openConfigWindow() {
         return Optional.of(MysqlConfig::openMysqlConfigWindow);
     }
