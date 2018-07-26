@@ -56,6 +56,7 @@ And special *all systems* file that work on all of the operating systems above b
     * `org.json:json:20180130`
     * `org.reactfx:reactfx:2.0-M5`
     * `com.jcraft:jsch:0.1.54`
+    * `mysql:mysql-connector-java:8.0.11`
 1. Compile and run.
 
 ### (Windows) pin VMSM to task bar / start screen

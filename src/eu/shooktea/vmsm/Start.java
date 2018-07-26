@@ -23,10 +23,17 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.view.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 /**
  * Main class for VMSM. Disables SSL certificates check, loads data from configuration file and displays main window.
@@ -64,7 +71,38 @@ public class Start extends Application {
         Toolkit.turnOffSSL();
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
         Storage.loadAll();
+        test();
         launch(args);
+    }
+
+    private static void test() {
+        try {
+            JSch jsch = new JSch();
+            Session session = jsch.getSession("vagrant", "sklep.energa.dev", 22);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.setPassword("vagrant");
+            session.connect();
+            System.out.println("Connected");
+
+            int assignedPort = session.setPortForwardingL(3307, "127.0.0.1", 3306);
+            System.out.println("localhost: " + assignedPort);
+            System.out.println("Forwarded");
+
+            String dbUrl = "jdbc:mysql://127.0.0.1:" + assignedPort + "/energa";
+            Connection conn = DriverManager.getConnection(dbUrl, "energa", "ci8Uega1");
+            System.out.println("Done");
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery("SELECT path, value FROM core_config_data");
+            while (result.next()) {
+                System.out.println(result.getString("path") + " => " + result.getString("value"));
+            }
+            statement.close();
+            conn.close();
+
+        } catch (Throwable thr) {
+            thr.printStackTrace();
+            System.exit(1);
+        }
     }
 
     private static boolean isStartCalled = false;
