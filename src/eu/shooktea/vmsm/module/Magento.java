@@ -14,8 +14,10 @@ import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
 import eu.shooktea.vmsm.view.controller.mage.MagentoReportsList;
 import eu.shooktea.vmsm.view.controller.MainWindow;
+import eu.shooktea.vmsm.view.controller.mage.Modules;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -25,18 +27,22 @@ import javafx.scene.input.KeyCombination;
 import org.reactfx.value.Val;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.rmi.server.ExportException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Module representing Magento e-commerce.
@@ -180,13 +186,18 @@ public class Magento extends Module {
         newMagentoModule.setAccelerator(KeyCombination.valueOf("Ctrl+Shift+N"));
         newMagentoModule.setOnAction(MagentoNewModule::openMagentoNewModuleWindow);
 
+        MenuItem magentoModules = new MenuItem("Magento modules...");
+        magentoModules.setOnAction(Modules::openModulesWindow);
+
         MenuItem reportsList = new MenuItem("Exception reports...");
         reportsList.setOnAction(MagentoReportsList::openMagentoReportsList);
 
         return new Menu("Magento", Toolkit.createMenuImage("magento.png"),
                 deleteCache, removeSubmenu, loginAsAdmin,
                 new SeparatorMenuItem(),
-                newMagentoModule, reportsList
+                newMagentoModule, magentoModules,
+                new SeparatorMenuItem(),
+                reportsList
         );
     }
 
@@ -308,6 +319,45 @@ public class Magento extends Module {
         } catch (JSchException e) {
             e.printStackTrace();
         }
+    }
+
+    public ObservableList<MagentoModule> getModules() {
+        ObservableList<MagentoModule> list = FXCollections.observableArrayList();
+        VirtualMachine vm = VM.getOrThrow();
+        String path = getStringSetting(vm, "path");
+        if (path == null) return list;
+        if (!path.endsWith(File.separator)) path = path + File.separator;
+        path = path + "app" + File.separator + "etc" + File.separator + "modules";
+        File dir = new File(path);
+        Arrays.stream(dir.listFiles())
+                .map(this::loadMagentoModule)
+                .forEach(list::addAll);
+        return list;
+    }
+
+    private List<MagentoModule> loadMagentoModule(File file) {
+        List<MagentoModule> ret = new ArrayList<>();
+        try {
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = db.parse(file);
+            Element config = doc.getDocumentElement();
+            config.normalize();
+            Element modules = (Element)config.getElementsByTagName("modules").item(0);
+            NodeList list = modules.getChildNodes();
+            for (int i = 0; i < list.getLength(); i++) {
+                org.w3c.dom.Node n = list.item(i);
+                if (n instanceof Element) {
+                    Element module = (Element)n;
+                    String[] fullModuleName = module.getTagName().split("_");
+                    String codePool = module.getElementsByTagName("codePool").item(0).getTextContent();
+                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], "INSTALLED", "XML"));
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.exit(1);
+        }
+        return ret;
     }
 
     @Override
