@@ -10,9 +10,9 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-import java.util.function.Predicate;
 
 public class Modules implements StageController {
 
@@ -32,6 +32,7 @@ public class Modules implements StageController {
         Magento magento = Magento.getModuleByName("Magento");
         task = magento.createModuleLoaderTask();
         task.setOnSucceeded(e -> Platform.runLater(() -> loadTable(task)));
+        table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         progressBar.progressProperty().bind(task.progressProperty());
     }
 
@@ -85,5 +86,14 @@ public class Modules implements StageController {
     @Override
     public void setStage(Stage stage) {
         new Thread(task).start();
+    }
+
+    @FXML
+    private void tableClicked(MouseEvent e) {
+        if (e.getClickCount() != 2) return;
+        MagentoModule module = table.getSelectionModel().getSelectedItem();
+        if (module == null) return;
+        ModuleInfo.openModuleInfo(Magento.getModuleByName("Magento"), module);
+
     }
 }
