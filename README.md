@@ -49,6 +49,8 @@ There are multiple versions of `VMSM.jar` file, depending on your OS:
 
 And special *all systems* file that work on all of the operating systems above but takes much more place on your disk.
 
+Differences between these files (unusual for JAva applications) lies in the way `JxBrowser` works.
+
 ### Download and compile
 
 1. Download source code (`git clone https://github.com/ShookTea/VMSM.git`),
