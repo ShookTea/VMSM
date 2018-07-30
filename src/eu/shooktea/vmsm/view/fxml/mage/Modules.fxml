@@ -6,10 +6,11 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
 
 <VBox prefHeight="540.0" prefWidth="888.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.mage.Modules">
    <children>
@@ -34,6 +35,44 @@
             <Insets bottom="5.0" />
          </VBox.margin>
       </ProgressBar>
+      <TitledPane expanded="false" text="Filters">
+         <content>
+            <HBox maxWidth="1.7976931348623157E308">
+               <children>
+                  <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Code pool:" />
+                        <TextField fx:id="codePool" onAction="#reloadTable" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="20.0" layoutY="20.0">
+                     <children>
+                        <Label text="Namespace:" />
+                        <TextField fx:id="namespace" onAction="#reloadTable" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="705.0" layoutY="20.0">
+                     <children>
+                        <Label text="Name:" />
+                        <TextField fx:id="name" onAction="#reloadTable" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="534.0" layoutY="20.0">
+                     <children>
+                        <Label text="Installed version:" />
+                        <TextField fx:id="installedVersion" onAction="#reloadTable" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="363.0" layoutY="20.0">
+                     <children>
+                        <Label text="XML version:" />
+                        <TextField onAction="#reloadTable" fx:id="xmlVersion" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </content>
+      </TitledPane>
       <TableView fx:id="table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
    </children>
    <padding>

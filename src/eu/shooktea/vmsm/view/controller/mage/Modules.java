@@ -12,11 +12,19 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import java.util.function.Predicate;
+
 public class Modules implements StageController {
 
     @FXML private TableView<MagentoModule> table;
     @FXML private ProgressBar progressBar;
+    @FXML private TextField codePool;
+    @FXML private TextField namespace;
+    @FXML private TextField name;
+    @FXML private TextField installedVersion;
+    @FXML private TextField xmlVersion;
     private Task<ObservableList<MagentoModule>> task;
+    private ObservableList<MagentoModule> allModules;
 
     @FXML
     private void initialize() {
@@ -28,7 +36,25 @@ public class Modules implements StageController {
     }
 
     private void loadTable(Task<ObservableList<MagentoModule>> task) {
-        table.setItems(task.getValue());
+        allModules = task.getValue();
+        reloadTable();
+        table.setItems(allModules);
+    }
+
+    @FXML
+    private void reloadTable() {
+        table.setItems(allModules
+                .filtered(module -> codePool.getText().trim().isEmpty()
+                        || module.getCodePool().toUpperCase().contains(codePool.getText().trim().toUpperCase()))
+                .filtered(module -> namespace.getText().trim().isEmpty()
+                        || module.getNamespace().toUpperCase().contains(namespace.getText().trim().toUpperCase()))
+                .filtered(module -> name.getText().trim().isEmpty()
+                        || module.getName().toUpperCase().contains(name.getText().trim().toUpperCase()))
+                .filtered(module -> installedVersion.getText().trim().isEmpty()
+                        || module.getInstalledVersion().toUpperCase().contains(installedVersion.getText().trim().toUpperCase()))
+                .filtered(module -> xmlVersion.getText().trim().isEmpty()
+                        || module.getXmlVersion().toUpperCase().contains(xmlVersion.getText().trim().toUpperCase()))
+        );
     }
 
     private void initColumns() {
