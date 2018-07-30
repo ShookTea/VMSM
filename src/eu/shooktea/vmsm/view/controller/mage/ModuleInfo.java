@@ -12,6 +12,7 @@ import javafx.scene.control.ListView;
 public class ModuleInfo {
     @FXML private Label codePoolName;
     @FXML private Label moduleName;
+    @FXML private Label rootDir;
     @FXML private ListView<String> versionsList;
 
     @FXML
@@ -27,11 +28,17 @@ public class ModuleInfo {
     private void reloadData() {
         codePoolName.setText(module.getCodePool());
         moduleName.setText(module.getNamespace() + " " + module.getName());
+        rootDir.setText(module.getDisplayRootFile());
         createVersionsList();
     }
 
     private void createVersionsList() {
 
+    }
+
+    @FXML
+    private void openRootDir() {
+        module.openRootDir();
     }
 
     private Magento magento;

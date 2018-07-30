@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
@@ -26,7 +27,7 @@
       </Separator>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox>
+            <VBox HBox.hgrow="ALWAYS">
                <children>
                   <Label text="Available versions:">
                      <VBox.margin>
@@ -34,6 +35,19 @@
                      </VBox.margin>
                   </Label>
                   <ListView fx:id="versionsList" prefHeight="319.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
+               </children>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Root directory:" />
+                  <Label fx:id="rootDir" onMouseClicked="#openRootDir" text="Label" textFill="BLUE" underline="true">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Label>
                </children>
             </VBox>
          </children>

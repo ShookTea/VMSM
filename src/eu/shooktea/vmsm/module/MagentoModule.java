@@ -4,7 +4,9 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.w3c.dom.Element;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
 public class MagentoModule {
     public MagentoModule(String codePool, String namespace, String name, String installedVersion, String xmlVersion, File rootFile, Element config) {
@@ -15,6 +17,28 @@ public class MagentoModule {
         this.xmlVersion = new SimpleStringProperty(xmlVersion);
         this.config = config;
         this.rootFile = rootFile;
+    }
+
+    public String getDisplayRootFile() {
+        return "/app/code/" + getCodePool() + "/" + getNamespace() + "/" + getName();
+    }
+
+    public void openConfig() {
+        try {
+            if (Desktop.isDesktopSupported())
+                Desktop.getDesktop().open(new File(rootFile, "etc" + File.separator + "config.xml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openRootDir() {
+        try {
+            if (Desktop.isDesktopSupported())
+                Desktop.getDesktop().open(rootFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private ReadOnlyStringProperty codePool;
