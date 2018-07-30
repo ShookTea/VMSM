@@ -61,6 +61,7 @@ public class Start extends Application {
     public static void main(String[] args) {
         if (isMainCalled) return;
         isMainCalled = true;
+        Storage.checkVmsmFiles();
         Toolkit.turnOffSSL();
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
         Storage.loadAll();
