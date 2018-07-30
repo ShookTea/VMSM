@@ -4,14 +4,17 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.w3c.dom.Element;
 
+import java.io.File;
+
 public class MagentoModule {
-    public MagentoModule(String codePool, String namespace, String name, String installedVersion, String xmlVersion, Element config) {
+    public MagentoModule(String codePool, String namespace, String name, String installedVersion, String xmlVersion, File rootFile, Element config) {
         this.codePool = new SimpleStringProperty(codePool);
         this.namespace = new SimpleStringProperty(namespace);
         this.name = new SimpleStringProperty(name);
         this.installedVersion = new SimpleStringProperty(installedVersion);
         this.xmlVersion = new SimpleStringProperty(xmlVersion);
         this.config = config;
+        this.rootFile = rootFile;
     }
 
     private ReadOnlyStringProperty codePool;
@@ -20,6 +23,7 @@ public class MagentoModule {
     private ReadOnlyStringProperty installedVersion;
     private ReadOnlyStringProperty xmlVersion;
     private Element config;
+    private File rootFile;
 
     public String getCodePool() {
         return codePool.get();

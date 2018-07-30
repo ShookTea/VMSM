@@ -12,7 +12,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.util.*;
 
@@ -79,9 +78,10 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
                     Element module = (Element)n;
                     String[] fullModuleName = module.getTagName().split("_");
                     String codePool = module.getElementsByTagName("codePool").item(0).getTextContent();
-                    Element configElement = createConfigElement(codePool, fullModuleName[0], fullModuleName[1]);
+                    File rootFile = createRootFile(codePool, fullModuleName[0], fullModuleName[1]);
+                    Element configElement = createConfigElement(rootFile);
                     String[] versions = getVersions(fullModuleName[0], fullModuleName[1], configElement);
-                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], versions[0], versions[1], configElement));
+                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], versions[0], versions[1], rootFile, configElement));
                 }
             }
         } catch (Exception ex) {
@@ -91,19 +91,23 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
         return ret;
     }
 
-    private Element createConfigElement(String codePool, String namespace, String name) {
+    private File createRootFile(String codePool, String namespace, String name) {
+        String path = magento.getStringSetting(vm, "path");
+        if (!path.endsWith(File.separator)) path = path + File.separator;
+        path = path +
+                "app" + File.separator +
+                "code" + File.separator +
+                codePool + File.separator +
+                namespace + File.separator +
+                name;
+        File file = new File(path);
+        return file;
+    }
+
+    private Element createConfigElement(File file) {
         try {
-            String path = magento.getStringSetting(vm, "path");
-            if (!path.endsWith(File.separator)) path = path + File.separator;
-            path = path +
-                    "app" + File.separator +
-                    "code" + File.separator +
-                    codePool + File.separator +
-                    namespace + File.separator +
-                    name + File.separator +
-                    "etc" + File.separator +
-                    "config.xml";
-            File file = new File(path);
+            String path = "etc" + File.separator + "config.xml";
+            file = new File(file, path);
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = db.parse(file);
             Element config = doc.getDocumentElement();

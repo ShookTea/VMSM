@@ -5,14 +5,14 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Magento;
 import eu.shooktea.vmsm.module.MagentoModule;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
+import javafx.scene.control.ListView;
 
-public class ModuleInfo implements StageController {
+public class ModuleInfo {
     @FXML private Label codePoolName;
     @FXML private Label moduleName;
+    @FXML private ListView<String> versionsList;
 
     @FXML
     private void initialize() {}
@@ -27,10 +27,10 @@ public class ModuleInfo implements StageController {
     private void reloadData() {
         codePoolName.setText(module.getCodePool());
         moduleName.setText(module.getNamespace() + " " + module.getName());
+        createVersionsList();
     }
 
-    @Override
-    public void setStage(Stage stage) {
+    private void createVersionsList() {
 
     }
 
