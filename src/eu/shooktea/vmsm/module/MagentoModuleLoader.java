@@ -75,7 +75,9 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
                     Element module = (Element)n;
                     String[] fullModuleName = module.getTagName().split("_");
                     String codePool = module.getElementsByTagName("codePool").item(0).getTextContent();
-                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], "INSTALLED", "XML"));
+                    String xmlVersion = getXmlVersion(codePool, fullModuleName[0], fullModuleName[1]);
+                    String installedVersion = getInstalledVersion(codePool, fullModuleName[0], fullModuleName[1]);
+                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], installedVersion, xmlVersion));
                 }
             }
         } catch (Exception ex) {
@@ -85,4 +87,33 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
         return ret;
     }
 
+    private String getXmlVersion(String codePool, String namespace, String name) {
+        try {
+            String path = magento.getStringSetting(vm, "path");
+            if (!path.endsWith(File.separator)) path = path + File.separator;
+            path = path +
+                    "app" + File.separator +
+                    "code" + File.separator +
+                    codePool + File.separator +
+                    namespace + File.separator +
+                    name + File.separator +
+                    "etc" + File.separator +
+                    "config.xml";
+            File file = new File(path);
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = db.parse(file);
+            Element config = doc.getDocumentElement();
+            config.normalize();
+
+            Element modules = (Element)config.getElementsByTagName("modules").item(0);
+            Element module = (Element)modules.getElementsByTagName(namespace + "_" + name).item(0);
+            return module.getElementsByTagName("version").item(0).getTextContent();
+        } catch (Exception ex) {
+            return "nd.";
+        }
+    }
+
+    private String getInstalledVersion(String codePool, String namespace, String name) {
+        return "installed";
+    }
 }
