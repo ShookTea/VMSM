@@ -279,17 +279,33 @@ public class Magento extends Module {
         try {
             connection.open();
             ResultSet set = (ResultSet)connection.query("SELECT value FROM core_config_data WHERE path LIKE \"%dev/debug/temp%\" LIMIT 1");
-            set.next();
-            int value = set.getInt("value");
-            set.close();
-            value = value == 0 ? 1 : 0;
-            connection.query("UPDATE core_config_data SET value=" + value + " WHERE path LIKE \"%dev/debug/temp%\"");
+            if (set.next()) {
+                int value = set.getInt("value");
+                set.close();
+                value = value == 0 ? 1 : 0;
+                connection.query("UPDATE core_config_data SET value=" + value + " WHERE path LIKE \"%dev/debug/temp%\"");
+            }
+            else {
+                int value = 1;
+                set.close();
+                String insertQuery = "INSERT INTO core_config_data(scope, scope_id, path, value) VALUES";
+                String valueA = "(default, 0, \"dev/debug/template_hints\", 1)";
+                String valueB = "(default, 0, \"dev/debug/template_hints_blocks\", 1)";
+                connection.query(insertQuery + " " + valueA + ", " + valueB);
+            }
             connection.close();
 
             Magento.deleteAllInVar("cache");
             if (View.controller().getUrl() != null && View.controller().getUrl().getHost().equalsIgnoreCase(vm.getPageRoot().getHost()))
                 View.controller().reloadWebpage();
-        } catch (JSchException | SQLException e) {
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                connection.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } catch (JSchException e) {
             e.printStackTrace();
         }
     }
