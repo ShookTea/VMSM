@@ -205,7 +205,7 @@ public class MagentoReport {
         public static HoldTime fromTime(long l) {
             return Arrays.stream(HoldTime.values())
                     .filter(t -> t.timeMillis == l)
-                    .findAny().get();
+                    .findAny().orElse(NEVER);
         }
     }
 }

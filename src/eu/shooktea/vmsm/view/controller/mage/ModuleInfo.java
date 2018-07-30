@@ -7,14 +7,15 @@ import eu.shooktea.vmsm.module.MagentoModule;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class ModuleInfo implements StageController {
+    @FXML private Label codePoolName;
+    @FXML private Label moduleName;
 
     @FXML
-    private void initialize() {
-
-    }
+    private void initialize() {}
 
     public void setValue(Magento magento, MagentoModule module, VirtualMachine vm) {
         this.magento = magento;
@@ -24,7 +25,8 @@ public class ModuleInfo implements StageController {
     }
 
     private void reloadData() {
-
+        codePoolName.setText(module.getCodePool());
+        moduleName.setText(module.getNamespace() + " " + module.getName());
     }
 
     @Override
@@ -39,7 +41,7 @@ public class ModuleInfo implements StageController {
     public static void openModuleInfo(Magento magento, MagentoModule module) {
         String path = "/eu/shooktea/vmsm/view/fxml/mage/ModuleInfo.fxml";
         String title = module.getCodePool() + "/" + module.getNamespace() + "_" + module.getName() + " - module info";
-        ModuleInfo contr = View.createNewWindow(path, title, true);
+        ModuleInfo contr = View.createNewWindow(path, title, false);
         contr.setValue(magento, module, VM.getOrThrow());
     }
 }
