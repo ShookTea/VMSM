@@ -2,14 +2,16 @@ package eu.shooktea.vmsm.module;
 
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.w3c.dom.Element;
 
 public class MagentoModule {
-    public MagentoModule(String codePool, String namespace, String name, String installedVersion, String xmlVersion) {
+    public MagentoModule(String codePool, String namespace, String name, String installedVersion, String xmlVersion, Element config) {
         this.codePool = new SimpleStringProperty(codePool);
         this.namespace = new SimpleStringProperty(namespace);
         this.name = new SimpleStringProperty(name);
         this.installedVersion = new SimpleStringProperty(installedVersion);
         this.xmlVersion = new SimpleStringProperty(xmlVersion);
+        this.config = config;
     }
 
     private ReadOnlyStringProperty codePool;
@@ -17,6 +19,7 @@ public class MagentoModule {
     private ReadOnlyStringProperty name;
     private ReadOnlyStringProperty installedVersion;
     private ReadOnlyStringProperty xmlVersion;
+    private Element config;
 
     public String getCodePool() {
         return codePool.get();

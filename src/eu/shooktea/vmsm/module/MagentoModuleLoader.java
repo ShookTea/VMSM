@@ -79,8 +79,9 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
                     Element module = (Element)n;
                     String[] fullModuleName = module.getTagName().split("_");
                     String codePool = module.getElementsByTagName("codePool").item(0).getTextContent();
-                    String[] versions = getVersions(codePool, fullModuleName[0], fullModuleName[1]);
-                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], versions[0], versions[1]));
+                    Element configElement = createConfigElement(codePool, fullModuleName[0], fullModuleName[1]);
+                    String[] versions = getVersions(fullModuleName[0], fullModuleName[1], configElement);
+                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], versions[0], versions[1], configElement));
                 }
             }
         } catch (Exception ex) {
@@ -90,9 +91,7 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
         return ret;
     }
 
-    private String[] getVersions(String codePool, String namespace, String name) {
-        String xml = "nd.";
-        String sql = "nd.";
+    private Element createConfigElement(String codePool, String namespace, String name) {
         try {
             String path = magento.getStringSetting(vm, "path");
             if (!path.endsWith(File.separator)) path = path + File.separator;
@@ -109,7 +108,17 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
             Document doc = db.parse(file);
             Element config = doc.getDocumentElement();
             config.normalize();
+            return config;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
 
+    private String[] getVersions(String namespace, String name, Element config) {
+        String xml = "nd.";
+        String sql = "nd.";
+        try {
+            if (config == null) throw new Exception("Catch it and return nd./nd.");
             Element modules = (Element)config.getElementsByTagName("modules").item(0);
             Element module = (Element)modules.getElementsByTagName(namespace + "_" + name).item(0);
 
