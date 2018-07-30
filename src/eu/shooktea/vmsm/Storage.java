@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -197,4 +198,17 @@ public class Storage {
     private static File vmsmFile = getVmsmFile();
     private static File backupFile = getBackupFile(vmsmFile);
     private static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
+
+    public static void checkVmsmFiles() {
+        try {
+            if (!vmsmFile.getParentFile().exists()) vmsmFile.getParentFile().mkdirs();
+            if (!vmsmFile.exists())
+                Files.write(vmsmFile.toPath(), "{}".getBytes(), StandardOpenOption.CREATE);
+            if (!backupFile.exists())
+                Files.write(backupFile.toPath(), "{}".getBytes(), StandardOpenOption.CREATE);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.exit(1);
+        }
+    }
 }
