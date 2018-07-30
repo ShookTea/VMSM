@@ -18,6 +18,7 @@ import eu.shooktea.vmsm.view.controller.mage.Modules;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -321,43 +322,8 @@ public class Magento extends Module {
         }
     }
 
-    public ObservableList<MagentoModule> getModules() {
-        ObservableList<MagentoModule> list = FXCollections.observableArrayList();
-        VirtualMachine vm = VM.getOrThrow();
-        String path = getStringSetting(vm, "path");
-        if (path == null) return list;
-        if (!path.endsWith(File.separator)) path = path + File.separator;
-        path = path + "app" + File.separator + "etc" + File.separator + "modules";
-        File dir = new File(path);
-        Arrays.stream(dir.listFiles())
-                .map(this::loadMagentoModule)
-                .forEach(list::addAll);
-        return list;
-    }
-
-    private List<MagentoModule> loadMagentoModule(File file) {
-        List<MagentoModule> ret = new ArrayList<>();
-        try {
-            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = db.parse(file);
-            Element config = doc.getDocumentElement();
-            config.normalize();
-            Element modules = (Element)config.getElementsByTagName("modules").item(0);
-            NodeList list = modules.getChildNodes();
-            for (int i = 0; i < list.getLength(); i++) {
-                org.w3c.dom.Node n = list.item(i);
-                if (n instanceof Element) {
-                    Element module = (Element)n;
-                    String[] fullModuleName = module.getTagName().split("_");
-                    String codePool = module.getElementsByTagName("codePool").item(0).getTextContent();
-                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], "INSTALLED", "XML"));
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        }
-        return ret;
+    public Task<ObservableList<MagentoModule>> createModuleLoaderTask() {
+        return new MagentoModuleLoader(this, VM.getOrThrow());
     }
 
     @Override
