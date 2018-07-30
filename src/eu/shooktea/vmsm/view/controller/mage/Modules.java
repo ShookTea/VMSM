@@ -23,6 +23,7 @@ public class Modules implements StageController {
     @FXML private TextField name;
     @FXML private TextField installedVersion;
     @FXML private TextField xmlVersion;
+    @FXML private TitledPane filtersPane;
     private Task<ObservableList<MagentoModule>> task;
     private ObservableList<MagentoModule> allModules;
 
@@ -31,7 +32,7 @@ public class Modules implements StageController {
         initColumns();
         Magento magento = Magento.getModuleByName("Magento");
         task = magento.createModuleLoaderTask();
-        task.setOnSucceeded(e -> Platform.runLater(() -> loadTable(task)));
+        task.setOnSucceeded(e -> Platform.runLater(() -> {loadTable(task); filtersPane.setExpanded(true);}));
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         progressBar.progressProperty().bind(task.progressProperty());
     }

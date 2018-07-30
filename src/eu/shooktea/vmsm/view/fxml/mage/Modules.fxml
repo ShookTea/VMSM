@@ -35,7 +35,7 @@
             <Insets bottom="5.0" />
          </VBox.margin>
       </ProgressBar>
-      <TitledPane expanded="false" text="Filters">
+      <TitledPane fx:id="filtersPane" expanded="false" text="Filters">
          <content>
             <HBox maxWidth="1.7976931348623157E308">
                <children>
@@ -73,7 +73,7 @@
             </HBox>
          </content>
       </TitledPane>
-      <TableView fx:id="table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" onMouseClicked="#tableClicked"/>
+      <TableView fx:id="table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#tableClicked" VBox.vgrow="ALWAYS" />
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
