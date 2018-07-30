@@ -8,9 +8,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -34,28 +32,20 @@ public class Modules implements StageController {
     }
 
     private void initColumns() {
-        TableColumn<MagentoModule, String> codePool = new TableColumn<>("Code pool");
-        codePool.setCellValueFactory(new PropertyValueFactory<>("codePool"));
-        codePool.prefWidthProperty().bind(table.widthProperty().divide(100).multiply(20));
-
-        TableColumn<MagentoModule, String> namespace = new TableColumn<>("Namespace");
-        namespace.setCellValueFactory(new PropertyValueFactory<>("namespace"));
-        namespace.prefWidthProperty().bind(table.widthProperty().divide(100).multiply(20));
-
-        TableColumn<MagentoModule, String> name = new TableColumn<>("Name");
-        name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        name.prefWidthProperty().bind(table.widthProperty().divide(100).multiply(20));
-
-        TableColumn<MagentoModule, String> installedVersion = new TableColumn<>("Installed version");
-        installedVersion.setCellValueFactory(new PropertyValueFactory<>("installedVersion"));
-        installedVersion.prefWidthProperty().bind(table.widthProperty().divide(100).multiply(19));
-
-        TableColumn<MagentoModule, String> xmlVersion = new TableColumn<>("XML version");
-        xmlVersion.setCellValueFactory(new PropertyValueFactory<>("xmlVersion"));
-        xmlVersion.prefWidthProperty().bind(table.widthProperty().divide(100).multiply(19));
-
-        table.getColumns().addAll(codePool, namespace, name, installedVersion, xmlVersion);
+        createColumn("Code pool", "codePool");
+        createColumn("Namespace", "namespace");
+        createColumn("Name", "name");
+        createColumn("Installed version", "installedVersion");
+        createColumn("XML version", "xmlVersion");
     }
+
+    private void createColumn(String text, String propertyName) {
+        TableColumn<MagentoModule, String> column = new TableColumn<>(text);
+        column.setCellValueFactory(new PropertyValueFactory<>(propertyName));
+        column.prefWidthProperty().bind(table.widthProperty().divide(100).multiply(20));
+        table.getColumns().add(column);
+    }
+
 
     @FXML
     private void newModule() {
