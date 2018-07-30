@@ -6,19 +6,22 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.sql.ResultSet;
+import java.util.*;
 
 public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
 
     public MagentoModuleLoader(Magento magento, VirtualMachine vm) {
         this.magento = magento;
         this.vm = vm;
+        this.versions = new HashMap<>();
     }
 
     private final Magento magento;
@@ -45,6 +48,7 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
         int count = 0;
         int max = files.length;
         updateProgress(count, max);
+        getSQL();
         for (File f : files) {
             List<MagentoModule> modules = loadMagentoModule(f);
             list.addAll(modules);
@@ -75,9 +79,8 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
                     Element module = (Element)n;
                     String[] fullModuleName = module.getTagName().split("_");
                     String codePool = module.getElementsByTagName("codePool").item(0).getTextContent();
-                    String xmlVersion = getXmlVersion(codePool, fullModuleName[0], fullModuleName[1]);
-                    String installedVersion = getInstalledVersion(codePool, fullModuleName[0], fullModuleName[1]);
-                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], installedVersion, xmlVersion));
+                    String[] versions = getVersions(codePool, fullModuleName[0], fullModuleName[1]);
+                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], versions[0], versions[1]));
                 }
             }
         } catch (Exception ex) {
@@ -87,7 +90,9 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
         return ret;
     }
 
-    private String getXmlVersion(String codePool, String namespace, String name) {
+    private String[] getVersions(String codePool, String namespace, String name) {
+        String xml = "nd.";
+        String sql = "nd.";
         try {
             String path = magento.getStringSetting(vm, "path");
             if (!path.endsWith(File.separator)) path = path + File.separator;
@@ -107,13 +112,42 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
 
             Element modules = (Element)config.getElementsByTagName("modules").item(0);
             Element module = (Element)modules.getElementsByTagName(namespace + "_" + name).item(0);
-            return module.getElementsByTagName("version").item(0).getTextContent();
+
+            xml = module.getElementsByTagName("version").item(0).getTextContent();
+
+            Element global = (Element)config.getElementsByTagName("global").item(0);
+            Element resources = (Element)global.getElementsByTagName("resources").item(0);
+
+            for (int i = 0; i < resources.getChildNodes().getLength(); i++) {
+                Node n = resources.getChildNodes().item(i);
+                if (!(n instanceof Element)) continue;
+                Element elem = (Element)n;
+                if (elem.getElementsByTagName("setup").getLength() != 1) continue;
+                String tagName = elem.getTagName();
+                sql = tagName;
+                sql = versions.getOrDefault(tagName, "nd.");
+                break;
+            }
+        } catch (Exception ex) {}
+        return new String[] {sql, xml};
+    }
+
+    private void getSQL() {
+        try {
+            MySQL sql = MySQL.getModuleByName("MySQL");
+            if (!sql.isInstalled(vm)) return;
+            SqlConnection connection = sql.createConnection();
+            connection.open();
+            ResultSet set = (ResultSet) connection.query("SELECT `code` AS \"module\", `version` AS \"version\" FROM `core_resource`");
+            while (set.next()) {
+                versions.put(set.getString("module"), set.getString("version"));
+            }
+            set.close();
+            connection.close();
         } catch (Exception ex) {
-            return "nd.";
+            ex.printStackTrace();
         }
     }
 
-    private String getInstalledVersion(String codePool, String namespace, String name) {
-        return "installed";
-    }
+    private Map<String, String> versions;
 }
