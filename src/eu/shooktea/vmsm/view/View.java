@@ -21,9 +21,10 @@ import java.net.URL;
 public class View {
     private View() {}
 
-    public static void initialize(Stage stage) throws Exception {
+    public static void initialize(Stage stage, boolean isSimpleGui) throws Exception {
         initializePrimaryStage(stage);
         initializeApplicationLoop();
+        if (isSimpleGui) System.out.println("RUN SIMPLE");
     }
 
     private static void initializePrimaryStage(Stage stage) throws Exception {
