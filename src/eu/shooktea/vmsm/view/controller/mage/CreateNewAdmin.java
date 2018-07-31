@@ -45,7 +45,7 @@ public class CreateNewAdmin implements StageController {
         if (salt.isEmpty()) salt = "salt";
         if (name.isEmpty()) name = "John";
         if (surname.isEmpty()) surname = "Smith";
-        if (email.isEmpty()) email = "john@smith.com";
+        if (email.isEmpty()) email = "johnsmith@example.tld";
 
         MySQL sql = MySQL.getModuleByName("MySQL");
         VirtualMachine vm = VM.getOrThrow();

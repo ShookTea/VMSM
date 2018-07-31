@@ -19,6 +19,7 @@ Virtual Machine Server Manager
     * [Magento Module configuration](#magento-module-configuration)
     * [Clearing var files](#clearing-var-files)
     * [Login to administrator panel](#login-to-administrator-panel)
+    * [Creating new admin account](#creating-new-admin-account)
     * [Creation of modules](#creation-of-modules)
     * [Exception notifications](#exception-notifications)
 1. [SSH](#ssh)
@@ -132,7 +133,7 @@ After successful installation and configuration of module, new menu and toolbar 
 * **Path to Magento root directory** is required to use most of the features of Magento module. Root directory contains
     `index.php` file, `app/code` and `var` directories.
 * **Admin login** and **Admin password** to Magento admin panel are not required, but writing them allows VMSM to autologin
-    when you need.
+    when you need. You can also [create new admin account](#creating-new-admin-account) later.
 * **Hold exception reports** - displays how long after removing [exception report file](#exception-notifications) information
     about that exception will be kept by VMSM.
 
@@ -158,6 +159,15 @@ If you have stored your login and/or password in [configuration](#magento-module
 will also automatically fill input fields in login form. If you've stored both login and password, form will be also
 submitted, which means that after correct configuration of module pressing that button will log you in to administrator
 panel automatically.
+
+### Creating new admin account
+If you have configured [MySQL module](#mysql), you can create new admin account.
+
+![New admin window](doc_img/magento_new_admin.png)
+
+Only two fields here are required: login and password. Other fields have default values that will be used (salt → "Salt",
+name → "John", surname → "Smith", email → "johnsmith@example.tld"). After successful creation of admin account you will
+be asked to set this account as your default account during [autologin to administrator panel](#login-to-administrator-panel).
 
 ### Creation of modules
 
