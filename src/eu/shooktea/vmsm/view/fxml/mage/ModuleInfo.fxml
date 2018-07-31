@@ -50,9 +50,10 @@
                      </cursor>
                   </Label>
                   <Separator opacity="0.0" orientation="VERTICAL" prefHeight="200.0" VBox.vgrow="ALWAYS" />
+                   <Label text="Reverting version changes version stored in MySQL database. In next page reload upgrade scripts will be run by Magento." textAlignment="JUSTIFY" wrapText="true" />
                   <Button fx:id="revertVersionButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#revertVersion" text="Revert version">
                      <VBox.margin>
-                        <Insets right="2.0" />
+                        <Insets right="2.0" top="5.0" />
                      </VBox.margin>
                   </Button>
                </children>
