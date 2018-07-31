@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="256.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.mage.MagentoConfig">
+<VBox prefHeight="266.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.mage.MagentoConfig">
     <children>
         <Label text="Magento configuration">
          <font>
@@ -90,7 +90,7 @@
                         <Insets right="5.0" />
                     </padding>
                 </Label>
-                <Label alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="You can create admin account later." textFill="BLUE" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="You can create admin account later, after configuring MySQL." textFill="BLUE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
                     <padding>
                         <Insets right="5.0" />
                     </padding>
