@@ -10,6 +10,7 @@ import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.View;
+import eu.shooktea.vmsm.view.controller.mage.CreateNewAdmin;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
 import eu.shooktea.vmsm.view.controller.mage.MagentoReportsList;
@@ -193,8 +194,11 @@ public class Magento extends Module {
         MenuItem reportsList = new MenuItem("Exception reports...");
         reportsList.setOnAction(MagentoReportsList::openMagentoReportsList);
 
+        MenuItem createNewAdmin = new MenuItem("Create new administrator...");
+        createNewAdmin.setOnAction(CreateNewAdmin::openAdminCreationWindow);
+
         return new Menu("Magento", Toolkit.createMenuImage("magento.png"),
-                deleteCache, removeSubmenu, loginAsAdmin,
+                deleteCache, removeSubmenu, loginAsAdmin, createNewAdmin,
                 new SeparatorMenuItem(),
                 newMagentoModule, magentoModules,
                 new SeparatorMenuItem(),
