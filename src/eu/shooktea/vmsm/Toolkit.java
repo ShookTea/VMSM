@@ -80,38 +80,60 @@ public class Toolkit {
      * @return parsed line
      */
     public static List<String> parseLine(List<String> input) {
-        Set<String> versions = new HashSet<>();
-        List<Pair<String,String>> links = input.stream()
+        return input.stream()
                 .map(str -> str.split(":"))
-                .map(arr -> new Pair<>(arr[0], arr[1]))
+                .flatMap(Arrays::stream)
+                .distinct()
+                .map(Version::new)
+                .sorted()
+                .map(Version::get)
                 .collect(Collectors.toList());
-        links.forEach(pair -> {versions.add(pair.getKey()); versions.add(pair.getValue());});
-        List<String> result = new ArrayList<>();
-
-        String lastString = null;
-        do {
-            if (lastString == null) {
-                for (String version : versions) {
-                    Optional<Pair<String, String>> any = links.stream().filter(pair -> pair.getValue().equals(version)).findAny();
-                    if (!any.isPresent()) {
-                        lastString = version;
-                        break;
-                    }
-                }
-            }
-            else {
-                final String test = lastString;
-                Optional<Pair<String, String>> any = links.stream().filter(pair -> pair.getKey().equals(test)).findAny();
-                lastString = any.map(Pair::getValue).orElse(null);
-            }
-
-            if (lastString != null) {
-                result.add(lastString);
-                versions.remove(lastString);
-            }
-        } while (!versions.isEmpty());
-        return result;
     }
 
     private static boolean isSslOn = true;
+
+    private static class Version implements Comparable<Version> {
+        private final String version;
+
+        public Version(String version) {
+            this.version = version;
+        }
+
+        public String get() {
+            return version;
+        }
+
+        @Override
+        public int compareTo(Version that) {
+            if(that == null)
+                return 1;
+            String[] thisParts = this.get().split("\\.");
+            String[] thatParts = that.get().split("\\.");
+            int length = Math.max(thisParts.length, thatParts.length);
+            for(int i = 0; i < length; i++) {
+                int thisPart = i < thisParts.length ?
+                        Integer.parseInt(thisParts[i]) : 0;
+                int thatPart = i < thatParts.length ?
+                        Integer.parseInt(thatParts[i]) : 0;
+                if(thisPart < thatPart)
+                    return -1;
+                if(thisPart > thatPart)
+                    return 1;
+            }
+            return 0;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (this.getClass() != obj.getClass()) return false;
+            return this.compareTo((Version)obj) == 0;
+        }
+
+        @Override
+        public int hashCode() {
+            return version.hashCode();
+        }
+    }
 }
