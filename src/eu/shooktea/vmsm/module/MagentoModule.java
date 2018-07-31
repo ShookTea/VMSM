@@ -19,6 +19,7 @@ public class MagentoModule {
         this.xmlVersion = new SimpleStringProperty(xmlVersion);
         this.config = config;
         this.rootFile = rootFile;
+        this.setupDir = setupTag == null ? null : new File(rootFile, "sql/" + setupTag);
     }
 
     public String getDisplayRootFile() {
@@ -45,7 +46,12 @@ public class MagentoModule {
 
     public List<String> createVersionList() {
         List<String> versionList = new ArrayList<>();
+        if (setupDir == null || !setupDir.exists() || !setupDir.isDirectory() || setupDir.listFiles() == null || setupDir.listFiles().length == 0)
+            return versionList;
 
+        for (File file : setupDir.listFiles()) {
+            versionList.add(file.getName());
+        }
         return versionList;
     }
 
@@ -56,6 +62,7 @@ public class MagentoModule {
     private ReadOnlyStringProperty xmlVersion;
     private Element config;
     private File rootFile;
+    private File setupDir;
 
     public String getCodePool() {
         return codePool.get();

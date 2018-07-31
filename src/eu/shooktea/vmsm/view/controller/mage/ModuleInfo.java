@@ -33,7 +33,7 @@ public class ModuleInfo {
     }
 
     private void createVersionsList() {
-        module.createVersionList();
+        versionsList.getItems().setAll(module.createVersionList());
     }
 
     @FXML
