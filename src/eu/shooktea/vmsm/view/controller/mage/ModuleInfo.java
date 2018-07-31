@@ -6,19 +6,28 @@ import eu.shooktea.vmsm.module.Magento;
 import eu.shooktea.vmsm.module.MagentoModule;
 import eu.shooktea.vmsm.view.View;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionModel;
+import org.reactfx.value.Val;
 
 public class ModuleInfo {
     @FXML private Label codePoolName;
     @FXML private Label moduleName;
     @FXML private Label rootDir;
+    @FXML private Button revertVersionButton;
     @FXML private ListView<String> versionsList;
 
     @FXML
     private void initialize() {}
 
     public void setValue(Magento magento, MagentoModule module, VirtualMachine vm) {
+        revertVersionButton.disableProperty().bind(
+                Val.flatMap(versionsList.selectionModelProperty(), SelectionModel::selectedItemProperty)
+                .map(version -> version.contains("installed"))
+                .orElseConst(Boolean.TRUE)
+        );
         this.magento = magento;
         this.module = module;
         this.vm = vm;
@@ -39,6 +48,11 @@ public class ModuleInfo {
     @FXML
     private void openRootDir() {
         module.openRootDir();
+    }
+
+    @FXML
+    private void revertVersion() {
+
     }
 
     private Magento magento;
