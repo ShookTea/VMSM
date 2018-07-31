@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.module;
 
+import eu.shooktea.vmsm.Toolkit;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.w3c.dom.Element;
@@ -50,9 +51,14 @@ public class MagentoModule {
             return versionList;
 
         for (File file : setupDir.listFiles()) {
-            versionList.add(file.getName());
+            String fileName = file.getName();
+            if (!fileName.contains("upgrade")) continue;
+            String name = fileName.toLowerCase();
+            name = name.replaceAll("^.*upgrade-([^-]*)-([^-]*)\\..*$", "$1:$2");
+            versionList.add(name);
         }
-        return versionList;
+
+        return Toolkit.parseLine(versionList);
     }
 
     private ReadOnlyStringProperty codePool;

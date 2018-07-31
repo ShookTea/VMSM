@@ -2,9 +2,12 @@ package eu.shooktea.vmsm;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Pair;
 
 import javax.net.ssl.*;
 import java.security.GeneralSecurityException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Container for utility methods.
@@ -68,6 +71,46 @@ public class Toolkit {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    /**
+     * Changes list of Strings with {@code A:B} format to list of Strings sorted by their links, for example for list {@code ["A:B", "XYZ:D", "B:XYZ"]}
+     * it will return {@code ["A", "B", "XYZ", "D"]}.
+     * @param input line without parsing
+     * @return parsed line
+     */
+    public static List<String> parseLine(List<String> input) {
+        Set<String> versions = new HashSet<>();
+        List<Pair<String,String>> links = input.stream()
+                .map(str -> str.split(":"))
+                .map(arr -> new Pair<>(arr[0], arr[1]))
+                .collect(Collectors.toList());
+        links.forEach(pair -> {versions.add(pair.getKey()); versions.add(pair.getValue());});
+        List<String> result = new ArrayList<>();
+
+        String lastString = null;
+        do {
+            if (lastString == null) {
+                for (String version : versions) {
+                    Optional<Pair<String, String>> any = links.stream().filter(pair -> pair.getValue().equals(version)).findAny();
+                    if (!any.isPresent()) {
+                        lastString = version;
+                        break;
+                    }
+                }
+            }
+            else {
+                final String test = lastString;
+                Optional<Pair<String, String>> any = links.stream().filter(pair -> pair.getKey().equals(test)).findAny();
+                lastString = any.map(Pair::getValue).orElse(null);
+            }
+
+            if (lastString != null) {
+                result.add(lastString);
+                versions.remove(lastString);
+            }
+        } while (!versions.isEmpty());
+        return result;
     }
 
     private static boolean isSslOn = true;
