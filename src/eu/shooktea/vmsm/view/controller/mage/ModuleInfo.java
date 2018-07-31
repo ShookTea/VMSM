@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
+import java.util.List;
+
 public class ModuleInfo {
     @FXML private Label codePoolName;
     @FXML private Label moduleName;

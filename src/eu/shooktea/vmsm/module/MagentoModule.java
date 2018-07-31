@@ -58,7 +58,21 @@ public class MagentoModule {
             versionList.add(name);
         }
 
-        return Toolkit.parseLine(versionList);
+        versionList = Toolkit.parseLine(versionList);
+        int installedIndex = versionList.indexOf(installedVersion.getValue());
+        int xmlIndex = versionList.indexOf(xmlVersion.getValue());
+        if (installedIndex == xmlIndex && installedIndex != -1) {
+            versionList.set(installedIndex, versionList.get(installedIndex) + " (installed/in config.xml)");
+        }
+        else {
+            if (installedIndex != -1) {
+                versionList.set(installedIndex, versionList.get(installedIndex) + " (installed)");
+            }
+            if (xmlIndex != -1) {
+                versionList.set(xmlIndex, versionList.get(xmlIndex) + " (in config.xml)");
+            }
+        }
+        return versionList;
     }
 
     private ReadOnlyStringProperty codePool;
