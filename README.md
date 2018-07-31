@@ -21,6 +21,7 @@ Virtual Machine Server Manager
     * [Login to administrator panel](#login-to-administrator-panel)
     * [Creating new admin account](#creating-new-admin-account)
     * [Creation of modules](#creation-of-modules)
+    * [Magento modules](#magento-modules)
     * [Exception notifications](#exception-notifications)
 1. [SSH](#ssh)
 1. [MySQL](#mysql)
@@ -205,6 +206,13 @@ class Namespace_ModuleName_Helper_Data extends Mage_Core_Helper_Abstract
 * Configuration file in `etc/config.xml` will contain all basic information about modules, including configuration of models, blocks, helpers and installers.
 * If `Activate module` is selected, module will be marked as active by default. Turning it on in Magento configuration won't be necessary.
 * If `Remove cache after creation` is selected, cache files will be removed after creating new module.
+
+### Magento modules
+
+After choosing `Magento/Magento modules...` window with table of all installed Magento modules will arrive. You can check their
+code pools, namespaces and names, and see their versions, both declared in `config.xml` and (if [MySQL module is configured](#mysql))
+in database. After doubleclick more information about module will be displayed. If you have configured MySQL, you can
+revert installed version of module, forcing Magento to rerun install/upgrade scripts.
 
 ### Exception notifications
 

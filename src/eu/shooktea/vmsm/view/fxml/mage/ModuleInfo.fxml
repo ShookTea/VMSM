@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.mage.ModuleInfo">
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+   <children>
+      <Label fx:id="codePoolName" text="core" />
+      <Label fx:id="moduleName" text="Mage_Customer">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Separator prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </VBox.margin>
+      </Separator>
+      <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Available versions:">
+                     <VBox.margin>
+                        <Insets bottom="3.0" />
+                     </VBox.margin>
+                  </Label>
+                  <ListView fx:id="versionsList" prefHeight="319.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
+               </children>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Root directory:" />
+                  <Label fx:id="rootDir" onMouseClicked="#openRootDir" text="Label" textFill="BLUE" underline="true">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Label>
+                  <Separator opacity="0.0" orientation="VERTICAL" prefHeight="200.0" VBox.vgrow="ALWAYS" />
+                   <Label text="Reverting version changes version stored in MySQL database. In next page reload upgrade scripts will be run by Magento." textAlignment="JUSTIFY" wrapText="true" />
+                  <Button fx:id="revertVersionButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#revertVersion" text="Revert version">
+                     <VBox.margin>
+                        <Insets right="2.0" top="5.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

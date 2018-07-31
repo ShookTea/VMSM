@@ -15,8 +15,11 @@ import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
 import eu.shooktea.vmsm.view.controller.mage.MagentoReportsList;
 import eu.shooktea.vmsm.view.controller.MainWindow;
+import eu.shooktea.vmsm.view.controller.mage.Modules;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -26,18 +29,22 @@ import javafx.scene.input.KeyCombination;
 import org.reactfx.value.Val;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.rmi.server.ExportException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Module representing Magento e-commerce.
@@ -181,6 +188,9 @@ public class Magento extends Module {
         newMagentoModule.setAccelerator(KeyCombination.valueOf("Ctrl+Shift+N"));
         newMagentoModule.setOnAction(MagentoNewModule::openMagentoNewModuleWindow);
 
+        MenuItem magentoModules = new MenuItem("Magento modules...");
+        magentoModules.setOnAction(Modules::openModulesWindow);
+
         MenuItem reportsList = new MenuItem("Exception reports...");
         reportsList.setOnAction(MagentoReportsList::openMagentoReportsList);
 
@@ -190,7 +200,9 @@ public class Magento extends Module {
         return new Menu("Magento", Toolkit.createMenuImage("magento.png"),
                 deleteCache, removeSubmenu, loginAsAdmin, createNewAdmin,
                 new SeparatorMenuItem(),
-                newMagentoModule, reportsList
+                newMagentoModule, magentoModules,
+                new SeparatorMenuItem(),
+                reportsList
         );
     }
 
@@ -312,6 +324,10 @@ public class Magento extends Module {
         } catch (JSchException e) {
             e.printStackTrace();
         }
+    }
+
+    public Task<ObservableList<MagentoModule>> createModuleLoaderTask() {
+        return new MagentoModuleLoader(this, VM.getOrThrow());
     }
 
     @Override

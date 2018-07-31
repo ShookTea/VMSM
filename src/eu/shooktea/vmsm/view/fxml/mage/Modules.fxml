@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="540.0" prefWidth="888.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.mage.Modules">
+   <children>
+      <HBox maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
+         <children>
+            <Label text="Magento modules">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Separator opacity="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#newModule" text="New" />
+         </children>
+      </HBox>
+      <Separator prefWidth="200.0">
+         <VBox.margin>
+            <Insets bottom="5.0" top="10.0" />
+         </VBox.margin>
+      </Separator>
+      <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.0" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
+      </ProgressBar>
+      <TitledPane fx:id="filtersPane" expanded="false" text="Filters">
+         <content>
+            <HBox maxWidth="1.7976931348623157E308">
+               <children>
+                  <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Code pool:" />
+                        <TextField fx:id="codePool" onAction="#reloadTable" onKeyReleased="#reloadTable"/>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="20.0" layoutY="20.0">
+                     <children>
+                        <Label text="Namespace:" />
+                        <TextField fx:id="namespace" onAction="#reloadTable" onKeyReleased="#reloadTable" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="705.0" layoutY="20.0">
+                     <children>
+                        <Label text="Name:" />
+                        <TextField fx:id="name" onAction="#reloadTable" onKeyReleased="#reloadTable" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="534.0" layoutY="20.0">
+                     <children>
+                        <Label text="Installed version:" />
+                        <TextField fx:id="installedVersion" onAction="#reloadTable" onKeyReleased="#reloadTable" />
+                     </children>
+                  </VBox>
+                  <VBox layoutX="363.0" layoutY="20.0">
+                     <children>
+                        <Label text="XML version:" />
+                        <TextField onAction="#reloadTable" fx:id="xmlVersion" onKeyReleased="#reloadTable" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </content>
+      </TitledPane>
+      <TableView fx:id="table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#tableClicked" VBox.vgrow="ALWAYS" />
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>
