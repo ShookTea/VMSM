@@ -80,8 +80,10 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
                     String codePool = module.getElementsByTagName("codePool").item(0).getTextContent();
                     File rootFile = createRootFile(codePool, fullModuleName[0], fullModuleName[1]);
                     Element configElement = createConfigElement(rootFile);
-                    String[] versions = getVersions(fullModuleName[0], fullModuleName[1], configElement);
-                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], versions[0], versions[1], rootFile, configElement));
+                    String setupTagName = getSetupTagName(configElement, fullModuleName[0], fullModuleName[1]);
+                    String sqlVersion = getSqlVersion(setupTagName);
+                    String xmlVersion = getXmlVersion(fullModuleName[0], fullModuleName[1], configElement);
+                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], sqlVersion, xmlVersion, rootFile, configElement, setupTagName));
                 }
             }
         } catch (Exception ex) {
@@ -118,15 +120,29 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
         }
     }
 
-    private String[] getVersions(String namespace, String name, Element config) {
+    private String getXmlVersion(String namespace, String name, Element config) {
         String xml = "nd.";
-        String sql = "nd.";
+        try {
+            if (config == null) throw new Exception("Catch it and return nd./nd.");
+            Element modules = (Element)config.getElementsByTagName("modules").item(0);
+            Element module = (Element)modules.getElementsByTagName(namespace + "_" + name).item(0);
+            xml = module.getElementsByTagName("version").item(0).getTextContent();
+        } catch (Exception ex) {}
+        return xml;
+    }
+
+    private String getSqlVersion(String tagName) {
+        if (tagName == null) return "nd.";
+        return versions.getOrDefault(tagName, "nd.");
+    }
+
+    private String getSetupTagName(Element config, String namespace, String name) {
+        String tagName = null;
         try {
             if (config == null) throw new Exception("Catch it and return nd./nd.");
             Element modules = (Element)config.getElementsByTagName("modules").item(0);
             Element module = (Element)modules.getElementsByTagName(namespace + "_" + name).item(0);
 
-            xml = module.getElementsByTagName("version").item(0).getTextContent();
 
             Element global = (Element)config.getElementsByTagName("global").item(0);
             Element resources = (Element)global.getElementsByTagName("resources").item(0);
@@ -136,13 +152,11 @@ public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
                 if (!(n instanceof Element)) continue;
                 Element elem = (Element)n;
                 if (elem.getElementsByTagName("setup").getLength() != 1) continue;
-                String tagName = elem.getTagName();
-                sql = tagName;
-                sql = versions.getOrDefault(tagName, "nd.");
+                tagName = elem.getTagName();
                 break;
             }
         } catch (Exception ex) {}
-        return new String[] {sql, xml};
+        return tagName;
     }
 
     private void getSQL() {

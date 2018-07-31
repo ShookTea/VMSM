@@ -4,12 +4,14 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.w3c.dom.Element;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MagentoModule {
-    public MagentoModule(String codePool, String namespace, String name, String installedVersion, String xmlVersion, File rootFile, Element config) {
+    public MagentoModule(String codePool, String namespace, String name, String installedVersion, String xmlVersion, File rootFile, Element config, String setupTag) {
         this.codePool = new SimpleStringProperty(codePool);
         this.namespace = new SimpleStringProperty(namespace);
         this.name = new SimpleStringProperty(name);
@@ -39,6 +41,12 @@ public class MagentoModule {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<String> createVersionList() {
+        List<String> versionList = new ArrayList<>();
+
+        return versionList;
     }
 
     private ReadOnlyStringProperty codePool;
