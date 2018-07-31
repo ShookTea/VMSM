@@ -75,6 +75,10 @@ public class MagentoModule {
         return versionList;
     }
 
+    public String getConfigName() {
+        return setupDir.getName();
+    }
+
     private ReadOnlyStringProperty codePool;
     private ReadOnlyStringProperty namespace;
     private ReadOnlyStringProperty name;
