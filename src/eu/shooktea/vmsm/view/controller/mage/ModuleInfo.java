@@ -70,6 +70,8 @@ public class ModuleInfo {
                 ((ResultSet)ob).close();
             }
             conn.close();
+            module.setInstalledVersion(version);
+            createVersionsList();
         } catch (JSchException | SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("You haven't properly configured MySQL module or your Virtual Machine is turned off.");

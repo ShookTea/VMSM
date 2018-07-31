@@ -3,6 +3,7 @@ package eu.shooktea.vmsm.module;
 import eu.shooktea.vmsm.Toolkit;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.w3c.dom.Element;
 
 import java.awt.Desktop;
@@ -82,7 +83,7 @@ public class MagentoModule {
     private ReadOnlyStringProperty codePool;
     private ReadOnlyStringProperty namespace;
     private ReadOnlyStringProperty name;
-    private ReadOnlyStringProperty installedVersion;
+    private StringProperty installedVersion;
     private ReadOnlyStringProperty xmlVersion;
     private Element config;
     private File rootFile;
@@ -126,5 +127,9 @@ public class MagentoModule {
 
     public ReadOnlyStringProperty xmlVersionProperty() {
         return xmlVersion;
+    }
+
+    public void setInstalledVersion(String version) {
+        installedVersion.setValue(version);
     }
 }
