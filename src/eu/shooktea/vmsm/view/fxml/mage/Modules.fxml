@@ -42,31 +42,31 @@
                   <VBox HBox.hgrow="ALWAYS">
                      <children>
                         <Label text="Code pool:" />
-                        <TextField fx:id="codePool" onAction="#reloadTable" />
+                        <TextField fx:id="codePool" onAction="#reloadTable" onKeyReleased="#reloadTable"/>
                      </children>
                   </VBox>
                   <VBox layoutX="20.0" layoutY="20.0">
                      <children>
                         <Label text="Namespace:" />
-                        <TextField fx:id="namespace" onAction="#reloadTable" />
+                        <TextField fx:id="namespace" onAction="#reloadTable" onKeyReleased="#reloadTable" />
                      </children>
                   </VBox>
                   <VBox layoutX="705.0" layoutY="20.0">
                      <children>
                         <Label text="Name:" />
-                        <TextField fx:id="name" onAction="#reloadTable" />
+                        <TextField fx:id="name" onAction="#reloadTable" onKeyReleased="#reloadTable" />
                      </children>
                   </VBox>
                   <VBox layoutX="534.0" layoutY="20.0">
                      <children>
                         <Label text="Installed version:" />
-                        <TextField fx:id="installedVersion" onAction="#reloadTable" />
+                        <TextField fx:id="installedVersion" onAction="#reloadTable" onKeyReleased="#reloadTable" />
                      </children>
                   </VBox>
                   <VBox layoutX="363.0" layoutY="20.0">
                      <children>
                         <Label text="XML version:" />
-                        <TextField onAction="#reloadTable" fx:id="xmlVersion" />
+                        <TextField onAction="#reloadTable" fx:id="xmlVersion" onKeyReleased="#reloadTable" />
                      </children>
                   </VBox>
                </children>
