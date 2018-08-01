@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.view;
 
+import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MainWindow;
@@ -28,7 +29,8 @@ import java.net.URL;
 public class View {
     private View() {}
 
-    public static void initialize(Stage stage, boolean isSimpleGui) throws Exception {
+    public static void initialize(Stage stage) throws Exception {
+        boolean isSimpleGui = Start.streamArgs().anyMatch(s -> s.equals("--simple-gui"));
         primaryStage = stage;
         if (isSimpleGui)
             initializeSimpleGui();
@@ -39,6 +41,7 @@ public class View {
     }
 
     private static void initializeSimpleGui() {
+        boolean debug = Start.streamArgs().anyMatch(s -> s.equals("--debug"));
         stage().initStyle(StageStyle.TRANSPARENT);
         stage().setAlwaysOnTop(true);
         Image logo = new Image(View.class.getResourceAsStream("/eu/shooktea/vmsm/resources/logo.png"));
@@ -47,12 +50,12 @@ public class View {
         view.setOnMouseClicked(SimpleGuiController::openGui);
         view.setPreserveRatio(true);
         view.setFitWidth(32.0);
-        Pane box = new Pane(view);
-        box.setBackground(Background.EMPTY);
-        Scene scene = new Scene(box);
-        scene.setFill(Color.TRANSPARENT);
-        box.prefWidthProperty().addListener((obs, oldV, newV) -> stage().setWidth(newV.doubleValue()));
-        box.prefHeightProperty().addListener((obs, oldV, newV) -> stage().setHeight(newV.doubleValue()));
+        Pane guiPane = new Pane(view);
+        if (!debug) guiPane.setBackground(Background.EMPTY);
+        Scene scene = new Scene(guiPane);
+        if (!debug) scene.setFill(Color.TRANSPARENT);
+        guiPane.prefWidthProperty().addListener((obs, oldV, newV) -> stage().setWidth(newV.doubleValue()));
+        guiPane.prefHeightProperty().addListener((obs, oldV, newV) -> stage().setHeight(newV.doubleValue()));
         stage().setScene(scene);
         stage().setResizable(false);
         stage().setTitle("VMSM");

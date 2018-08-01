@@ -29,6 +29,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 /**
  * Main class for VMSM. Disables SSL certificates check, loads data from configuration file and displays main window.
@@ -44,7 +45,7 @@ public class Start extends Application {
     public void start(Stage stage) throws Exception {
         if (isStartCalled) return;
         isStartCalled = true;
-        View.initialize(stage, simpleGui);
+        View.initialize(stage);
         VM.addListener((oldVM, newVM) -> {
             if (oldVM != null) for (Module m : oldVM.getModules()) m.afterModuleTurnedOff();
             if (newVM != null) for (Module m : newVM.getModules()) m.afterModuleLoaded();
@@ -63,8 +64,7 @@ public class Start extends Application {
         if (isMainCalled) return;
         isMainCalled = true;
 
-        simpleGui = Arrays.stream(args).anyMatch(s -> s.equalsIgnoreCase("--simple-gui"));
-
+        Start.args = args;
         Storage.checkVmsmFiles();
         Toolkit.turnOffSSL();
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
@@ -72,7 +72,12 @@ public class Start extends Application {
         launch(args);
     }
 
-    private static boolean simpleGui = false;
+    private static String[] args;
+
+    public static Stream<String> streamArgs() {
+        return Arrays.stream(args);
+    }
+
     private static boolean isStartCalled = false;
     private static boolean isMainCalled = false;
 }
