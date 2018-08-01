@@ -10,6 +10,8 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -29,22 +31,30 @@ public class View {
         primaryStage = stage;
         if (isSimpleGui)
             initializeSimpleGui();
-        else
+        else {
             initializePrimaryStage();
-        initializeApplicationLoop();
+            initializeApplicationLoop();
+        }
     }
 
     private static void initializeSimpleGui() {
         stage().initStyle(StageStyle.TRANSPARENT);
-        Label test = new Label("Test");
-        test.setTextFill(Color.WHITE);
-        VBox box = new VBox(test);
+        Image logo = new Image(View.class.getResourceAsStream("/eu/shooktea/vmsm/resources/logo.png"));
+        ImageView view = new ImageView(logo);
+        view.setPreserveRatio(true);
+        view.setFitWidth(32.0);
+        VBox box = new VBox(view);
         box.setBackground(Background.EMPTY);
         Scene scene = new Scene(box);
         scene.setFill(Color.TRANSPARENT);
         stage().setScene(scene);
         stage().setResizable(false);
         stage().setTitle("VMSM");
+        final double OPACITY_ON = 1.0;
+        final double OPACITY_OFF = 0.25;
+        scene.setOnMouseEntered(e -> stage().setOpacity(OPACITY_ON));
+        scene.setOnMouseExited(e -> stage().setOpacity(OPACITY_OFF));
+        stage().setOpacity(OPACITY_OFF);
         scene.getWindow().setX(0);
         scene.getWindow().setY(0);
         stage().show();
