@@ -40,8 +40,10 @@ public class View {
 
     private static void initializeSimpleGui() {
         stage().initStyle(StageStyle.TRANSPARENT);
+        stage().setAlwaysOnTop(true);
         Image logo = new Image(View.class.getResourceAsStream("/eu/shooktea/vmsm/resources/logo.png"));
         ImageView view = new ImageView(logo);
+        view.setPickOnBounds(true);
         view.setOnMouseClicked(e -> SimpleGuiController.openGui());
         view.setPreserveRatio(true);
         view.setFitWidth(32.0);
