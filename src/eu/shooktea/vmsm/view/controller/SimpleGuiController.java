@@ -9,8 +9,12 @@ public class SimpleGuiController {
     private SimpleGuiController() {}
 
     public static void openGui(MouseEvent e) {
+        createMenu().show(View.stage(), e.getScreenX(), e.getScreenY());
+    }
+
+    private static ContextMenu createMenu() {
         MenuItem item = new MenuItem("Test");
         ContextMenu menu = new ContextMenu(item);
-        menu.show(View.stage(), e.getScreenX(), e.getScreenY());
+        return menu;
     }
 }
