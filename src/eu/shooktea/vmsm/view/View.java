@@ -44,7 +44,7 @@ public class View {
         Image logo = new Image(View.class.getResourceAsStream("/eu/shooktea/vmsm/resources/logo.png"));
         ImageView view = new ImageView(logo);
         view.setPickOnBounds(true);
-        view.setOnMouseClicked(e -> SimpleGuiController.openGui());
+        view.setOnMouseClicked(SimpleGuiController::openGui);
         view.setPreserveRatio(true);
         view.setFitWidth(32.0);
         VBox box = new VBox(view);
