@@ -9,10 +9,14 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -22,13 +26,31 @@ public class View {
     private View() {}
 
     public static void initialize(Stage stage, boolean isSimpleGui) throws Exception {
-        initializePrimaryStage(stage);
+        primaryStage = stage;
+        if (isSimpleGui)
+            initializeSimpleGui();
+        else
+            initializePrimaryStage();
         initializeApplicationLoop();
-        if (isSimpleGui) System.out.println("RUN SIMPLE");
     }
 
-    private static void initializePrimaryStage(Stage stage) throws Exception {
-        primaryStage = stage;
+    private static void initializeSimpleGui() {
+        stage().initStyle(StageStyle.TRANSPARENT);
+        Label test = new Label("Test");
+        test.setTextFill(Color.WHITE);
+        VBox box = new VBox(test);
+        box.setBackground(Background.EMPTY);
+        Scene scene = new Scene(box);
+        scene.setFill(Color.TRANSPARENT);
+        stage().setScene(scene);
+        stage().setResizable(false);
+        stage().setTitle("VMSM");
+        scene.getWindow().setX(0);
+        scene.getWindow().setY(0);
+        stage().show();
+    }
+
+    private static void initializePrimaryStage() throws Exception {
         URL location = View.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
         FXMLLoader loader = new FXMLLoader(location);
         VBox vbox = loader.load();
