@@ -11,6 +11,6 @@ public class SimpleGuiController {
     public static void openGui(MouseEvent e) {
         MenuItem item = new MenuItem("Test");
         ContextMenu menu = new ContextMenu(item);
-        menu.show(View.stage(), e.getX(), e.getY());
+        menu.show(View.stage(), e.getScreenX(), e.getScreenY());
     }
 }
