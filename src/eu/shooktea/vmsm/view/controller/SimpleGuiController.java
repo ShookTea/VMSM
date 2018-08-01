@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -21,11 +22,19 @@ import java.util.List;
 public class SimpleGuiController {
     private SimpleGuiController() {}
 
+    private static final double radius = 100.0;
+    private static boolean isShortGuiOpen = false;
+
     public static void openGui(MouseEvent e) {
+        Pane pane = (Pane)View.stage().getScene().getRoot();
+        pane.setPrefWidth(pane.getWidth() + (isShortGuiOpen ? -radius : radius));
+        isShortGuiOpen = !isShortGuiOpen;
+        /*
         if (e.getButton() == MouseButton.PRIMARY)
             openQuickMenu(e.getScreenX(), e.getScreenY());
         else
             createMenu().show(View.stage(), e.getScreenX(), e.getScreenY());
+        */
     }
 
     private static void openQuickMenu(double x, double y) {
