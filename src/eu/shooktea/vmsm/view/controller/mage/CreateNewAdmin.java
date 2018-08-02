@@ -27,6 +27,9 @@ public class CreateNewAdmin implements StageController {
     @FXML private Label error;
     private Stage stage;
 
+    private VirtualMachine vm;
+    private MySQL sql;
+
     @FXML
     private void create() {
         if (login.getText().trim().isEmpty() || password.getText().isEmpty()) {
@@ -47,8 +50,6 @@ public class CreateNewAdmin implements StageController {
         if (surname.isEmpty()) surname = "Smith";
         if (email.isEmpty()) email = "johnsmith@example.tld";
 
-        MySQL sql = MySQL.getModuleByName("MySQL");
-        VirtualMachine vm = VM.getOrThrow();
         connection = sql.createConnection();
         try {
             connection.open();
@@ -108,7 +109,9 @@ public class CreateNewAdmin implements StageController {
             dialog.showAndWait();
         }
         else {
-            View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/CreateNewAdmin.fxml", "Create new admin");
+            CreateNewAdmin cna = View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/CreateNewAdmin.fxml", "Create new admin");
+            cna.sql = sql;
+            cna.vm = vm;
         }
     }
 

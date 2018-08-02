@@ -43,8 +43,14 @@ public class MagentoNewModule implements StageController {
 
     private Stage stage;
 
+    private VirtualMachine vm;
+    private Magento magento;
+
     @FXML
     private void initialize() {
+        vm = VM.getOrThrow();
+        magento = Magento.getModuleByName("Magento");
+
         namespaceField.setOnKeyTyped(e -> updateTextFields(false));
         nameField.setOnKeyTyped(e -> updateTextFields(false));
         fullModuleNameField.setOnKeyTyped(e -> updateTextFields(true));
@@ -75,8 +81,6 @@ public class MagentoNewModule implements StageController {
 
     @FXML
     private void createAction() {
-        VirtualMachine vm = VM.getOrThrow();
-        Magento magento = Module.getModuleByName("Magento");
         String path = magento.getStringSetting(vm, "path");
         if (path == null) {
             showError("You haven't configured Magento main directory!");

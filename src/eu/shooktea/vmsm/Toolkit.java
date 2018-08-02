@@ -70,6 +70,7 @@ public class Toolkit {
         iv.setPreserveRatio(true);
         iv.setPickOnBounds(true);
         iv.setFitWidth(width);
+        iv.setFitHeight(width);
         return iv;
     }
 

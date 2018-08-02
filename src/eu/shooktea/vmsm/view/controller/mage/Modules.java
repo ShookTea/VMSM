@@ -27,10 +27,12 @@ public class Modules implements StageController {
     private Task<ObservableList<MagentoModule>> task;
     private ObservableList<MagentoModule> allModules;
 
+    private Magento magento;
+
     @FXML
     private void initialize() {
+        magento = Magento.getModuleByName("Magento");
         initColumns();
-        Magento magento = Magento.getModuleByName("Magento");
         task = magento.createModuleLoaderTask();
         task.setOnSucceeded(e -> Platform.runLater(() -> {loadTable(task); filtersPane.setExpanded(true);}));
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -94,7 +96,7 @@ public class Modules implements StageController {
         if (e.getClickCount() != 2) return;
         MagentoModule module = table.getSelectionModel().getSelectedItem();
         if (module == null) return;
-        ModuleInfo.openModuleInfo(Magento.getModuleByName("Magento"), module);
+        ModuleInfo.openModuleInfo(module);
 
     }
 }

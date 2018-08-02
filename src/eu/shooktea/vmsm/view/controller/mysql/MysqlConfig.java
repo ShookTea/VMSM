@@ -35,12 +35,14 @@ public class MysqlConfig implements StageController {
 
     private VirtualMachine vm;
     private MySQL mysql;
+    private SSH ssh;
     private Stage stage;
 
     @FXML
     private void initialize() {
         vm = VM.getOrThrow();
         mysql = MySQL.getModuleByName("MySQL");
+        ssh = SSH.getModuleByName("SSH");
         bindSsh();
         loadMysqlSettings();
         Boolean sshEnabled = (Boolean)mysql.getSetting(vm, "ssh_enabled");
@@ -80,7 +82,6 @@ public class MysqlConfig implements StageController {
         defaults.put("port", "22");
         defaults.put("local_port", "3307");
 
-        SSH ssh = SSH.getModuleByName("SSH");
         if (ssh.isInstalled(vm)) {
             String defHost = ssh.getStringSetting(vm, "host");
             if (defHost != null && !defHost.trim().isEmpty()) defaults.put("host", defHost);

@@ -22,19 +22,23 @@ public class ModuleInfo {
     @FXML private Button revertVersionButton;
     @FXML private ListView<String> versionsList;
 
-    @FXML
-    private void initialize() {}
+    private MagentoModule module;
+    private VirtualMachine vm;
+    private MySQL sql;
 
-    public void setValue(Magento magento, MagentoModule module, VirtualMachine vm) {
+    @FXML
+    private void initialize() {
+        vm = VM.getOrThrow();
+        sql = MySQL.getModuleByName("MySQL");
+    }
+
+    public void setValue() {
         versionsList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         revertVersionButton.disableProperty().bind(
                 Val.flatMap(versionsList.selectionModelProperty(), SelectionModel::selectedItemProperty)
                 .map(version -> version.contains("installed"))
                 .orElseConst(Boolean.TRUE)
         );
-        this.magento = magento;
-        this.module = module;
-        this.vm = vm;
         reloadData();
     }
 
@@ -57,7 +61,6 @@ public class ModuleInfo {
     @FXML
     private void revertVersion() {
         String version = versionsList.getSelectionModel().getSelectedItem();
-        MySQL sql = MySQL.getModuleByName("MySQL");
         SqlConnection conn = sql.createConnection();
         String moduleConfigName = module.getConfigName();
         String query = String.format(
@@ -78,14 +81,11 @@ public class ModuleInfo {
         }
     }
 
-    private Magento magento;
-    private MagentoModule module;
-    private VirtualMachine vm;
-
-    public static void openModuleInfo(Magento magento, MagentoModule module) {
+    public static void openModuleInfo(MagentoModule module) {
         String path = "/eu/shooktea/vmsm/view/fxml/mage/ModuleInfo.fxml";
         String title = module.getCodePool() + "/" + module.getNamespace() + "_" + module.getName() + " - module info";
         ModuleInfo contr = View.createNewWindow(path, title, false);
-        contr.setValue(magento, module, VM.getOrThrow());
+        contr.module = module;
+        contr.setValue();
     }
 }

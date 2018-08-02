@@ -32,7 +32,7 @@ public class QuickGuiMenu {
     }
 
     private ImageView createExitButton() {
-        ImageView exitButton = Toolkit.createQuickGuiButton("red_ball.png", "Exit VMSM");
+        ImageView exitButton = Toolkit.createQuickGuiButton("exit.png", "Exit VMSM");
         exitButton.setOnMouseClicked(e -> System.exit(1));
         return exitButton;
     }
