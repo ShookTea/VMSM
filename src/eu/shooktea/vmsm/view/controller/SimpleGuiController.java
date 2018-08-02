@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.view.controller;
 
+import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ContextMenu;
@@ -32,9 +33,12 @@ public class SimpleGuiController {
         startWidth = root.getWidth();
         startHeight = root.getHeight();
         mainButton.setOnMouseClicked(SimpleGuiController::mainButtonClicked);
+        root.setPickOnBounds(true);
+        root.setOnMouseExited(SimpleGuiController::mouseExited);
+        root.setOnMouseEntered(SimpleGuiController::mouseEntered);
     }
 
-    public static void mainButtonClicked(MouseEvent e) {
+    private static void mainButtonClicked(MouseEvent e) {
         if (e.getButton() == MouseButton.PRIMARY && isShortGuiOpen)
             closeQuickGui();
         else if (e.getButton() == MouseButton.PRIMARY)
@@ -93,6 +97,31 @@ public class SimpleGuiController {
 
     private static List<ImageView> addedButtons = new ArrayList<>();
 
+    private static void mouseExited(MouseEvent event) {
+        if (isShortGuiOpen)
+            requestExit();
+    }
+
+    private static void mouseEntered(MouseEvent event) {
+        requestedExit = false;
+    }
+
+    private static void requestExit() {
+        requestedExit = true;
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000); //2 seconds
+            } catch (InterruptedException ignored) {}
+            Platform.runLater(() -> {
+                if (requestedExit) {
+                    requestedExit = false;
+                    closeQuickGui();
+                }
+            });
+        }).start();
+    }
+
+    private static boolean requestedExit = false;
 
     private static List<Point2D> getPoints(int amountOfPoints) {
         double startAngle = 5;

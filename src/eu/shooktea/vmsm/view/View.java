@@ -41,8 +41,6 @@ public class View {
     }
 
     private static void initializeSimpleGui() {
-        boolean debug = Start.streamArgs().anyMatch(s -> s.equals("--debug"));
-        System.out.println("DEBUG = " + debug);
         stage().initStyle(StageStyle.TRANSPARENT);
         stage().setAlwaysOnTop(true);
         Image logo = new Image(View.class.getResourceAsStream("/eu/shooktea/vmsm/resources/logo.png"));
@@ -51,9 +49,9 @@ public class View {
         view.setPreserveRatio(true);
         view.setFitWidth(32.0);
         Pane guiPane = new Pane(view);
-        if (!debug) guiPane.setBackground(Background.EMPTY);
+        guiPane.setBackground(Background.EMPTY);
         Scene scene = new Scene(guiPane);
-        if (!debug) scene.setFill(Color.TRANSPARENT);
+        scene.setFill(Color.TRANSPARENT);
         guiPane.prefWidthProperty().addListener((obs, oldV, newV) -> stage().setWidth(newV.doubleValue()));
         guiPane.prefHeightProperty().addListener((obs, oldV, newV) -> stage().setHeight(newV.doubleValue()));
         stage().setScene(scene);
