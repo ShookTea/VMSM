@@ -44,6 +44,12 @@ public class View {
     private static void initializeSimpleGui() {
         stage().initStyle(StageStyle.TRANSPARENT);
         stage().setAlwaysOnTop(true);
+        stage().alwaysOnTopProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                stage().setAlwaysOnTop(true);
+            }
+        });
+        stage().toFront();
         Image logo = new Image(View.class.getResourceAsStream("/eu/shooktea/vmsm/resources/logo.png"));
         ImageView view = new ImageView(logo);
         view.setPickOnBounds(true);
@@ -85,8 +91,7 @@ public class View {
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, (ev) -> {
                     VM.ifNotNull(VirtualMachine::update);
-                    if (isSimpleGui) stage().setAlwaysOnTop(true);
-                    else controller().reloadGUI();
+                    if (!isSimpleGui) controller().reloadGUI();
                 }),
                 new KeyFrame(Duration.seconds(5))
         );
