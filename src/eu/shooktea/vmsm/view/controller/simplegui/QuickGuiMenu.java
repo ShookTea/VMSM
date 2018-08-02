@@ -1,9 +1,9 @@
 package eu.shooktea.vmsm.view.controller.simplegui;
 
-import javafx.scene.image.Image;
+import eu.shooktea.vmsm.Toolkit;
 import javafx.scene.image.ImageView;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuickGuiMenu {
@@ -16,8 +16,15 @@ public class QuickGuiMenu {
     }
 
     private List<ImageView> createList() {
-        ImageView test = new ImageView(new Image(QuickGuiMenu.class.getResourceAsStream("/eu/shooktea/vmsm/resources/green_ball.png")));
-        return Arrays.asList(test);
+        List<ImageView> list = new ArrayList<>();
+        list.add(createExitButton());
+        return list;
+    }
+
+    private ImageView createExitButton() {
+        ImageView exitButton = Toolkit.createQuickGuiButton("red_ball.png", "Exit VMSM");
+        exitButton.setOnMouseClicked(e -> System.exit(1));
+        return exitButton;
     }
 
     private final List<ImageView> list;

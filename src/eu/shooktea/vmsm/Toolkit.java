@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm;
 
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Pair;
@@ -18,25 +19,57 @@ public class Toolkit {
     /**
      * Creates {@link ImageView} node with icon resized to 20 pixels.
      * @param resourceFileName name of file in {@code /eu/shooktea/vmsm/resources/} directory
-     * @return created nod with icon from resources directory
+     * @return created node with icon from resources directory
      */
     public static ImageView createToolbarImage(String resourceFileName) {
-        resourceFileName = "/eu/shooktea/vmsm/resources/" + resourceFileName;
-        ImageView iv = new ImageView(new Image(Toolkit.class.getResourceAsStream(resourceFileName)));
-        iv.setPreserveRatio(true);
-        iv.setFitWidth(20);
-        iv.setPickOnBounds(true);
-        return iv;
+        return createImageView(resourceFileName, 20);
     }
 
     /**
      * Creates {@link ImageView} node with icon resized to 15 pixels.
      * @param resourceFileName name of file in {@code /eu/shooktea/vmsm/resources/} directory
-     * @return created nod with icon from resources directory
+     * @return created node with icon from resources directory
      */
     public static ImageView createMenuImage(String resourceFileName) {
-        ImageView iv = createToolbarImage(resourceFileName);
-        iv.setFitWidth(15);
+        return createImageView(resourceFileName, 15);
+    }
+
+    /**
+     * Creates {@link ImageView} node with icon resized to 32 pixels.
+     * @param resourceFileName name of file in {@code /eu/shooktea/vmsm/resources/} directory
+     * @return created node with icon from resources directory
+     */
+    public static ImageView createQuickGuiButton(String resourceFileName) {
+        return createQuickGuiButton(resourceFileName, null);
+    }
+
+    /**
+     * Creates {@link ImageView} node with icon resized to 32 pixels and some tooltip.
+     * @param resourceFileName name of file in {@code /eu/shooktea/vmsm/resources/} directory
+     * @param tooltipText string containing tooltip to be displayed when hovering over button.
+     * @return created node with icon from resources directory
+     */
+    public static ImageView createQuickGuiButton(String resourceFileName, String tooltipText) {
+        ImageView iv = createImageView(resourceFileName, 32);
+        if (tooltipText == null) return iv;
+        Tooltip tip = new Tooltip(tooltipText);
+        Tooltip.install(iv, tip);
+        return iv;
+    }
+
+    /**
+     * Creates {@link ImageView} node from given resource and resized to given size
+     * @param resourceFileName name of file in {@code /eu/shooktea/vmsm/resources/} directory
+     * @param width width of icon in pixels
+     * @return created node with icon from resources directory
+     */
+    public static ImageView createImageView(String resourceFileName, double width) {
+        resourceFileName = "/eu/shooktea/vmsm/resources/" + resourceFileName;
+        Image image = new Image(Toolkit.class.getResourceAsStream(resourceFileName));
+        ImageView iv = new ImageView(image);
+        iv.setPreserveRatio(true);
+        iv.setPickOnBounds(true);
+        iv.setFitWidth(width);
         return iv;
     }
 
