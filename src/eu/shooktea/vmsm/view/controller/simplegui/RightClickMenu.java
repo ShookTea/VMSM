@@ -1,7 +1,6 @@
 package eu.shooktea.vmsm.view.controller.simplegui;
 
 import eu.shooktea.vmsm.Storage;
-import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.NewVM;
@@ -43,7 +42,6 @@ public class RightClickMenu {
 
     private MenuItem exit() {
         MenuItem item = new MenuItem("Exit VMSM");
-        item.setGraphic(Toolkit.createMenuImage("exit.png"));
         item.setOnAction(e -> System.exit(0));
         return item;
     }
