@@ -54,6 +54,6 @@ public class SshConfig implements StageController {
     private Stage stage;
 
     public static void openSshConfigWindow(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ssh/SshConfig.fxml", "SSH Configuration", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ssh/SshConfig.fxml", "SSH Configuration");
     }
 }

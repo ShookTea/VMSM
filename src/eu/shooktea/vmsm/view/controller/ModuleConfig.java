@@ -88,6 +88,6 @@ public class ModuleConfig {
     private Map<ToggleButton,Module> switchButtons = new HashMap<>();
 
     public static void openModuleConfigWindow(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ModuleConfig.fxml", "Module configuration", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ModuleConfig.fxml", "Module configuration");
     }
 }

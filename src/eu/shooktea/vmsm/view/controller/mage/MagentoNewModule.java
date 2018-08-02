@@ -261,6 +261,6 @@ public class MagentoNewModule implements StageController {
     }
 
     public static void openMagentoNewModuleWindow(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoNewModule.fxml", "New module", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoNewModule.fxml", "New module");
     }
 }

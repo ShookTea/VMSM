@@ -81,7 +81,7 @@ public class Modules implements StageController {
     }
 
     public static void openModulesWindow(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/Modules.fxml", "Magento modules", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/Modules.fxml", "Magento modules");
     }
 
     @Override

@@ -76,7 +76,7 @@ public class MagentoConfig implements StageController {
     }
 
     public static void openMagentoConfig(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoConfig.fxml", "Magento Config", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoConfig.fxml", "Magento Config");
     }
 
     @FXML

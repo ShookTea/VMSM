@@ -108,7 +108,7 @@ public class CreateNewAdmin implements StageController {
             dialog.showAndWait();
         }
         else {
-            View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/CreateNewAdmin.fxml", "Create new admin", true);
+            View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/CreateNewAdmin.fxml", "Create new admin");
         }
     }
 

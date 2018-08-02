@@ -131,6 +131,6 @@ public class MysqlConfig implements StageController {
     }
 
     public static void openMysqlConfigWindow(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/MysqlConfig.fxml", "MySQL config", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/MysqlConfig.fxml", "MySQL config");
     }
 }
