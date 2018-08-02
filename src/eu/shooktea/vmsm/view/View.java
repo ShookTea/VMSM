@@ -29,15 +29,16 @@ import java.net.URL;
 public class View {
     private View() {}
 
+    private static boolean isSimpleGui;
+
     public static void initialize(Stage stage) throws Exception {
-        boolean isSimpleGui = Start.streamArgs().anyMatch(s -> s.equals("--simple-gui"));
+        isSimpleGui = Start.streamArgs().anyMatch(s -> s.equals("--simple-gui"));
         primaryStage = stage;
         if (isSimpleGui)
             initializeSimpleGui();
-        else {
+        else
             initializePrimaryStage();
-            initializeApplicationLoop();
-        }
+        initializeApplicationLoop();
     }
 
     private static void initializeSimpleGui() {
@@ -84,7 +85,8 @@ public class View {
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, (ev) -> {
                     VM.ifNotNull(VirtualMachine::update);
-                    controller().reloadGUI();
+                    if (isSimpleGui) stage().setAlwaysOnTop(true);
+                    else controller().reloadGUI();
                 }),
                 new KeyFrame(Duration.seconds(5))
         );
