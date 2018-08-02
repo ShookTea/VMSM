@@ -1,7 +1,9 @@
 package eu.shooktea.vmsm.view.controller.simplegui;
 
+import eu.shooktea.vmsm.Toolkit;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 
 public class RightClickMenu {
     RightClickMenu() {
@@ -13,10 +15,19 @@ public class RightClickMenu {
     }
 
     private ContextMenu createContextMenu() {
-        MenuItem item = new MenuItem("Test");
-        MenuItem test = new MenuItem("Hello, better world");
-        ContextMenu menu = new ContextMenu(item, test);
+        ContextMenu menu = new ContextMenu(exit());
         return menu;
+    }
+
+    private MenuItem separator() {
+        return new SeparatorMenuItem();
+    }
+
+    private MenuItem exit() {
+        MenuItem item = new MenuItem("Exit VMSM");
+        item.setGraphic(Toolkit.createMenuImage("exit.png"));
+        item.setOnAction(e -> System.exit(0));
+        return item;
     }
 
     private final ContextMenu menu;
