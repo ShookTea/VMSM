@@ -38,18 +38,14 @@ class QuickGui {
         pane.setPrefWidth(startWidth + DISPLAY_RADIUS);
         pane.setPrefHeight(startHeight + DISPLAY_RADIUS);
 
-        List<Point2D> points = getPoints(10);
-        int count = 0;
-        for (Point2D point : points) {
-            String url;
-            switch (count) {
-                case 0: url = "red"; break;
-                case 1: url = "yellow"; break;
-                default: url = "green";
-            }
-            url = "/eu/shooktea/vmsm/resources/" + url + "_ball.png";
-            count++;
-            javafx.scene.image.ImageView imageView = new javafx.scene.image.ImageView(new Image(SimpleGuiController.class.getResourceAsStream(url)));
+        List<ImageView> menu = new QuickGuiMenu().getList();
+        List<Point2D> points = getPoints(menu.size());
+
+        int size = Math.min(menu.size(), points.size());
+        for (int i = 0; i < size; i++) {
+            ImageView imageView = menu.get(i);
+            Point2D point = points.get(i);
+
             imageView.setPickOnBounds(true);
             imageView.setPreserveRatio(true);
             imageView.setFitWidth(32);
