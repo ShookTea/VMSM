@@ -4,7 +4,7 @@ import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.MainWindow;
-import eu.shooktea.vmsm.view.controller.SimpleGuiController;
+import eu.shooktea.vmsm.view.controller.simplegui.SimpleGuiController;
 import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
