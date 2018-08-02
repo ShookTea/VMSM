@@ -20,7 +20,7 @@ class QuickGui {
         if (isShortGuiOpen) closeGui(); else openGui();
     }
 
-    private void closeGui() {
+    public void closeGui() {
         if (!isShortGuiOpen) return;
         pane.setPrefWidth(startWidth);
         pane.setPrefHeight(startHeight);
@@ -37,7 +37,7 @@ class QuickGui {
         pane.setPrefWidth(startWidth + DISPLAY_RADIUS);
         pane.setPrefHeight(startHeight + DISPLAY_RADIUS);
 
-        List<ImageView> menu = new QuickGuiMenu().getList();
+        List<ImageView> menu = new QuickGuiMenu().getList(this);
         List<Point2D> points = getPoints(menu.size());
 
         int size = Math.min(menu.size(), points.size());

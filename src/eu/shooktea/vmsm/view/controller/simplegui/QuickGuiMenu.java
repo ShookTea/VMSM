@@ -3,7 +3,9 @@ package eu.shooktea.vmsm.view.controller.simplegui;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.view.controller.NewVM;
+import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +15,16 @@ public class QuickGuiMenu {
         this.list = createList();
     }
 
-    public List<ImageView> getList() {
-        return list;
+    public List<ImageView> getList(QuickGui gui) {
+        List<ImageView> ret = new ArrayList<>(list);
+        ret.forEach(iv -> {
+            EventHandler<? super MouseEvent> eh = iv.getOnMouseClicked();
+            iv.setOnMouseClicked(ev -> {
+                gui.closeGui();
+                if (eh != null) eh.handle(ev);
+            });
+        });
+        return ret;
     }
 
     private List<ImageView> createList() {
