@@ -133,11 +133,29 @@ public class VM {
     }
 
     /**
-     * Calls some action if the virtual machine is setted.
-     * @param consumer action to be done if VM is setted.
+     * Calls some action if the virtual machine is set.
+     * @param consumer action to be done if VM is set.
      */
     public static void ifNotNull(Consumer<VirtualMachine> consumer) {
-        if (get() != null) consumer.accept(get());
+        ifNotNullOrElse(consumer, () -> {});
+    }
+
+    /**
+     * Calls some action if the virtual machine is not set.
+     * @param runnable action to be done if VM is not set.
+     */
+    public static void ifNull(Runnable runnable) {
+        ifNotNullOrElse(vm -> {}, runnable);
+    }
+
+    /**
+     * Calls some action depending on whether virtual machine is set or not.
+     * @param consumer action to be done if VM is set.
+     * @param runnable action to be done if VM is not set.
+     */
+    public static void ifNotNullOrElse(Consumer<VirtualMachine> consumer, Runnable runnable) {
+        if (get() == null) runnable.run();
+        else consumer.accept(get());
     }
 
     /**
