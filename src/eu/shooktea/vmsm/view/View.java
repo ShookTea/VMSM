@@ -42,12 +42,12 @@ public class View {
 
     private static void initializeSimpleGui() {
         boolean debug = Start.streamArgs().anyMatch(s -> s.equals("--debug"));
+        System.out.println("DEBUG = " + debug);
         stage().initStyle(StageStyle.TRANSPARENT);
         stage().setAlwaysOnTop(true);
         Image logo = new Image(View.class.getResourceAsStream("/eu/shooktea/vmsm/resources/logo.png"));
         ImageView view = new ImageView(logo);
         view.setPickOnBounds(true);
-        view.setOnMouseClicked(SimpleGuiController::openGui);
         view.setPreserveRatio(true);
         view.setFitWidth(32.0);
         Pane guiPane = new Pane(view);
@@ -66,6 +66,7 @@ public class View {
         stage().setOpacity(OPACITY_OFF);
         scene.getWindow().setX(0);
         scene.getWindow().setY(0);
+        SimpleGuiController.init(view, guiPane);
         stage().show();
     }
 
