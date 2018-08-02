@@ -136,6 +136,10 @@ public class View {
         }
     }
 
+    public static <T extends Region, C> C createNewWindow(String fxmlPath, String title) {
+        return createNewWindow(fxmlPath, title, !isSimpleGui);
+    }
+
     public static void reloadGUI() {
         if (mainWindow != null) mainWindow.reloadGUI();
     }
