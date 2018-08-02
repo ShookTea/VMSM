@@ -1,26 +1,26 @@
 package eu.shooktea.vmsm.view.controller.simplegui;
 
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class QuickGui {
-    QuickGui(Pane pane) {
+    QuickGui(Label rootButton, Pane pane) {
         this.pane = pane;
-        this.startHeight = pane.getHeight();
-        this.startWidth = pane.getWidth();
+        this.rootButton = rootButton;
+        this.startWidth = new SimpleDoubleProperty();
+        this.startHeight = new SimpleDoubleProperty();
+        startWidth.bind(rootButton.widthProperty());
+        startHeight.bind(rootButton.heightProperty());
+        resetPaneSize();
     }
 
     void switchGui() {
@@ -29,8 +29,7 @@ class QuickGui {
 
     public void closeGui() {
         if (!isShortGuiOpen) return;
-        pane.setPrefWidth(startWidth);
-        pane.setPrefHeight(startHeight);
+        resetPaneSize();
         addedButtons.forEach(b -> pane.getChildren().remove(b));
         addedButtons.clear();
         isShortGuiOpen = false;
@@ -40,9 +39,7 @@ class QuickGui {
         if (isShortGuiOpen) return;
         addedButtons.forEach(b -> pane.getChildren().remove(b));
         addedButtons.clear();
-
-        pane.setPrefWidth(startWidth + DISPLAY_RADIUS);
-        pane.setPrefHeight(startHeight + DISPLAY_RADIUS);
+        setPaneSize(startWidth.getValue() + DISPLAY_RADIUS, startHeight.getValue() + DISPLAY_RADIUS);
 
         List<ImageView> menu = new QuickGuiMenu().getList(this);
         List<Point2D> points = getPoints(menu.size());
@@ -73,31 +70,6 @@ class QuickGui {
     void mouseExited() {
         if (isShortGuiOpen) requestExit();
     }
-
-    void hideMessage() {
-        if (currentMessage == null) return;
-        currentMessage = null;
-        pane.setPrefWidth(isShortGuiOpen ? startWidth + DISPLAY_RADIUS : startWidth);
-        pane.getChildren().remove(messageLabel);
-    }
-
-    void showMessage(String s) {
-        if (currentMessage != null) return;
-        currentMessage = s;
-        messageLabel = new Label(currentMessage);
-        messageLabel.setFont(Font.font(15.0));
-        messageLabel.setTextFill(Color.BLACK);
-        messageLabel.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0.1, true), new Insets(0.0))));
-        double width = isShortGuiOpen ?
-                Math.max(DISPLAY_RADIUS, MESSAGE_WIDTH) + startWidth :
-                MESSAGE_WIDTH + startWidth;
-        pane.setPrefWidth(width);
-        pane.getChildren().add(messageLabel);
-        messageLabel.setTranslateX(startWidth + 5);
-    }
-
-    private String currentMessage = null;
-    private Label messageLabel = null;
 
     private void requestExit() {
         requestedExit = true;
@@ -131,14 +103,26 @@ class QuickGui {
         return points;
     }
 
+    private void resetPaneSize() {
+        pane.prefWidthProperty().bind(rootButton.widthProperty());
+        pane.prefHeightProperty().bind(rootButton.heightProperty());
+    }
+
+    private void setPaneSize(double width, double height) {
+        pane.prefWidthProperty().unbind();
+        pane.setPrefWidth(width);
+        pane.prefHeightProperty().unbind();
+        pane.setPrefHeight(height);
+    }
+
     private final Pane pane;
-    private final double startWidth;
-    private final double startHeight;
+    private final Label rootButton;
+    private final DoubleProperty startWidth;
+    private final DoubleProperty startHeight;
     private final List<ImageView> addedButtons = new ArrayList<>();
     private boolean isShortGuiOpen = false;
     private boolean requestedExit = false;
 
     private static final double BUTTON_RADIUS = 150.0;
     private static final double DISPLAY_RADIUS = 200.0;
-    private static final double MESSAGE_WIDTH = 500.0;
 }

@@ -25,9 +25,6 @@ public class RightClickMenu {
         List<MenuItem> list = new ArrayList<>();
         list.add(vmMenu());
         list.add(exit());
-        MenuItem test = new MenuItem("test");
-        test.setOnAction(e -> SimpleGuiController.addMessage("Test message"));
-        list.add(test);
 
         ContextMenu menu = new ContextMenu();
         menu.getItems().addAll(list);

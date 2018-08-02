@@ -1,7 +1,10 @@
 package eu.shooktea.vmsm.view.controller.simplegui;
 
+import eu.shooktea.vmsm.VM;
 import javafx.application.Platform;
-import javafx.scene.image.ImageView;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -12,14 +15,17 @@ import java.util.Queue;
 public class SimpleGuiController {
     private SimpleGuiController() {}
 
-    private static ImageView mainButton;
+    private static Label mainButton;
     private static Pane root;
     private static QuickGui quickGui;
 
-    public static void init(ImageView iv, Pane p) {
-        mainButton = iv;
+    public static void init(Label label, Pane p) {
+        VM.addListener(() -> VM.ifNotNull(vm -> titleStringProperty.setValue(vm.getName()))).vmConsume();
+        mainButton = label;
+        mainButton.setPickOnBounds(true);
+        mainButton.textProperty().bind(titleStringProperty);
         root = p;
-        quickGui = new QuickGui(root);
+        quickGui = new QuickGui(mainButton, root);
         mainButton.setOnMouseClicked(SimpleGuiController::mainButtonClicked);
         root.setPickOnBounds(true);
         root.setOnMouseExited(e -> quickGui.mouseExited());
@@ -41,11 +47,12 @@ public class SimpleGuiController {
     private static void updateMessage() {
         if (currentMessage != null) {
             currentMessage = null;
-            quickGui.hideMessage();
+            mainButton.textProperty().bind(titleStringProperty);
         }
         if (!messageQueue.isEmpty()) {
             currentMessage = messageQueue.poll();
-            quickGui.showMessage(currentMessage);
+            mainButton.textProperty().unbind();
+            mainButton.setText(currentMessage);
             new Thread(() -> {
                 try {
                     Thread.sleep(5000);
@@ -55,6 +62,11 @@ public class SimpleGuiController {
         }
     }
 
+    public static void setTitle(String title) {
+        titleStringProperty.setValue(title);
+    }
+
+    private static StringProperty titleStringProperty = new SimpleStringProperty("VMSM");
     private static String currentMessage = null;
     private static Queue<String> messageQueue = new ArrayDeque<>();
 }

@@ -10,14 +10,14 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -50,11 +50,11 @@ public class View {
             }
         });
         stage().toFront();
-        Image logo = new Image(View.class.getResourceAsStream("/eu/shooktea/vmsm/resources/logo.png"));
-        ImageView view = new ImageView(logo);
-        view.setPickOnBounds(true);
-        view.setPreserveRatio(true);
-        view.setFitWidth(32.0);
+        Label view = new Label("VMSM");
+        view.setFont(Font.font(15));
+        view.setTextFill(Color.BLACK);
+        view.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0.1, true), new Insets(0.0))));
+
         Pane guiPane = new Pane(view);
         guiPane.setBackground(Background.EMPTY);
         Scene scene = new Scene(guiPane);
