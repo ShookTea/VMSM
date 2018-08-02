@@ -45,18 +45,18 @@ public class SimpleGuiController {
     }
 
     private static void updateMessage() {
-        if (currentMessage != null) {
-            currentMessage = null;
-            mainButton.textProperty().bind(titleStringProperty);
-        }
-        if (!messageQueue.isEmpty()) {
+        if (currentMessage == null && !messageQueue.isEmpty()) {
             currentMessage = messageQueue.poll();
             mainButton.textProperty().unbind();
             mainButton.setText(currentMessage);
             new Thread(() -> {
                 try {
                     Thread.sleep(5000);
-                    Platform.runLater(SimpleGuiController::updateMessage);
+                    Platform.runLater(() -> {
+                        currentMessage = null;
+                        mainButton.textProperty().bind(titleStringProperty);
+                        updateMessage();
+                    });
                 } catch (InterruptedException ignored) {}
             }).start();
         }
