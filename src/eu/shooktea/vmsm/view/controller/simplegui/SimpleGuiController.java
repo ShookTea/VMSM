@@ -1,7 +1,5 @@
 package eu.shooktea.vmsm.view.controller.simplegui;
 
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -28,12 +26,6 @@ public class SimpleGuiController {
         if (e.getButton() == MouseButton.PRIMARY)
             quickGui.switchGui();
         else
-            createMenu().show(root, e.getScreenX(), e.getScreenY());
-    }
-
-    private static ContextMenu createMenu() {
-        MenuItem item = new MenuItem("Test");
-        ContextMenu menu = new ContextMenu(item);
-        return menu;
+            new RightClickMenu().getContextMenu().show(root, e.getScreenX(), e.getScreenY());
     }
 }
