@@ -2,9 +2,16 @@ package eu.shooktea.vmsm.view.controller.simplegui;
 
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +74,31 @@ class QuickGui {
         if (isShortGuiOpen) requestExit();
     }
 
+    void hideMessage() {
+        if (currentMessage == null) return;
+        currentMessage = null;
+        pane.setPrefWidth(isShortGuiOpen ? startWidth + DISPLAY_RADIUS : startWidth);
+        pane.getChildren().remove(messageLabel);
+    }
+
+    void showMessage(String s) {
+        if (currentMessage != null) return;
+        currentMessage = s;
+        messageLabel = new Label(currentMessage);
+        messageLabel.setFont(Font.font(15.0));
+        messageLabel.setTextFill(Color.BLACK);
+        messageLabel.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0.1, true), new Insets(0.0))));
+        double width = isShortGuiOpen ?
+                Math.max(DISPLAY_RADIUS, MESSAGE_WIDTH) + startWidth :
+                MESSAGE_WIDTH + startWidth;
+        pane.setPrefWidth(width);
+        pane.getChildren().add(messageLabel);
+        messageLabel.setTranslateX(startWidth + 5);
+    }
+
+    private String currentMessage = null;
+    private Label messageLabel = null;
+
     private void requestExit() {
         requestedExit = true;
         new Thread(() -> {
@@ -108,4 +140,5 @@ class QuickGui {
 
     private static final double BUTTON_RADIUS = 150.0;
     private static final double DISPLAY_RADIUS = 200.0;
+    private static final double MESSAGE_WIDTH = 500.0;
 }
