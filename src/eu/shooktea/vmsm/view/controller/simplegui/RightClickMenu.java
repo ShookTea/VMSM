@@ -5,6 +5,9 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RightClickMenu {
     RightClickMenu() {
         menu = createContextMenu();
@@ -15,7 +18,11 @@ public class RightClickMenu {
     }
 
     private ContextMenu createContextMenu() {
-        ContextMenu menu = new ContextMenu(exit());
+        List<MenuItem> list = new ArrayList<>();
+        list.add(exit());
+
+        ContextMenu menu = new ContextMenu();
+        menu.getItems().addAll(list);
         return menu;
     }
 
