@@ -33,6 +33,7 @@ public class QuickGuiMenu {
 
     private List<ImageView> createList() {
         List<ImageView> list = new ArrayList<>();
+        list.add(createExitButton());
 
         VM.ifNotNullOrElse(
                 vm -> {
@@ -41,7 +42,6 @@ public class QuickGuiMenu {
                 () -> list.add(createNewVmButton())
         );
 
-        list.add(createExitButton());
         return list;
     }
 
