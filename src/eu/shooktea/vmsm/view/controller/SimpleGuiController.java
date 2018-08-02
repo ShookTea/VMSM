@@ -43,12 +43,8 @@ public class SimpleGuiController {
             closeQuickGui();
         else if (e.getButton() == MouseButton.PRIMARY)
             openQuickGui();
-        /*
-        if (e.getButton() == MouseButton.PRIMARY)
-            switchQuickMenu(e.getScreenX(), e.getScreenY());
         else
-            createMenu().show(View.stage(), e.getScreenX(), e.getScreenY());
-        */
+            createMenu().show(root, e.getScreenX(), e.getScreenY());
     }
 
     private static void openQuickGui() {
