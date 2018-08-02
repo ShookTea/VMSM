@@ -4,6 +4,7 @@ import eu.shooktea.vmsm.VM;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -33,10 +34,24 @@ public class SimpleGuiController {
     }
 
     private static void mainButtonClicked(MouseEvent e) {
-        if (e.getButton() == MouseButton.PRIMARY)
+        if (e.getButton() == MouseButton.PRIMARY) {
+            if (menu != null) {
+                menu.hide();
+                menu = null;
+            }
             quickGui.switchGui();
-        else
-            new RightClickMenu().getContextMenu().show(root, e.getScreenX(), e.getScreenY());
+        }
+        else {
+            quickGui.closeGui();
+            if (menu != null) {
+                menu.hide();
+                menu = null;
+            }
+            else {
+                menu = new RightClickMenu().getContextMenu();
+                menu.show(root, e.getScreenX(), e.getScreenY());
+            }
+        }
     }
 
     public static void addMessage(String message) {
@@ -69,4 +84,5 @@ public class SimpleGuiController {
     private static StringProperty titleStringProperty = new SimpleStringProperty("VMSM");
     private static String currentMessage = null;
     private static Queue<String> messageQueue = new ArrayDeque<>();
+    private static ContextMenu menu = null;
 }
