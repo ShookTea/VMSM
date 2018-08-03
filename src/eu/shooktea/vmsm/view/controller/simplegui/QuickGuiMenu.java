@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class QuickGuiMenu {
@@ -36,6 +37,7 @@ public class QuickGuiMenu {
         VM.ifNotNullOrElse(
                 vm -> {
                     if (vm.getPageRoot() != null) list.add(home(vm.getPageRoot()));
+                    vm.getType().getQuickGuiButtons().ifPresent(ivs -> list.addAll(Arrays.asList(ivs)));
                 },
                 () -> list.add(createNewVmButton())
         );

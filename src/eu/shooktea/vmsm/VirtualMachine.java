@@ -25,6 +25,7 @@ package eu.shooktea.vmsm;
 
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.vmtype.VMType;
+import eu.shooktea.vmsm.vmtype.Vagrant;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -150,11 +151,24 @@ public class VirtualMachine {
         modules.forEach(Module::loopUpdate);
     }
 
+    public ObjectProperty<Status> statusProperty() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        statusProperty().setValue(status);
+    }
+
+    public Status getStatus() {
+        return statusProperty().getValue();
+    }
+
     private ReadOnlyStringProperty name;
     private ObjectProperty<File> mainPath;
     private ObjectProperty<URL> pageRoot;
     private ObjectProperty<VMType> type;
     private ListProperty<Module> modules;
+    private ObjectProperty<Status> status = new SimpleObjectProperty<>(Status.UNDEFINED);
 
     /**
      * Loads virtual machine from its JSON representation.
@@ -177,5 +191,27 @@ public class VirtualMachine {
             vm.getModules().add(module);
         }
         return vm;
+    }
+
+    public enum Status {
+        RUNNING, STOPPED, UNDEFINED;
+
+        public String getResourceName() {
+            switch (this) {
+                case RUNNING:   return "green_ball.png";
+                case STOPPED:   return "red_ball.png";
+                case UNDEFINED: return "yellow_ball.png";
+                default: throw new RuntimeException();
+            }
+        }
+
+        public String getTooltipText() {
+            switch (this) {
+                case RUNNING:   return "VM is on.";
+                case STOPPED:   return "VM is off.";
+                case UNDEFINED: return null;
+                default: throw new RuntimeException();
+            }
+        }
     }
 }
