@@ -6,7 +6,9 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Singleton object for keeping currently displayed virtual machine.
@@ -176,6 +178,29 @@ public class VM {
      */
     public static boolean isNotEqual(VirtualMachine vm) {
         return !isEqual(vm);
+    }
+
+    /**
+     * Performs mapping from Virtual Machine to some other object. If mapping returns optional, you can use {@link #flatMap(Function)}
+     * to prevent returning {@code Optional<Optional<T>>}.
+     * @param mapper function mapper
+     * @param <T> return type in optional
+     * @return optional holding result of function if VM is set, empty optional otherwise.
+     */
+    public static <T> Optional<T> map(Function<VirtualMachine, T> mapper) {
+        if (isSet()) return Optional.of(mapper.apply(get()));
+        else return Optional.empty();
+    }
+
+    /**
+     * Performs mapping from Virtual Machine to some optional.
+     * @param mapper function mapper
+     * @param <T> return type in optional
+     * @return optional holding result of function if VM is set, empty optional otherwise.
+     */
+    public static <T> Optional<T> flatMap(Function<VirtualMachine, Optional<T>> mapper) {
+        if (isSet()) return mapper.apply(get());
+        else return Optional.empty();
     }
 
     private static ObjectProperty<VirtualMachine> currentVm = new SimpleObjectProperty<>(null);

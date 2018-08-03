@@ -10,7 +10,6 @@ import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class QuickGuiMenu {
@@ -35,10 +34,7 @@ public class QuickGuiMenu {
         list.add(createExitButton());
 
         VM.ifNotNullOrElse(
-                vm -> {
-                    if (vm.getPageRoot() != null) list.add(home(vm.getPageRoot()));
-                    vm.getType().getQuickGuiButtons().ifPresent(ivs -> list.addAll(Arrays.asList(ivs)));
-                },
+                vm -> list.addAll(vm.getQuickMenuItems()),
                 () -> list.add(createNewVmButton())
         );
 
@@ -61,7 +57,7 @@ public class QuickGuiMenu {
         return toWebPage(home, "home.png", "Go to home page");
     }
 
-    private ImageView toWebPage(URL url, String fileName, String tooltip) {
+    public static ImageView toWebPage(URL url, String fileName, String tooltip) {
         ImageView iv = Toolkit.createQuickGuiButton(fileName, tooltip);
         iv.setOnMouseClicked(e -> View.openURL(url));
         return iv;

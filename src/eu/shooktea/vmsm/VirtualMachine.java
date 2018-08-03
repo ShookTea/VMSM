@@ -24,16 +24,19 @@ SOFTWARE.
 package eu.shooktea.vmsm;
 
 import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.view.controller.simplegui.QuickGuiMenu;
 import eu.shooktea.vmsm.vmtype.VMType;
-import eu.shooktea.vmsm.vmtype.Vagrant;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.ImageView;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Single virtual machine with HTTP server on it.
@@ -161,6 +164,12 @@ public class VirtualMachine {
 
     public Status getStatus() {
         return statusProperty().getValue();
+    }
+
+    public List<ImageView> getQuickMenuItems() {
+        List<ImageView> ret = new ArrayList<>();
+        if (pageRoot.isNotNull().get()) ret.add(QuickGuiMenu.toWebPage(getPageRoot(), "home.png", "Go to home page"));
+        return ret;
     }
 
     private ReadOnlyStringProperty name;
