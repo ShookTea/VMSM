@@ -61,6 +61,7 @@ public class ModuleInfo {
     @FXML
     private void revertVersion() {
         String version = versionsList.getSelectionModel().getSelectedItem();
+        version = version.replace("^([^\\(\\)]*)(\\s*\\([^\\)]*\\))?$", "$1");
         SqlConnection conn = sql.createConnection();
         String moduleConfigName = module.getConfigName();
         String query = String.format(
