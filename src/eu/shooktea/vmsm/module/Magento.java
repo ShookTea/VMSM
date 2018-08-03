@@ -107,11 +107,9 @@ public class Magento extends Module {
         deleteCache.setOnMouseClicked(e -> deleteAllInVar(VM.getOrThrow(), DeleteDir.CACHE));
         ret.add(deleteCache);
 
-        if (getStringSetting(vm, "adm_login") != null) {
-            ImageView loginAsAdmin = Toolkit.createQuickGuiButton("user.png", "Open admin panel");
-            loginAsAdmin.setOnMouseClicked(e -> loginAsAdmin(vm, getStringSetting(vm, "adm_login")));
-            ret.add(loginAsAdmin);
-        }
+        ImageView loginAsAdmin = Toolkit.createQuickGuiButton("user.png", "Open admin panel");
+        loginAsAdmin.setOnMouseClicked(e -> loginAsAdmin(vm, getStringSetting(vm, "adm_login")));
+        ret.add(loginAsAdmin);
 
         return Optional.of(ret);
     }
@@ -133,7 +131,6 @@ public class Magento extends Module {
 
         MenuItem autologin = new MenuItem("Open administrator panel", Toolkit.createMenuImage("user.png"));
         autologin.setOnAction(e -> loginAsAdmin(vm, getStringSetting(vm, "adm_login")));
-        autologin.setDisable(getStringSetting(vm, "adm_login") == null);
 
         MenuItem newAdmin = new MenuItem("Create new admin account...");
         newAdmin.setOnAction(CreateNewAdmin::openAdminCreationWindow);
@@ -209,7 +206,23 @@ public class Magento extends Module {
         return new MagentoModuleLoader(this, VM.getOrThrow());
     }
 
+    private void loginAsAdmin(VirtualMachine vm) {
+        try {
+            String address = getAdminAddress(vm);
+            URL root = vm.getPageRoot();
+            URL newPage = new URL(root, address);
+            View.openURL(newPage);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
     private void loginAsAdmin(VirtualMachine vm, String login) {
+        if (login == null) {
+            loginAsAdmin(vm);
+            return;
+        }
         String fileName = "vmsm_autologin_" + System.currentTimeMillis() + ".php";
         String mainPath = getStringSetting(vm, "path");
         if (mainPath == null) return;
