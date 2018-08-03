@@ -24,6 +24,7 @@ SOFTWARE.
 package eu.shooktea.vmsm.vmtype;
 
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.view.controller.NewVM;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -33,7 +34,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class VMType {
 
@@ -70,7 +72,16 @@ public abstract class VMType {
     public Optional<String[]> getModules() { return Optional.empty(); }
 
     public Optional<ImageView[]> getQuickGuiButtons() {
-        return Optional.empty();
+        return getModules().map(arr ->
+            Arrays.stream(arr)
+                    .map(Module::getModuleByName)
+                    .filter(Objects::nonNull)
+                    .map(obj -> (Module) obj)
+                    .map(Module::getQuickGuiButtons)
+                    .map(opt -> opt.orElse(new ArrayList<>()))
+                    .flatMap(Collection::stream)
+                    .toArray(ImageView[]::new)
+        );
     }
 
     public Optional<MenuItem> getMenuItem(VirtualMachine vm) {

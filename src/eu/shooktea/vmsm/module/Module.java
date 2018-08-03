@@ -8,7 +8,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.json.JSONObject;
 
+import javax.swing.text.html.ImageView;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -141,6 +143,10 @@ public abstract class Module {
     private static final MySQL mysql = new MySQL();
     private static final Magento magento = new Magento();
     private static final SSH ssh = new SSH();
+
+    public Optional<List<ImageView>> getQuickGuiButtons() {
+        return Optional.empty();
+    }
 
     /**
      * Sets object to be stored in configuration of virtual machine. It can be any correct JSON value.
