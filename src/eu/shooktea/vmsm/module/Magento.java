@@ -4,6 +4,7 @@ import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.View;
+import eu.shooktea.vmsm.view.controller.mage.CreateNewAdmin;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -128,14 +129,24 @@ public class Magento extends Module {
                 createDelete(DeleteDir.SESSION, "User sessions")
         );
 
-        MenuItem autologin = new Menu("Open administrator panel", Toolkit.createMenuImage("user.png"));
+        MenuItem autologin = new MenuItem("Open administrator panel", Toolkit.createMenuImage("user.png"));
         autologin.setOnAction(e -> loginAsAdmin(vm, getStringSetting(vm, "adm_login")));
         autologin.setDisable(getStringSetting(vm, "adm_login") == null);
+
+        MenuItem newAdmin = new MenuItem("Create new admin account...");
+        newAdmin.setOnAction(CreateNewAdmin::openAdminCreationWindow);
+
+        MenuItem openConfig = new MenuItem("Magento configuration...", Toolkit.createMenuImage("run.png"));
+        openConfig.setOnAction(MagentoConfig::openMagentoConfig);
+
 
         root.getItems().addAll(
                 delete,
                 new SeparatorMenuItem(),
-                autologin
+                autologin,
+                newAdmin,
+                new SeparatorMenuItem(),
+                openConfig
         );
         return Optional.of(root);
     }

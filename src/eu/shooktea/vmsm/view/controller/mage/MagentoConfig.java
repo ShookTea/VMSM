@@ -11,7 +11,6 @@ import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
@@ -22,7 +21,6 @@ import java.io.File;
 public class MagentoConfig implements StageController {
     @FXML private TextField magentoPath;
     @FXML private TextField adminLogin;
-    @FXML private PasswordField adminPassword;
     @FXML private Label magentoInfo;
     @FXML private ChoiceBox<MagentoReport.HoldTime> holdReports;
 
@@ -35,7 +33,6 @@ public class MagentoConfig implements StageController {
         magento = Module.getModuleByName("Magento");
         loadSetting(magento, vm, magentoPath, "path");
         loadSetting(magento, vm, adminLogin, "adm_login");
-        loadSetting(magento, vm, adminPassword, "adm_pass");
 
         holdReports.setItems(MagentoReport.HoldTime.createList());
         Long holdValue = null;
@@ -94,7 +91,6 @@ public class MagentoConfig implements StageController {
         }
 
         saveConf(adminLogin, "adm_login", magento, vm);
-        saveConf(adminPassword, "adm_pass", magento, vm);
 
         magento.setSetting(vm, "report_keep_time", holdReports.getValue().timeMillis);
 
