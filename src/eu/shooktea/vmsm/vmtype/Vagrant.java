@@ -26,6 +26,7 @@ package eu.shooktea.vmsm.vmtype;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.VirtualMachine.Status;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -35,8 +36,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 public class Vagrant extends VMType {
     public Vagrant() {
@@ -184,4 +187,47 @@ public class Vagrant extends VMType {
 
     private VirtualMachine previousUpdateVm = null;
     private boolean isMachineStateChanging = false;
+
+    public static void searchUnregisteredVms() {
+        try {
+            ProcessBuilder builder = new ProcessBuilder("vagrant", "global-status");
+            Process process = builder.start();
+            new Thread(() -> {
+                try {
+                    List<String> entries = new ArrayList<>();
+                    Scanner sc = new Scanner(process.getInputStream());
+                    Thread thr = new Thread(() -> {
+                        boolean start = false;
+                        boolean stop = false;
+                        while (sc.hasNextLine()) {
+                            String line = sc.nextLine().trim();
+                            if (line.startsWith("------")) start = true;
+                            else if (line.isEmpty()) stop = true;
+                            else if (start && !stop) {
+                                String[] entry = line.split("\\s+");
+                                String directory = entry[4];
+                                entries.add(directory);
+                            }
+                        }
+                    });
+                    thr.start();
+                    process.waitFor();
+                    thr.interrupt();
+                    thr.join(1000);
+                    Platform.runLater(() -> checkGlobalVagrantMachines(entries));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.exit(1);
+                }
+            }).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    private static void checkGlobalVagrantMachines(List<String> directories) {
+        System.out.println("DIRECTORIES:");
+        directories.forEach(System.out::println);
+    }
 }

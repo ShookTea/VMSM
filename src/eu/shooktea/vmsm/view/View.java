@@ -4,6 +4,7 @@ import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.StageController;
 import eu.shooktea.vmsm.view.controller.simplegui.SimpleGuiController;
+import eu.shooktea.vmsm.vmtype.Vagrant;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -92,7 +93,7 @@ public class View {
     }
 
     private static void updateOneMinuteLoop() {
-
+        Vagrant.searchUnregisteredVms();
     }
 
     public static Stage stage() {
