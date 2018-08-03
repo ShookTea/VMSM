@@ -171,6 +171,10 @@ public class NewVM implements StageController {
         if (lambdaArgs.length > 0 && lambdaArgs[0] instanceof VirtualMachine) {
             machineToEdit = (VirtualMachine)lambdaArgs[0];
         }
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/NewVM.fxml", "New VM");
+        NewVM nvm = View.createNewWindow("/eu/shooktea/vmsm/view/fxml/NewVM.fxml", "New VM");
+        if (lambdaArgs.length == 2 && lambdaArgs[0] instanceof String && lambdaArgs[1] instanceof String) {
+            nvm.vmPath.setText(lambdaArgs[1].toString());
+            nvm.vmType.setValue(VMType.getByName(lambdaArgs[0].toString()));
+        }
     }
 }

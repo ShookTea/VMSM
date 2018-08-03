@@ -34,6 +34,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,6 +104,10 @@ public class Storage {
         JSONArray vms = new JSONArray(list);
         root.put("VMs", vms);
         VM.ifNotNull(vm -> root.put("current_vm", vm.getName()));
+        if (ignoredVagrantMachines != null && !ignoredVagrantMachines.isEmpty()) {
+            JSONArray array = new JSONArray(ignoredVagrantMachines);
+            root.put("ignored_vagrant_machines", array);
+        }
 
         PrintWriter pw = new PrintWriter(vmsmFile);
         pw.println(root.toString());
@@ -149,6 +154,12 @@ public class Storage {
                 VM.set(vmList.get(0));
             }
         }
+
+        ignoredVagrantMachines = new ArrayList<>();
+        if (obj.has("ignored_vagrant_machines")) {
+            JSONArray array = obj.getJSONArray("ignored_vagrant_machines");
+            array.iterator().forEachRemaining(entry -> ignoredVagrantMachines.add(entry.toString()));
+        }
     }
 
     private static File getVmsmFile() {
@@ -181,6 +192,10 @@ public class Storage {
         return file;
     }
 
+    public static List<String> getIgnoredVagrantMachines() {
+        return ignoredVagrantMachines;
+    }
+
     /**
      * Returns list of registered virtual machines. That list should be used only to read data; while you can
      * change content of that list, it won't be saved automatically - added or removed list will be updated in configuration
@@ -198,6 +213,7 @@ public class Storage {
     private static File vmsmFile = getVmsmFile();
     private static File backupFile = getBackupFile(vmsmFile);
     private static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
+    private static List<String> ignoredVagrantMachines = new ArrayList<>();
 
     public static void checkVmsmFiles() {
         try {

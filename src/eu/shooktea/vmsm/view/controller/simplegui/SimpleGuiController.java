@@ -20,6 +20,7 @@ import javafx.util.Pair;
 import org.reactfx.value.Val;
 
 import java.util.ArrayDeque;
+import java.util.Objects;
 import java.util.Queue;
 
 public class SimpleGuiController {
@@ -31,8 +32,11 @@ public class SimpleGuiController {
 
     public static void init(Label label, Pane p) {
         VM.addListener(() -> VM.ifNotNull(vm -> titleStringProperty.setValue(vm.getName()))).vmConsume();
-        Val.flatMap(VM.getProperty(), VirtualMachine::statusProperty)
-                .addListener((observable, oldValue, newValue) -> View.showMessage(newValue.getTooltipText(), newValue.getInfoColor()));
+        Val.flatMap(VM.getProperty(), VirtualMachine::statusProperty).filter(Objects::nonNull)
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue == null) return;
+                    View.showMessage(newValue.getTooltipText(), newValue.getInfoColor());
+                });
         mainButton = label;
         mainButton.setPickOnBounds(true);
         mainButton.textProperty().bind(titleStringProperty);

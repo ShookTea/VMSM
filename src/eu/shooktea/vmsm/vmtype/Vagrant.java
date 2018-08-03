@@ -23,14 +23,16 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
+import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.VirtualMachine.Status;
+import eu.shooktea.vmsm.view.controller.NewVM;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Vagrant extends VMType {
     public Vagrant() {
@@ -227,7 +230,40 @@ public class Vagrant extends VMType {
     }
 
     private static void checkGlobalVagrantMachines(List<String> directories) {
-        System.out.println("DIRECTORIES:");
-        directories.forEach(System.out::println);
+        List<String> vms = Storage.getVmList()
+                .stream()
+                .filter(vm -> vm.getType().getTypeName().equals("Vagrant"))
+                .map(VirtualMachine::getMainPath)
+                .map(File::toString)
+                .collect(Collectors.toList());
+
+        List<String> ignored = Storage.getIgnoredVagrantMachines();
+
+        ignored.removeIf(elem -> !directories.contains(elem));
+        directories.removeIf(ignored::contains);
+        directories.removeIf(vms::contains);
+
+        for (String dir : directories) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("New VM detected");
+            alert.setHeaderText("Virtual machine detected");
+            alert.setContentText("VMSM detected a Vagrant machine in " + dir + ". Do you want to add it to your VMs?");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+
+            ButtonType add = new ButtonType("Add VM", ButtonBar.ButtonData.APPLY);
+            ButtonType notAdd = new ButtonType("Do not add", ButtonBar.ButtonData.CANCEL_CLOSE);
+            ButtonType ignore = new ButtonType("Ignore");
+
+            alert.getButtonTypes().setAll(add, notAdd, ignore);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == add) {
+                NewVM.openNewVmWindow("Vagrant", dir);
+            }
+            else if (result.get() == ignore) {
+                ignored.add(dir);
+            }
+
+            Storage.saveAll();
+        }
     }
 }
