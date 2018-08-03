@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -209,7 +211,6 @@ public class Magento extends Module {
 
     private void loginAsAdmin(VirtualMachine vm, String login) {
         String fileName = "vmsm_autologin_" + System.currentTimeMillis() + ".php";
-        String code = "<?php\n$username = \"" + login + "\";\n$file = \"" + fileName + "\";\n" + openAdminCode;
         String mainPath = getStringSetting(vm, "path");
         if (mainPath == null) return;
 
@@ -220,12 +221,22 @@ public class Magento extends Module {
         try {
             codeFile.createNewFile();
             PrintWriter pw = new PrintWriter(codeFile);
-            pw.println(code);
+            pw.println(openAdminCode);
             pw.close();
             URL fileUrl = new URL(vm.getPageRoot(), fileName);
-            View.openURL(fileUrl);
+            URI oldUri = fileUrl.toURI();
+            String newQuery = oldUri.getQuery();
+            String append = "username=" + login;
+            if (newQuery == null) {
+                newQuery = append;
+            }
+            else {
+                newQuery += "&" + append;
+            }
+            URI newUri = new URI(oldUri.getScheme(), oldUri.getAuthority(), oldUri.getPath(), newQuery, oldUri.getFragment());
+            View.openURL(newUri);
             codeFile.deleteOnExit();
-        } catch (IOException e) {
+        } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
             if (codeFile.exists()) if (!codeFile.delete()) codeFile.deleteOnExit();
         }
@@ -254,6 +265,8 @@ public class Magento extends Module {
     }
 
     private static final String openAdminCode =
+                    "<?php\n" +
+                    "$username = $_GET['username'];\n" +
                     "require_once 'app/Mage.php';\n" +
                     "umask(0);\n" +
                     "$app = Mage::app('default');\n" +
@@ -273,5 +286,5 @@ public class Magento extends Module {
                     "    echo \"<script type='text/javascript'>location.href = '$url';</script>\";\n" +
                     "}\n" +
                     "\n" +
-                    "unlink($file);\n";
+                    "unlink(__FILE__);\n";
 }

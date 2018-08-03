@@ -21,6 +21,7 @@ import javafx.util.Duration;
 
 import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -116,8 +117,17 @@ public class View {
 
     public static void openURL(URL url) {
         try {
-            Desktop.getDesktop().browse(url.toURI());
-        } catch (IOException | URISyntaxException e) {
+            openURL(url.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static void openURL(URI uri) {
+        try {
+            Desktop.getDesktop().browse(uri);
+        } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
