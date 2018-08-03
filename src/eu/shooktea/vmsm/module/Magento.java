@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.module;
 
+import com.jcraft.jsch.JSchException;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
@@ -8,6 +9,7 @@ import eu.shooktea.vmsm.view.controller.mage.CreateNewAdmin;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
 import eu.shooktea.vmsm.view.controller.mage.Modules;
+import eu.shooktea.vmsm.view.controller.mysql.MysqlConfig;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.control.Menu;
@@ -24,10 +26,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.invoke.SwitchPoint;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -146,7 +151,6 @@ public class Magento extends Module {
         MenuItem moduleManager = new MenuItem("Module manager...");
         moduleManager.setOnAction(Modules::openModulesWindow);
 
-
         root.getItems().addAll(
                 delete,
                 new SeparatorMenuItem(),
@@ -154,7 +158,16 @@ public class Magento extends Module {
                 newAdmin,
                 new SeparatorMenuItem(),
                 newModule,
-                moduleManager,
+                moduleManager
+        );
+
+        if (MySQL.getModuleByName("MySQL").isInstalled(vm)) {
+            MenuItem switchDebugging = new MenuItem("Switch debugging", Toolkit.createMenuImage("debug.png"));
+            switchDebugging.setOnAction(e -> switchDebugging(vm));
+            root.getItems().add(switchDebugging);
+        }
+
+        root.getItems().addAll(
                 new SeparatorMenuItem(),
                 openConfig
         );
@@ -251,6 +264,43 @@ public class Magento extends Module {
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
             if (codeFile.exists()) if (!codeFile.delete()) codeFile.deleteOnExit();
+        }
+    }
+
+    private void switchDebugging(VirtualMachine vm) {
+        MySQL sql = MySQL.getModuleByName("MySQL");
+        if (!sql.isInstalled(vm)) return;
+
+        SqlConnection connection = sql.createConnection();
+        try {
+            connection.open();
+            ResultSet set = (ResultSet)connection.query("SELECT value FROM core_config_data WHERE path LIKE \"%dev/debug/temp%\" LIMIT 1");
+            if (set.next()) {
+                int value = set.getInt("value");
+                set.close();
+                value = value == 0 ? 1 : 0;
+                connection.query("UPDATE core_config_data SET value=" + value + " WHERE path LIKE \"%dev/debug/temp%\"");
+            }
+            else {
+                int value = 1;
+                set.close();
+                String insertQuery = "INSERT INTO core_config_data(scope, scope_id, path, value) VALUES";
+                String valueA = "(default, 0, \"dev/debug/template_hints\", 1)";
+                String valueB = "(default, 0, \"dev/debug/template_hints_blocks\", 1)";
+                connection.query(insertQuery + " " + valueA + ", " + valueB);
+            }
+            connection.close();
+
+            deleteAllInVar(vm, DeleteDir.CACHE);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                connection.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } catch (JSchException e) {
+            e.printStackTrace();
         }
     }
 
