@@ -7,6 +7,7 @@ import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import org.w3c.dom.Document;
@@ -96,6 +97,12 @@ public class Magento extends Module {
         deleteCache.setOnMouseClicked(e -> deleteAllInVar(VM.getOrThrow(), DeleteDir.CACHE));
 
         return Optional.of(Arrays.asList(deleteCache));
+    }
+
+    @Override
+    public Optional<MenuItem> getMenuItem() {
+        MenuItem item = new MenuItem("Magento test");
+        return Optional.of(item);
     }
 
     /**

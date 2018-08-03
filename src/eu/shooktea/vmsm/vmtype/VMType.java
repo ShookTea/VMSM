@@ -37,6 +37,7 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class VMType {
 
@@ -73,17 +74,11 @@ public abstract class VMType {
     public Optional<String[]> getModules() { return Optional.empty(); }
 
     public List<ImageView> getQuickGuiButtons() {
-        return getModules().map(arr ->
-            Arrays.stream(arr)
-                    .map(Module::getModuleByName)
-                    .filter(Objects::nonNull)
-                    .map(obj -> (Module) obj)
-                    .filter(mod -> mod.isInstalled(VM.getOrThrow()))
-                    .map(Module::getQuickGuiButtons)
-                    .map(opt -> opt.orElse(new ArrayList<>()))
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toList())
-        ).orElse(new ArrayList<>());
+        return getInstalledModulesStream(VM.getOrThrow())
+                .map(Module::getQuickGuiButtons)
+                .map(opt -> opt.orElse(new ArrayList<>()))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     public Optional<MenuItem> getMenuItem(VirtualMachine vm) {
@@ -92,19 +87,20 @@ public abstract class VMType {
 
     public List<MenuItem> getMenuItemsWithModules(VirtualMachine vm) {
         List<MenuItem> list = new ArrayList<>();
-        getMenuItem(vm).ifPresent(list::add);
-        getModules().map(arr ->
-                Arrays.stream(arr)
-                .map(Module::getModuleByName)
-                .filter(Objects::nonNull)
-                .map(obj -> (Module)obj)
-                .filter(mod -> mod.isInstalled(vm))
+        list.addAll(getInstalledModulesStream(vm)
                 .map(Module::getMenuItem)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toList())
-        ).ifPresent(list::addAll);
+                .collect(Collectors.toList()));
         return list;
+    }
+
+    private Stream<Module> getInstalledModulesStream(VirtualMachine vm) {
+        return getModules().map(Arrays::stream).orElse(Stream.empty())
+                .map(Module::getModuleByName)
+                .filter(Objects::nonNull)
+                .map(obj -> (Module)obj)
+                .filter(mod -> mod.isInstalled(vm));
     }
 
     public void update(VirtualMachine vm) {}

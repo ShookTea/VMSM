@@ -183,8 +183,9 @@ public class VirtualMachine {
         return ret;
     }
 
-    public Optional<MenuItem> createMenuItem() {
-        return getType().getMenuItem(this).map(item -> {
+    public List<MenuItem> createMenuItem() {
+        List<MenuItem> ret = new ArrayList<>();
+        getType().getMenuItem(this).ifPresent(item -> {
             if (getType().getModules().isPresent() && item instanceof Menu) {
                 MenuItem openModuleConfig = new MenuItem("Module configuration...");
                 openModuleConfig.setOnAction(ModuleConfig::openModuleConfigWindow);
@@ -192,8 +193,10 @@ public class VirtualMachine {
                 Menu m = (Menu)item;
                 m.getItems().addAll(new SeparatorMenuItem(), openModuleConfig);
             }
-            return item;
+            ret.add(item);
         });
+        ret.addAll(getType().getMenuItemsWithModules(this));
+        return ret;
     }
 
     private ReadOnlyStringProperty name;
