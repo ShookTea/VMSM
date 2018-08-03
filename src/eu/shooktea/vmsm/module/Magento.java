@@ -3,10 +3,12 @@ package eu.shooktea.vmsm.module;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -91,7 +93,7 @@ public class Magento extends Module {
     @Override
     public Optional<List<ImageView>> getQuickGuiButtons() {
         ImageView deleteCache = Toolkit.createQuickGuiButton("trash_full.png", "Delete cache files");
-        deleteCache.setOnMouseClicked(e -> deleteAllInVar(VM.getOrThrow(), "cache"));
+        deleteCache.setOnMouseClicked(e -> deleteAllInVar(VM.getOrThrow(), DeleteDir.CACHE));
 
         return Optional.of(Arrays.asList(deleteCache));
     }
@@ -99,9 +101,9 @@ public class Magento extends Module {
     /**
      * Removes all files in {@code /var/X} directories, where X are loaded from arguments.
      * @param vm virtual machine that contains file to be removed
-     * @param varSubdirs subdirectories in {@code /var} directory that should be cleaned.
+     * @param toDelete subdirectories in {@code /var} directory that should be cleaned.
      */
-    public void deleteAllInVar(VirtualMachine vm, String... varSubdirs) {
+    public void deleteAllInVar(VirtualMachine vm, DeleteDir toDelete) {
         String mainPath = getStringSetting(vm, "path");
         if (mainPath == null) return;
 
@@ -111,21 +113,35 @@ public class Magento extends Module {
         File var = new File(root, "var");
         if (!var.exists() || !var.isDirectory()) return;
 
-        for (String subdir : varSubdirs) {
+        boolean somethingWrongHappen = false;
+
+        for (String subdir : toDelete.path) {
             File toRemoveDir = new File(var, subdir);
             if (toRemoveDir.exists() && toRemoveDir.isDirectory()) {
                 for (File file : toRemoveDir.listFiles()) {
-                    delete(file);
+                    if (delete(file)) somethingWrongHappen = true;
                 }
             }
         }
+
+        if (somethingWrongHappen)
+            View.showMessage("Failed to delete files", Color.RED);
+        else
+            View.showMessage(toDelete.deleteInfo, Color.GREEN);
     }
 
-    private static void delete(File file) {
+    private static boolean delete(File file) {
+        boolean somethingWrong = false;
         if (file.isDirectory()) {
-            for (File c : file.listFiles()) delete(c);
+            for (File c : file.listFiles()) {
+                if (!delete(c)) somethingWrong = true;
+            }
         }
-        if (!file.delete()) file.deleteOnExit();
+        if (!file.delete()) {
+            file.deleteOnExit();
+            somethingWrong = true;
+        }
+        return somethingWrong;
     }
 
     public Task<ObservableList<MagentoModule>> createModuleLoaderTask() {
@@ -144,5 +160,22 @@ public class Magento extends Module {
         String pass = magento.getStringSetting(vm, "adm_pass");
 
         //TODO: Generate login file and redirect to it via View.openURL(new URL(currentAddress))
+    }
+
+    public enum DeleteDir {
+        CACHE("Cache deleted", "cache"),
+        LOGS("Logs deleted", "log"),
+        REPORTS("Reports deleted", "report"),
+        SESSION("Sessions deleted", "session"),
+        ALL("Unnecessary /var files deleted", "cache", "log", "report", "session");
+
+
+        DeleteDir(String deleteInfo, String... path) {
+            this.path = path;
+            this.deleteInfo = deleteInfo;
+        }
+
+        public final String[] path;
+        public final String deleteInfo;
     }
 }
