@@ -1,9 +1,16 @@
 package eu.shooktea.vmsm.module;
 
 import com.jcraft.jsch.*;
+import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.ssh.SshConfig;
+import eu.shooktea.vmsm.view.controller.ssh.SshTerminal;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -51,6 +58,27 @@ public class SSH extends Module {
         }
         Channel channel = session.openChannel(type);
         return channel;
+    }
+
+    @Override
+    public Optional<List<ImageView>> getQuickGuiButtons() {
+        ImageView openTerminal = Toolkit.createQuickGuiButton("terminal.png", "Open SSH terminal");
+        openTerminal.setOnMouseClicked(SshTerminal::openSshTerminal);
+        return Optional.of(Arrays.asList(openTerminal));
+    }
+
+    @Override
+    public Optional<MenuItem> getMenuItem() {
+        Menu root = new Menu("SSH", Toolkit.createMenuImage("terminal.png"));
+
+        MenuItem openTerminal = new MenuItem("Open terminal...");
+        openTerminal.setOnAction(SshTerminal::openSshTerminal);
+
+        MenuItem config = new MenuItem("SSH configuration...", Toolkit.createMenuImage("run.png"));
+        config.setOnAction(SshConfig::openSshConfigWindow);
+
+        root.getItems().addAll(openTerminal, config);
+        return Optional.of(root);
     }
 
     @Override
