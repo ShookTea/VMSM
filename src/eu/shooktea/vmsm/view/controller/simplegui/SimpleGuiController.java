@@ -1,6 +1,7 @@
 package eu.shooktea.vmsm.view.controller.simplegui;
 
 import eu.shooktea.vmsm.VM;
+import eu.shooktea.vmsm.VirtualMachine;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -9,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import org.reactfx.value.Val;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -22,6 +24,8 @@ public class SimpleGuiController {
 
     public static void init(Label label, Pane p) {
         VM.addListener(() -> VM.ifNotNull(vm -> titleStringProperty.setValue(vm.getName()))).vmConsume();
+        Val.flatMap(VM.getProperty(), VirtualMachine::statusProperty)
+                .addListener((observable, oldValue, newValue) -> addMessage(newValue.getTooltipText()));
         mainButton = label;
         mainButton.setPickOnBounds(true);
         mainButton.textProperty().bind(titleStringProperty);
@@ -55,8 +59,9 @@ public class SimpleGuiController {
     }
 
     public static void addMessage(String message) {
-        messageQueue.offer(message);
-        updateMessage();
+        if (message == null || message.trim().isEmpty()) return;
+        messageQueue.offer(message.trim());
+        Platform.runLater(SimpleGuiController::updateMessage);
     }
 
     private static void updateMessage() {

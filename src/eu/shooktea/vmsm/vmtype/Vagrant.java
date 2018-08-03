@@ -124,6 +124,7 @@ public class Vagrant extends VMType {
     public Optional<ImageView[]> getQuickGuiButtons() {
         if (previousUpdateVm == null) return Optional.empty();
         ImageView switchStatus = Toolkit.createQuickGuiButton(previousUpdateVm.getStatus().getResourceName(), previousUpdateVm.getStatus().getTooltipText());
+        switchStatus.setOnMouseClicked(e -> statusIconClicked());
         return Optional.of(new ImageView[] {switchStatus});
     }
 
