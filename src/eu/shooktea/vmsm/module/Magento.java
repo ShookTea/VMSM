@@ -169,6 +169,11 @@ public class Magento extends Module {
         //TODO: Generate login file and redirect to it via View.openURL(new URL(currentAddress))
     }
 
+    @Override
+    public int getSortValue() {
+        return 0;
+    }
+
     public enum DeleteDir {
         CACHE("Cache deleted", "cache"),
         LOGS("Logs deleted", "log"),

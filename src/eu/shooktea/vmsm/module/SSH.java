@@ -52,4 +52,9 @@ public class SSH extends Module {
         Channel channel = session.openChannel(type);
         return channel;
     }
+
+    @Override
+    public int getSortValue() {
+        return 1000;
+    }
 }

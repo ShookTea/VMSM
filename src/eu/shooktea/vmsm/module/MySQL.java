@@ -24,4 +24,9 @@ public class MySQL extends Module {
     public SqlConnection createConnection() {
         return new SqlConnection(this, VM.getOrThrow());
     }
+
+    @Override
+    public int getSortValue() {
+        return 1005;
+    }
 }

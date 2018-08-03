@@ -198,6 +198,10 @@ public abstract class Module {
         settings.getOrDefault(vm, new HashMap<>()).remove(key);
     }
 
+    public int getSortValue() {
+        return 0;
+    }
+
     private BooleanProperty isInstalled;
     private Map<VirtualMachine, Map<String, Object>> settings = new HashMap<>();
 }

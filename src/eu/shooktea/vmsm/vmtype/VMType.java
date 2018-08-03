@@ -100,7 +100,8 @@ public abstract class VMType {
                 .map(Module::getModuleByName)
                 .filter(Objects::nonNull)
                 .map(obj -> (Module)obj)
-                .filter(mod -> mod.isInstalled(vm));
+                .filter(mod -> mod.isInstalled(vm))
+                .sorted(Comparator.comparing(Module::getSortValue));
     }
 
     public void update(VirtualMachine vm) {}
