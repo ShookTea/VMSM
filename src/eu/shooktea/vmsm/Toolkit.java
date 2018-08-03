@@ -16,15 +16,6 @@ public class Toolkit {
     private Toolkit() {}
 
     /**
-     * Creates {@link ImageView} node with icon resized to 20 pixels.
-     * @param resourceFileName name of file in {@code /eu/shooktea/vmsm/resources/} directory
-     * @return created node with icon from resources directory
-     */
-    public static ImageView createToolbarImage(String resourceFileName) {
-        return createImageView(resourceFileName, 20);
-    }
-
-    /**
      * Creates {@link ImageView} node with icon resized to 15 pixels.
      * @param resourceFileName name of file in {@code /eu/shooktea/vmsm/resources/} directory
      * @return created node with icon from resources directory

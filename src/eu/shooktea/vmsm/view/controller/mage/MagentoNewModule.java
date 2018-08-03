@@ -113,7 +113,7 @@ public class MagentoNewModule implements StageController {
             createModuleDeclaration(moduleDeclarationRoot, fullModuleName);
             createModuleConfigFile(moduleRoot, fullModuleName, version);
             if (removeCache.isSelected()) {
-                Magento.deleteAllInVar("cache");
+                magento.deleteAllInVar(vm, "cache");
             }
             stage.close();
         } catch (Exception e) {

@@ -35,6 +35,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Optional;
 
 public class Vagrant extends VMType {
@@ -112,11 +113,15 @@ public class Vagrant extends VMType {
     }
 
     @Override
-    public Optional<ImageView[]> getQuickGuiButtons() {
-        if (previousUpdateVm == null) return Optional.empty();
+    public List<ImageView> getQuickGuiButtons() {
+        List<ImageView> ret = super.getQuickGuiButtons();
+        if (previousUpdateVm == null) return ret;
+
         ImageView switchStatus = Toolkit.createQuickGuiButton(previousUpdateVm.getStatus().getResourceName(), previousUpdateVm.getStatus().getTooltipText());
         switchStatus.setOnMouseClicked(e -> statusIconClicked());
-        return Optional.of(new ImageView[] {switchStatus});
+
+        ret.add(switchStatus);
+        return ret;
     }
 
     @Override

@@ -175,10 +175,11 @@ public class VirtualMachine {
 
     public List<ImageView> getQuickMenuItems() {
         List<ImageView> ret = new ArrayList<>();
-        if (pageRoot.isNotNull().get()) ret.add(QuickGuiMenu.toWebPage(getPageRoot(), "home.png", "Go to home page"));
-        getType().getQuickGuiButtons().ifPresent(
-                ivs -> ret.addAll(Arrays.asList(ivs))
-        );
+
+        if (pageRoot.isNotNull().get())
+            ret.add(QuickGuiMenu.toWebPage(getPageRoot(), "home.png", "Go to home page"));
+
+        ret.addAll(getType().getQuickGuiButtons());
         return ret;
     }
 

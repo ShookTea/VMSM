@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Module;
 import eu.shooktea.vmsm.view.controller.NewVM;
@@ -71,7 +72,7 @@ public abstract class VMType {
 
     public Optional<String[]> getModules() { return Optional.empty(); }
 
-    public Optional<ImageView[]> getQuickGuiButtons() {
+    public List<ImageView> getQuickGuiButtons() {
         return getModules().map(arr ->
             Arrays.stream(arr)
                     .map(Module::getModuleByName)
@@ -80,8 +81,8 @@ public abstract class VMType {
                     .map(Module::getQuickGuiButtons)
                     .map(opt -> opt.orElse(new ArrayList<>()))
                     .flatMap(Collection::stream)
-                    .toArray(ImageView[]::new)
-        );
+                    .collect(Collectors.toList())
+        ).orElse(new ArrayList<>());
     }
 
     public Optional<MenuItem> getMenuItem(VirtualMachine vm) {

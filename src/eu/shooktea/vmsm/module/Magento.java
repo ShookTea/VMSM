@@ -1,10 +1,12 @@
 package eu.shooktea.vmsm.module;
 
+import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.image.ImageView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -13,6 +15,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -83,13 +88,21 @@ public class Magento extends Module {
         return localXmlFile;
     }
 
+    @Override
+    public Optional<List<ImageView>> getQuickGuiButtons() {
+        ImageView deleteCache = Toolkit.createQuickGuiButton("trash_full.png", "Delete cache files");
+        deleteCache.setOnMouseClicked(e -> deleteAllInVar(VM.getOrThrow(), "cache"));
+
+        return Optional.of(Arrays.asList(deleteCache));
+    }
+
     /**
      * Removes all files in {@code /var/X} directories, where X are loaded from arguments.
+     * @param vm virtual machine that contains file to be removed
      * @param varSubdirs subdirectories in {@code /var} directory that should be cleaned.
      */
-    public static void deleteAllInVar(String... varSubdirs) {
-        VirtualMachine current = VM.getOrThrow();
-        String mainPath = getModuleByName("Magento").getStringSetting(current, "path");
+    public void deleteAllInVar(VirtualMachine vm, String... varSubdirs) {
+        String mainPath = getStringSetting(vm, "path");
         if (mainPath == null) return;
 
         File root = new File(mainPath);

@@ -6,9 +6,9 @@ import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.image.ImageView;
 import org.json.JSONObject;
 
-import javax.swing.text.html.ImageView;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
