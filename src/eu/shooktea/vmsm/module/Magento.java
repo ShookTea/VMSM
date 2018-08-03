@@ -20,8 +20,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,14 +97,25 @@ public class Magento extends Module {
 
     @Override
     public Optional<List<ImageView>> getQuickGuiButtons() {
+        VirtualMachine vm = VM.getOrThrow();
+        List<ImageView> ret = new ArrayList<>();
+
         ImageView deleteCache = Toolkit.createQuickGuiButton("trash_full.png", "Delete cache files");
         deleteCache.setOnMouseClicked(e -> deleteAllInVar(VM.getOrThrow(), DeleteDir.CACHE));
+        ret.add(deleteCache);
 
-        return Optional.of(Arrays.asList(deleteCache));
+        if (getStringSetting(vm, "adm_login") != null) {
+            ImageView loginAsAdmin = Toolkit.createQuickGuiButton("user.png", "Open admin panel");
+            loginAsAdmin.setOnMouseClicked(e -> loginAsAdmin(vm, getStringSetting(vm, "adm_login")));
+            ret.add(loginAsAdmin);
+        }
+
+        return Optional.of(ret);
     }
 
     @Override
     public Optional<MenuItem> getMenuItem() {
+        VirtualMachine vm = VM.getOrThrow();
         Menu root = new Menu("Magento", Toolkit.createMenuImage("magento.png"));
 
         Menu delete = new Menu("Remove", Toolkit.createMenuImage("trash_full.png"));
@@ -115,7 +128,15 @@ public class Magento extends Module {
                 createDelete(DeleteDir.SESSION, "User sessions")
         );
 
-        root.getItems().addAll(delete);
+        MenuItem autologin = new Menu("Open administrator panel", Toolkit.createMenuImage("user.png"));
+        autologin.setOnAction(e -> loginAsAdmin(vm, getStringSetting(vm, "adm_login")));
+        autologin.setDisable(getStringSetting(vm, "adm_login") == null);
+
+        root.getItems().addAll(
+                delete,
+                new SeparatorMenuItem(),
+                autologin
+        );
         return Optional.of(root);
     }
 
@@ -175,18 +196,28 @@ public class Magento extends Module {
         return new MagentoModuleLoader(this, VM.getOrThrow());
     }
 
-    private static void loginAsAdmin() {
-        VirtualMachine vm = VM.getOrThrow();
-        Magento magento = Module.getModuleByName("Magento");
-        String address = magento.getAdminAddress(vm);
-        String currentAddress = vm.getPageRoot().toString();
-        if (!currentAddress.endsWith("/")) currentAddress = currentAddress + "/";
-        currentAddress = currentAddress + address;
+    private void loginAsAdmin(VirtualMachine vm, String login) {
+        String fileName = "vmsm_autologin_" + System.currentTimeMillis() + ".php";
+        String code = "<?php\n$username = \"" + login + "\";\n$file = \"" + fileName + "\";\n" + openAdminCode;
+        String mainPath = getStringSetting(vm, "path");
+        if (mainPath == null) return;
 
-        String login = magento.getStringSetting(vm, "adm_login");
-        String pass = magento.getStringSetting(vm, "adm_pass");
+        File root = new File(mainPath);
+        if (!root.exists() || !root.isDirectory()) return;
 
-        //TODO: Generate login file and redirect to it via View.openURL(new URL(currentAddress))
+        File codeFile = new File(root, fileName);
+        try {
+            codeFile.createNewFile();
+            PrintWriter pw = new PrintWriter(codeFile);
+            pw.println(code);
+            pw.close();
+            URL fileUrl = new URL(vm.getPageRoot(), fileName);
+            View.openURL(fileUrl);
+            codeFile.deleteOnExit();
+        } catch (IOException e) {
+            e.printStackTrace();
+            if (codeFile.exists()) if (!codeFile.delete()) codeFile.deleteOnExit();
+        }
     }
 
     @Override
@@ -210,4 +241,26 @@ public class Magento extends Module {
         public final String[] path;
         public final String deleteInfo;
     }
+
+    private static final String openAdminCode =
+                    "require_once 'app/Mage.php';\n" +
+                    "umask(0);\n" +
+                    "$app = Mage::app('default');\n" +
+                    "Mage::getSingleton('core/session', array('name' => 'adminhtml'));\n" +
+                    "// supply username\n" +
+                    "$user = Mage::getModel('admin/user')->loadByUsername($username);\n" +
+                    "if (Mage::getSingleton('adminhtml/url')->useSecretKey()) {\n" +
+                    "    Mage::getSingleton('adminhtml/url')->renewSecretUrls();\n" +
+                    "}\n" +
+                    "$session = Mage::getSingleton('admin/session');\n" +
+                    "$session->setIsFirstVisit(true);\n" +
+                    "$session->setUser($user);\n" +
+                    "$session->setAcl(Mage::getResourceModel('admin/acl')->loadAcl());\n" +
+                    "Mage::dispatchEvent('admin_session_user_login_success',array('user'=>$user));\n" +
+                    "if ($session->isLoggedIn()) {\n" +
+                    "    $url = Mage::getUrl(\"adminhtml/\");\n" +
+                    "    echo \"<script type='text/javascript'>location.href = '$url';</script>\";\n" +
+                    "}\n" +
+                    "\n" +
+                    "unlink($file);\n";
 }
