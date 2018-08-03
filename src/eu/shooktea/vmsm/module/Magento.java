@@ -209,6 +209,7 @@ public class Magento extends Module {
         if (!file.delete()) {
             file.deleteOnExit();
             somethingWrong = true;
+            System.out.println("SOMETHING TERRIBLY WRONG HAS HAPPENED during deleting " + file.toString());
         }
         return somethingWrong;
     }
