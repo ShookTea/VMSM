@@ -26,24 +26,15 @@ package eu.shooktea.vmsm.vmtype;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.VirtualMachine.Status;
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 public class Vagrant extends VMType {
@@ -126,6 +117,26 @@ public class Vagrant extends VMType {
         ImageView switchStatus = Toolkit.createQuickGuiButton(previousUpdateVm.getStatus().getResourceName(), previousUpdateVm.getStatus().getTooltipText());
         switchStatus.setOnMouseClicked(e -> statusIconClicked());
         return Optional.of(new ImageView[] {switchStatus});
+    }
+
+    @Override
+    public Optional<MenuItem> getMenuItem(VirtualMachine vm) {
+        Menu root = new Menu(vm.getName(), Toolkit.createMenuImage("vagrant_icon.png"));
+
+        MenuItem on = new MenuItem("Switch on", Toolkit.createMenuImage("play.png"));
+        on.setOnAction(e -> this.switchMachine(vm, "up"));
+        on.setDisable(vm.getStatus() != Status.STOPPED);
+
+        MenuItem reset = new MenuItem("Reset", Toolkit.createMenuImage("play_all.png"));
+        reset.setOnAction(e -> this.switchMachine(vm, "reload"));
+        reset.setDisable(vm.getStatus() != Status.RUNNING);
+
+        MenuItem off = new MenuItem("Switch off", Toolkit.createMenuImage("stop.png"));
+        off.setOnAction(e -> this.switchMachine(vm, "halt"));
+        off.setDisable(vm.getStatus() != Status.RUNNING);
+
+        root.getItems().addAll(on, reset, off);
+        return Optional.of(root);
     }
 
     private void statusIconClicked() {
