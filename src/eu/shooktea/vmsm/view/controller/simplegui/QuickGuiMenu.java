@@ -53,10 +53,6 @@ public class QuickGuiMenu {
         return exitButton;
     }
 
-    private ImageView home(URL home) {
-        return toWebPage(home, "home.png", "Go to home page");
-    }
-
     public static ImageView toWebPage(URL url, String fileName, String tooltip) {
         ImageView iv = Toolkit.createQuickGuiButton(fileName, tooltip);
         iv.setOnMouseClicked(e -> View.openURL(url));
