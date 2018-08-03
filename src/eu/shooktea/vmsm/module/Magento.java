@@ -182,36 +182,23 @@ public class Magento extends Module {
         File var = new File(root, "var");
         if (!var.exists() || !var.isDirectory()) return;
 
-        boolean somethingWrongHappen = false;
-
         for (String subdir : toDelete.path) {
             File toRemoveDir = new File(var, subdir);
             if (toRemoveDir.exists() && toRemoveDir.isDirectory()) {
                 for (File file : toRemoveDir.listFiles()) {
-                    if (delete(file)) somethingWrongHappen = true;
+                    delete(file);
                 }
             }
         }
 
-        if (somethingWrongHappen)
-            View.showMessage("Failed to delete files", Color.RED);
-        else
-            View.showMessage(toDelete.deleteInfo, Color.GREEN);
+        View.showMessage(toDelete.deleteInfo, Color.GREEN);
     }
 
-    private static boolean delete(File file) {
-        boolean somethingWrong = false;
+    private static void delete(File file) {
         if (file.isDirectory()) {
-            for (File c : file.listFiles()) {
-                if (!delete(c)) somethingWrong = true;
-            }
+            for (File c : file.listFiles()) delete(c);
         }
-        if (!file.delete()) {
-            file.deleteOnExit();
-            somethingWrong = true;
-            System.out.println("SOMETHING TERRIBLY WRONG HAS HAPPENED during deleting " + file.toString());
-        }
-        return somethingWrong;
+        if (!file.delete()) file.deleteOnExit();
     }
 
     public Task<ObservableList<MagentoModule>> createModuleLoaderTask() {

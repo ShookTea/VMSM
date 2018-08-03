@@ -130,7 +130,8 @@ public class MagentoNewModule implements StageController {
         Element config = doc.createElement("config");
         doc.appendChild(config);
 
-        Element module = createChild(moduleName, config);
+        Element modules = createChild("modules", config);
+        Element module = createChild(moduleName, modules);
         Element active = createChild("active", module);
         Element pool = createChild("codePool", module);
 
