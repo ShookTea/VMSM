@@ -71,11 +71,28 @@ public class View {
 
     private static void initializeApplicationLoop() {
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, (ev) -> VM.ifNotNull(VirtualMachine::update)),
+                new KeyFrame(Duration.ZERO, (ev) -> {
+                    VM.ifNotNull(VirtualMachine::update);
+                    checkOneMinuteLoop();
+                }),
                 new KeyFrame(Duration.seconds(5))
         );
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
+    }
+
+    private static int oneMinuteLoop = 0;
+
+    private static void checkOneMinuteLoop() {
+        oneMinuteLoop--;
+        if (oneMinuteLoop <= 0) {
+            updateOneMinuteLoop();
+            oneMinuteLoop = 12; //12, not 60 - checkOneMinuteLoop() is launched every 5 seconds
+        }
+    }
+
+    private static void updateOneMinuteLoop() {
+
     }
 
     public static Stage stage() {
