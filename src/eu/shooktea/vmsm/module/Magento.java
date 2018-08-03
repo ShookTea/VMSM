@@ -6,6 +6,8 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.mage.CreateNewAdmin;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
+import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
+import eu.shooktea.vmsm.view.controller.mage.Modules;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.control.Menu;
@@ -138,12 +140,21 @@ public class Magento extends Module {
         MenuItem openConfig = new MenuItem("Magento configuration...", Toolkit.createMenuImage("run.png"));
         openConfig.setOnAction(MagentoConfig::openMagentoConfig);
 
+        MenuItem newModule = new MenuItem("New module...");
+        newModule.setOnAction(MagentoNewModule::openMagentoNewModuleWindow);
+
+        MenuItem moduleManager = new MenuItem("Module manager...");
+        moduleManager.setOnAction(Modules::openModulesWindow);
+
 
         root.getItems().addAll(
                 delete,
                 new SeparatorMenuItem(),
                 autologin,
                 newAdmin,
+                new SeparatorMenuItem(),
+                newModule,
+                moduleManager,
                 new SeparatorMenuItem(),
                 openConfig
         );
