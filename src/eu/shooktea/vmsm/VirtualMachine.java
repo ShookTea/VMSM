@@ -34,6 +34,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -240,6 +241,15 @@ public class VirtualMachine {
             switch (this) {
                 case RUNNING:   return "VM is on.";
                 case STOPPED:   return "VM is off.";
+                case UNDEFINED: return null;
+                default: throw new RuntimeException();
+            }
+        }
+
+        public Color getInfoColor() {
+            switch (this) {
+                case RUNNING:   return Color.GREEN;
+                case STOPPED:   return Color.RED;
                 case UNDEFINED: return null;
                 default: throw new RuntimeException();
             }

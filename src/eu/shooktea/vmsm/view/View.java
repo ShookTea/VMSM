@@ -45,7 +45,7 @@ public class View {
         Label view = new Label("VMSM");
         view.setFont(Font.font(15));
         view.setTextFill(Color.BLACK);
-        view.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0.1, true), new Insets(0.0))));
+        view.setBackground(new Background(new BackgroundFill(defaultBackgroundColor, new CornerRadii(0.1, true), new Insets(0.0))));
         view.setPadding(new Insets(0, 3, 0, 3));
 
         Pane guiPane = new Pane(view);
@@ -123,9 +123,14 @@ public class View {
         }
     }
 
+    public static void showMessage(String message, Color bgColor) {
+        SimpleGuiController.addMessage(message, bgColor);
+    }
+
     public static void showMessage(String message) {
-        SimpleGuiController.addMessage(message);
+        showMessage(message, defaultBackgroundColor);
     }
 
     private static Stage primaryStage;
+    public static final Color defaultBackgroundColor = Color.WHITE;
 }
