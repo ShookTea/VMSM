@@ -36,20 +36,6 @@ public class SSH extends Module {
         return Optional.of(SshConfig::openSshConfigWindow);
     }
 
-    @Override
-    public void afterModuleRemoved() {
-        super.afterModuleRemoved();
-        View.controller().toolBar.getItems().removeAll(toolbarElements);
-    }
-
-    @Override
-    public void afterModuleTurnedOff() {
-        super.afterModuleTurnedOff();
-        Platform.runLater(() -> {
-            View.controller().toolBar.getItems().removeAll(toolbarElements);
-        });
-    }
-
     /**
      * Opens new channel of SSH communication protocol.
      * @param vm virtual machine
@@ -79,26 +65,7 @@ public class SSH extends Module {
     }
 
     @Override
-    public void reloadToolbar() {
-        View.controller().toolBar.getItems().addAll(toolbarElements);
-    }
-
-    private List<Node> createToolbarElements() {
-        ImageView openTerminal = Toolkit.createToolbarImage("terminal.png");
-        Tooltip removeCacheTip = new Tooltip("Open SSH terminal");
-        Tooltip.install(openTerminal, removeCacheTip);
-        openTerminal.setOnMouseClicked(SshTerminal::openSshTerminal);
-
-        return Arrays.asList(
-                new Separator(Orientation.VERTICAL),
-                openTerminal
-        );
-    }
-
-    @Override
     public int toolbarOrder() {
         return 1000;
     }
-
-    private List<Node> toolbarElements = createToolbarElements();
 }

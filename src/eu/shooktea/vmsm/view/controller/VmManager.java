@@ -59,8 +59,6 @@ public class VmManager {
                         Storage.removeVM(vm);
                         if (VM.isEqual(vm))
                             VM.unset();
-                        else
-                            View.reloadGUI();
                     }
                 }
             });

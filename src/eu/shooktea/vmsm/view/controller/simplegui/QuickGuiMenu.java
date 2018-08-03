@@ -2,14 +2,12 @@ package eu.shooktea.vmsm.view.controller.simplegui;
 
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.NewVM;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,14 +61,7 @@ public class QuickGuiMenu {
 
     private ImageView toWebPage(URL url, String fileName, String tooltip) {
         ImageView iv = Toolkit.createQuickGuiButton(fileName, tooltip);
-        iv.setOnMouseClicked(e -> {
-            try {
-                Desktop.getDesktop().browse(url.toURI());
-            } catch (IOException | URISyntaxException e1) {
-                e1.printStackTrace();
-                System.exit(1);
-            }
-        });
+        iv.setOnMouseClicked(e -> View.openURL(url));
         return iv;
     }
 

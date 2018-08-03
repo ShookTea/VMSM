@@ -1,23 +1,10 @@
 package eu.shooktea.vmsm.module;
 
 import com.jcraft.jsch.JSchException;
-import com.teamdev.jxbrowser.chromium.Browser;
-import com.teamdev.jxbrowser.chromium.dom.*;
-import com.teamdev.jxbrowser.chromium.events.FinishLoadingEvent;
-import com.teamdev.jxbrowser.chromium.events.LoadAdapter;
-import com.teamdev.jxbrowser.chromium.events.LoadListener;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.mage.CreateNewAdmin;
-import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
-import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
-import eu.shooktea.vmsm.view.controller.mage.MagentoReportsList;
-import eu.shooktea.vmsm.view.controller.MainWindow;
-import eu.shooktea.vmsm.view.controller.mage.Modules;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
+import eu.shooktea.vmsm.view.controller.mage.*;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.geometry.Orientation;
@@ -29,22 +16,18 @@ import javafx.scene.input.KeyCombination;
 import org.reactfx.value.Val;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.rmi.server.ExportException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Module representing Magento e-commerce.
@@ -64,46 +47,6 @@ public class Magento extends Module {
     @Override
     public Optional<Runnable> openConfigWindow() {
         return Optional.of(MagentoConfig::openMagentoConfig);
-    }
-
-    @Override
-    public void afterModuleInstalled() {
-        super.afterModuleInstalled();
-        if (!View.controller().menuBar.getMenus().contains(magentoMenu)) {
-            View.controller().menuBar.getMenus().add(magentoMenu);
-        }
-    }
-
-    @Override
-    public void afterModuleRemoved() {
-        super.afterModuleRemoved();
-        View.controller().menuBar.getMenus().remove(magentoMenu);
-        View.controller().toolBar.getItems().removeAll(toolbarElements);
-    }
-
-    @Override
-    public void afterModuleLoaded() {
-        super.afterModuleLoaded();
-        Platform.runLater(() -> {
-            if (!View.controller().menuBar.getMenus().contains(magentoMenu)) {
-                View.controller().menuBar.getMenus().add(magentoMenu);
-            }
-        });
-    }
-
-    @Override
-    public void afterModuleTurnedOff() {
-        super.afterModuleTurnedOff();
-        Platform.runLater(() -> {
-            View.controller().menuBar.getMenus().remove(magentoMenu);
-            View.controller().toolBar.getItems().removeAll(toolbarElements);
-        });
-    }
-
-    @Override
-    public void reloadToolbar() {
-        toolbarElements = createToolbar();
-        View.controller().toolBar.getItems().addAll(toolbarElements);
     }
 
     @Override
@@ -153,9 +96,6 @@ public class Magento extends Module {
         if (!localXmlFile.exists()) throw new IOException("local xml file " + localXmlFile.toString() + " doesn't exist");
         return localXmlFile;
     }
-
-    private static final Menu magentoMenu = createMenu();
-    private static List<Node> toolbarElements = createToolbar();
 
     private static Menu createMenu() {
         MenuItem deleteCache = new MenuItem("Delete cache files", Toolkit.createMenuImage("trash_full.png"));
@@ -302,7 +242,6 @@ public class Magento extends Module {
                 connection.query("UPDATE core_config_data SET value=" + value + " WHERE path LIKE \"%dev/debug/temp%\"");
             }
             else {
-                int value = 1;
                 set.close();
                 String insertQuery = "INSERT INTO core_config_data(scope, scope_id, path, value) VALUES";
                 String valueA = "(default, 0, \"dev/debug/template_hints\", 1)";
@@ -312,8 +251,6 @@ public class Magento extends Module {
             connection.close();
 
             Magento.deleteAllInVar("cache");
-            if (View.controller().getUrl() != null && View.controller().getUrl().getHost().equalsIgnoreCase(vm.getPageRoot().getHost()))
-                View.controller().reloadWebpage();
         } catch (SQLException e) {
             e.printStackTrace();
             try {
@@ -339,7 +276,6 @@ public class Magento extends Module {
         VirtualMachine vm = VM.getOrThrow();
         Magento magento = Module.getModuleByName("Magento");
         String address = magento.getAdminAddress(vm);
-        MainWindow mw = View.controller();
         String currentAddress = vm.getPageRoot().toString();
         if (!currentAddress.endsWith("/")) currentAddress = currentAddress + "/";
         currentAddress = currentAddress + address;
@@ -347,29 +283,6 @@ public class Magento extends Module {
         String login = magento.getStringSetting(vm, "adm_login");
         String pass = magento.getStringSetting(vm, "adm_pass");
 
-        Browser browser = mw.browser;
-
-        LoadListener listener = new LoadAdapter() {
-            @Override
-            public void onFinishLoadingFrame(FinishLoadingEvent event) {
-                super.onFinishLoadingFrame(event);
-                if (event.isMainFrame()) {
-                    browser.removeLoadListener(this);
-                    DOMDocument document = browser.getDocument();
-                    DOMFormElement form = (DOMFormElement)document.findElement(By.id("loginForm"));
-                    if (form != null) {
-                        if (login != null)
-                            document.findElement(By.name("login[username]")).setAttribute("value", login);
-                        if( pass != null)
-                            document.findElement(By.name("login[password]")).setAttribute("value", pass);
-                        if (login != null && pass != null)
-                            form.submit();
-                    }
-                }
-            }
-        };
-
-        browser.addLoadListener(listener);
-        browser.loadURL(currentAddress);
+        //TODO: Generate login file and redirect to it via View.openURL(new URL(currentAddress))
     }
 }

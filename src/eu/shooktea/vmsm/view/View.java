@@ -1,11 +1,9 @@
 package eu.shooktea.vmsm.view;
 
-import eu.shooktea.vmsm.Start;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.view.controller.MainWindow;
-import eu.shooktea.vmsm.view.controller.simplegui.SimpleGuiController;
 import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.controller.simplegui.SimpleGuiController;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -13,8 +11,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -23,21 +19,17 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class View {
     private View() {}
 
-    private static boolean isSimpleGui;
-
-    public static void initialize(Stage stage) throws Exception {
-        isSimpleGui = Start.streamArgs().anyMatch(s -> s.equals("--simple-gui"));
+    public static void initialize(Stage stage) {
         primaryStage = stage;
-        if (isSimpleGui)
-            initializeSimpleGui();
-        else
-            initializePrimaryStage();
+        initializeSimpleGui();
         initializeApplicationLoop();
     }
 
@@ -75,24 +67,9 @@ public class View {
         stage().show();
     }
 
-    private static void initializePrimaryStage() throws Exception {
-        URL location = View.class.getResource("/eu/shooktea/vmsm/view/fxml/MainWindow.fxml");
-        FXMLLoader loader = new FXMLLoader(location);
-        VBox vbox = loader.load();
-        mainWindow = loader.getController();
-        primaryStage.setScene(new Scene(vbox));
-        primaryStage.setMaximized(true);
-        primaryStage.setTitle("VMSM");
-        primaryStage.setOnCloseRequest(e -> mainWindow.close());
-        primaryStage.show();
-    }
-
     private static void initializeApplicationLoop() {
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, (ev) -> {
-                    VM.ifNotNull(VirtualMachine::update);
-                    if (!isSimpleGui) controller().reloadGUI();
-                }),
+                new KeyFrame(Duration.ZERO, (ev) -> VM.ifNotNull(VirtualMachine::update)),
                 new KeyFrame(Duration.seconds(5))
         );
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -101,10 +78,6 @@ public class View {
 
     public static Stage stage() {
         return primaryStage;
-    }
-
-    public static MainWindow controller() {
-        return mainWindow;
     }
 
     public static <T extends Region, C> C createNewWindow(String fxmlPath, String title, boolean isModal) {
@@ -137,13 +110,21 @@ public class View {
     }
 
     public static <T extends Region, C> C createNewWindow(String fxmlPath, String title) {
-        return createNewWindow(fxmlPath, title, !isSimpleGui);
+        return createNewWindow(fxmlPath, title, false);
     }
 
-    public static void reloadGUI() {
-        if (mainWindow != null) mainWindow.reloadGUI();
+    public static void openURL(URL url) {
+        try {
+            Desktop.getDesktop().browse(url.toURI());
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public static void showMessage(String message) {
+        SimpleGuiController.addMessage(message);
     }
 
     private static Stage primaryStage;
-    private static MainWindow mainWindow;
 }
