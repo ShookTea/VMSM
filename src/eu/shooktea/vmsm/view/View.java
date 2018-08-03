@@ -46,6 +46,7 @@ public class View {
         view.setFont(Font.font(15));
         view.setTextFill(Color.BLACK);
         view.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0.1, true), new Insets(0.0))));
+        view.setPadding(new Insets(0, 3, 0, 3));
 
         Pane guiPane = new Pane(view);
         guiPane.setBackground(Background.EMPTY);
