@@ -7,7 +7,9 @@ import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import org.w3c.dom.Document;
@@ -101,8 +103,26 @@ public class Magento extends Module {
 
     @Override
     public Optional<MenuItem> getMenuItem() {
-        MenuItem item = new MenuItem("Magento test");
-        return Optional.of(item);
+        Menu root = new Menu("Magento", Toolkit.createMenuImage("magento.png"));
+
+        Menu delete = new Menu("Remove", Toolkit.createMenuImage("trash_full.png"));
+        delete.getItems().addAll(
+                createDelete(DeleteDir.ALL, "All"),
+                new SeparatorMenuItem(),
+                createDelete(DeleteDir.CACHE, "Cache files"),
+                createDelete(DeleteDir.LOGS, "Log files"),
+                createDelete(DeleteDir.REPORTS, "Exception report files"),
+                createDelete(DeleteDir.SESSION, "User sessions")
+        );
+
+        root.getItems().addAll(delete);
+        return Optional.of(root);
+    }
+
+    private MenuItem createDelete(DeleteDir dir, String text) {
+        MenuItem item = new MenuItem(text);
+        item.setOnAction(e -> deleteAllInVar(VM.getOrThrow(), dir));
+        return item;
     }
 
     /**
