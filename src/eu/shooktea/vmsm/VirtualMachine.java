@@ -29,6 +29,7 @@ import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import org.json.JSONObject;
 
@@ -38,6 +39,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Single virtual machine with HTTP server on it.
@@ -174,6 +176,10 @@ public class VirtualMachine {
                 ivs -> ret.addAll(Arrays.asList(ivs))
         );
         return ret;
+    }
+
+    public Optional<MenuItem> createMenuItem() {
+        return getType().getMenuItem(this);
     }
 
     private ReadOnlyStringProperty name;

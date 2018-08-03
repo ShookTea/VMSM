@@ -23,6 +23,7 @@ public class RightClickMenu {
     private ContextMenu createContextMenu() {
         List<MenuItem> list = new ArrayList<>();
         list.add(vmMenu());
+        VM.flatMap(VirtualMachine::createMenuItem).ifPresent(list::add);
         list.add(exit());
 
         ContextMenu menu = new ContextMenu();

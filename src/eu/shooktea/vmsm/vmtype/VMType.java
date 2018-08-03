@@ -30,6 +30,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
@@ -70,6 +71,10 @@ public abstract class VMType {
     public Optional<String[]> getModules() { return Optional.empty(); }
 
     public Optional<ImageView[]> getQuickGuiButtons() {
+        return Optional.empty();
+    }
+
+    public Optional<MenuItem> getMenuItem(VirtualMachine vm) {
         return Optional.empty();
     }
 
