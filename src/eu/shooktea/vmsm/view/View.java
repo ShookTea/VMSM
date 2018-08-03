@@ -125,11 +125,15 @@ public class View {
     }
 
     public static void openURL(URI uri) {
-        try {
-            Desktop.getDesktop().browse(uri);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+        if (Desktop.isDesktopSupported()) {
+            new Thread(() -> {
+                try {
+                    Desktop.getDesktop().browse(uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+            }).start();
         }
     }
 
