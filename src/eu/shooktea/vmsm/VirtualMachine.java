@@ -24,12 +24,15 @@ SOFTWARE.
 package eu.shooktea.vmsm;
 
 import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.view.controller.ModuleConfig;
 import eu.shooktea.vmsm.view.controller.simplegui.QuickGuiMenu;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.ImageView;
 import org.json.JSONObject;
 
@@ -179,7 +182,16 @@ public class VirtualMachine {
     }
 
     public Optional<MenuItem> createMenuItem() {
-        return getType().getMenuItem(this);
+        return getType().getMenuItem(this).map(item -> {
+            if (getType().getModules().isPresent() && item instanceof Menu) {
+                MenuItem openModuleConfig = new MenuItem("Module configuration...");
+                openModuleConfig.setOnAction(ModuleConfig::openModuleConfigWindow);
+
+                Menu m = (Menu)item;
+                m.getItems().addAll(new SeparatorMenuItem(), openModuleConfig);
+            }
+            return item;
+        });
     }
 
     private ReadOnlyStringProperty name;
