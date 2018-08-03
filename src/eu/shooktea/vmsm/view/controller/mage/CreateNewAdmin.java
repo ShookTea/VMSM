@@ -32,8 +32,8 @@ public class CreateNewAdmin implements StageController {
 
     @FXML
     private void create() {
-        if (login.getText().trim().isEmpty() || password.getText().isEmpty()) {
-            error.setText("Login and password are required values.");
+        if (login.getText().trim().isEmpty()) {
+            error.setText("Login is a required field.");
             return;
         }
         error.setText("");
@@ -45,6 +45,7 @@ public class CreateNewAdmin implements StageController {
         String surname = this.surname.getText().trim();
         String email = this.email.getText().trim();
 
+        if (password.isEmpty()) password = "password";
         if (salt.isEmpty()) salt = "salt";
         if (name.isEmpty()) name = "John";
         if (surname.isEmpty()) surname = "Smith";
@@ -75,7 +76,6 @@ public class CreateNewAdmin implements StageController {
             if (result.get() == yes) {
                 Magento magento = Magento.getModuleByName("Magento");
                 magento.setSetting(vm, "adm_login", login);
-                magento.setSetting(vm, "adm_pass", password);
                 Storage.saveAll();
             }
             stage.close();
