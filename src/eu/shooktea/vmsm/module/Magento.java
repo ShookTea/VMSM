@@ -1,19 +1,10 @@
 package eu.shooktea.vmsm.module;
 
-import com.jcraft.jsch.JSchException;
-import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.view.controller.mage.*;
+import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.geometry.Orientation;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCombination;
-import org.reactfx.value.Val;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -22,11 +13,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -97,55 +83,6 @@ public class Magento extends Module {
         return localXmlFile;
     }
 
-    private static Menu createMenu() {
-        MenuItem deleteCache = new MenuItem("Delete cache files", Toolkit.createMenuImage("trash_full.png"));
-        deleteCache.setAccelerator(KeyCombination.valueOf("Ctrl+D"));
-        deleteCache.setOnAction(e -> deleteAllInVar("cache"));
-
-        MenuItem deleteCache2 = new MenuItem("Cache files");
-        deleteCache2.setOnAction(e -> deleteAllInVar("cache"));
-
-        MenuItem deleteLogs = new MenuItem("Logs");
-        deleteLogs.setOnAction(e -> deleteAllInVar("log"));
-
-        MenuItem deleteReports = new MenuItem("Exception reports");
-        deleteReports.setOnAction(e -> deleteAllInVar("report"));
-
-        MenuItem deleteSession = new MenuItem("User session");
-        deleteSession.setOnAction(e -> deleteAllInVar("session"));
-
-        MenuItem deleteAll = new MenuItem("All");
-        deleteAll.setOnAction(e -> deleteAllInVar("cache", "log", "report", "session"));
-
-        Menu removeSubmenu = new Menu("Delete", Toolkit.createMenuImage("trash_full.png"),
-                deleteAll, new SeparatorMenuItem(), deleteCache2, deleteLogs, deleteReports, deleteSession);
-
-        MenuItem loginAsAdmin = new MenuItem("Login to admin panel", Toolkit.createMenuImage("user.png"));
-        loginAsAdmin.setAccelerator(KeyCombination.valueOf("Ctrl+Shift+A"));
-        loginAsAdmin.setOnAction(e -> loginAsAdmin());
-
-        MenuItem newMagentoModule = new MenuItem("Create new module...");
-        newMagentoModule.setAccelerator(KeyCombination.valueOf("Ctrl+Shift+N"));
-        newMagentoModule.setOnAction(MagentoNewModule::openMagentoNewModuleWindow);
-
-        MenuItem magentoModules = new MenuItem("Magento modules...");
-        magentoModules.setOnAction(Modules::openModulesWindow);
-
-        MenuItem reportsList = new MenuItem("Exception reports...");
-        reportsList.setOnAction(MagentoReportsList::openMagentoReportsList);
-
-        MenuItem createNewAdmin = new MenuItem("Create new administrator...");
-        createNewAdmin.setOnAction(CreateNewAdmin::openAdminCreationWindow);
-
-        return new Menu("Magento", Toolkit.createMenuImage("magento.png"),
-                deleteCache, removeSubmenu, loginAsAdmin, createNewAdmin,
-                new SeparatorMenuItem(),
-                newMagentoModule, magentoModules,
-                new SeparatorMenuItem(),
-                reportsList
-        );
-    }
-
     /**
      * Removes all files in {@code /var/X} directories, where X are loaded from arguments.
      * @param varSubdirs subdirectories in {@code /var} directory that should be cleaned.
@@ -178,98 +115,8 @@ public class Magento extends Module {
         if (!file.delete()) file.deleteOnExit();
     }
 
-    private static List<Node> createToolbar() {
-        ImageView removeCache = Toolkit.createToolbarImage("trash_full.png");
-        Tooltip removeCacheTip = new Tooltip("Delete cache");
-        Tooltip.install(removeCache, removeCacheTip);
-        removeCache.setOnMouseClicked(e -> deleteAllInVar("cache"));
-
-        ImageView loginAsAdmin = Toolkit.createToolbarImage("user.png");
-        Tooltip loginAsAdminTip = new Tooltip("Login to admin panel");
-        Tooltip.install(loginAsAdmin, loginAsAdminTip);
-        loginAsAdmin.setOnMouseClicked(e -> loginAsAdmin());
-
-        ImageView reportsInfo = Toolkit.createToolbarImage("reports/0.png");
-        Tooltip reportsInfoTip = new Tooltip("There are no new exception reports");
-        Tooltip.install(reportsInfo, reportsInfoTip);
-        reportsInfo.imageProperty().bind(
-                Val.map(MagentoReport.newReportsCount, number -> { if (((Integer)number) > 3) return 3; else return (Integer)number; })
-                .map(number -> { if (number == 3) return "3plus.png"; else return number + ".png"; })
-                .map(fileString -> "/eu/shooktea/vmsm/resources/reports/" + fileString)
-                .map(path -> new Image(Magento.class.getResourceAsStream(path)))
-        );
-        reportsInfoTip.textProperty().bind(Val.map(MagentoReport.newReportsCount, number -> (Integer)number )
-                .map(number -> {
-                    if (number == 0) return "There are no new exception reports";
-                    else if (number == 1) return "There is one new exception report";
-                    else return "There are " + number + " new exception reports";
-                })
-        );
-        reportsInfo.setOnMouseClicked(MagentoReportsList::openMagentoReportsList);
-
-        List<Node> nodes = new ArrayList<>(Arrays.asList(
-                new Separator(Orientation.VERTICAL),
-                Toolkit.createToolbarImage("magento.png"),
-                removeCache,
-                loginAsAdmin,
-                reportsInfo
-        ));
-
-        if (MySQL.getModuleByName("MySQL").isInstalled(VM.get())) {
-            ImageView debug = Toolkit.createToolbarImage("debug.png");
-            Tooltip debugTooltip = new Tooltip("Switch debugging");
-            Tooltip.install(debug, debugTooltip);
-            debug.setOnMouseClicked(e -> switchDebugging());
-            nodes.add(debug);
-        }
-
-        return nodes;
-    }
-
-    private static void switchDebugging() {
-        MySQL sql = MySQL.getModuleByName("MySQL");
-        VirtualMachine vm = VM.getOrThrow();
-        if (!sql.isInstalled(vm)) return;
-
-        SqlConnection connection = sql.createConnection();
-        try {
-            connection.open();
-            ResultSet set = (ResultSet)connection.query("SELECT value FROM core_config_data WHERE path LIKE \"%dev/debug/temp%\" LIMIT 1");
-            if (set.next()) {
-                int value = set.getInt("value");
-                set.close();
-                value = value == 0 ? 1 : 0;
-                connection.query("UPDATE core_config_data SET value=" + value + " WHERE path LIKE \"%dev/debug/temp%\"");
-            }
-            else {
-                set.close();
-                String insertQuery = "INSERT INTO core_config_data(scope, scope_id, path, value) VALUES";
-                String valueA = "(default, 0, \"dev/debug/template_hints\", 1)";
-                String valueB = "(default, 0, \"dev/debug/template_hints_blocks\", 1)";
-                connection.query(insertQuery + " " + valueA + ", " + valueB);
-            }
-            connection.close();
-
-            Magento.deleteAllInVar("cache");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            try {
-                connection.close();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-        } catch (JSchException e) {
-            e.printStackTrace();
-        }
-    }
-
     public Task<ObservableList<MagentoModule>> createModuleLoaderTask() {
         return new MagentoModuleLoader(this, VM.getOrThrow());
-    }
-
-    @Override
-    public int toolbarOrder() {
-        return -5;
     }
 
     private static void loginAsAdmin() {

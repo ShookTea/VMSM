@@ -3,7 +3,6 @@ package eu.shooktea.vmsm;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Pair;
 
 import javax.net.ssl.*;
 import java.security.GeneralSecurityException;
@@ -32,15 +31,6 @@ public class Toolkit {
      */
     public static ImageView createMenuImage(String resourceFileName) {
         return createImageView(resourceFileName, 15);
-    }
-
-    /**
-     * Creates {@link ImageView} node with icon resized to 32 pixels.
-     * @param resourceFileName name of file in {@code /eu/shooktea/vmsm/resources/} directory
-     * @return created node with icon from resources directory
-     */
-    public static ImageView createQuickGuiButton(String resourceFileName) {
-        return createQuickGuiButton(resourceFileName, null);
     }
 
     /**

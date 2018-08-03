@@ -28,9 +28,6 @@ import eu.shooktea.vmsm.view.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 /**
  * Main class for VMSM. Disables SSL certificates check, loads data from configuration file and displays main window.
  */
@@ -39,10 +36,9 @@ public class Start extends Application {
     /**
      * Main method for JavaFX application that initializes GUI. You shouldn't call it by your own.
      * @param stage primary stage
-     * @throws Exception if anything wrong happens during initialization of GUI.
      */
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         if (isStartCalled) return;
         isStartCalled = true;
         View.initialize(stage);
@@ -64,18 +60,11 @@ public class Start extends Application {
         if (isMainCalled) return;
         isMainCalled = true;
 
-        Start.args = args;
         Storage.checkVmsmFiles();
         Toolkit.turnOffSSL();
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
         Storage.loadAll();
         launch(args);
-    }
-
-    private static String[] args;
-
-    public static Stream<String> streamArgs() {
-        return Arrays.stream(args);
     }
 
     private static boolean isStartCalled = false;

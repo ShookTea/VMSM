@@ -81,16 +81,10 @@ public abstract class Module {
     public Optional<Runnable> openConfigWindow() {
         return Optional.empty();
     }
-    /** Method that will be run after toggling module on. */
-    public void afterModuleInstalled() {}
-    /** Method that will be run after toggling module off. */
-    public void afterModuleRemoved() {}
     /** Method that will be run after choosing VM with module toggled on */
     public void afterModuleLoaded() {}
     /** Method that will be run after choosing other machine than the one with module toggled on */
     public void afterModuleTurnedOff() {}
-    /** Method that will be run after clearing toolbar */
-    public void reloadToolbar() {}
     /** Update method that wil be run every 5 seconds */
     public void loopUpdate() {}
 
@@ -122,11 +116,9 @@ public abstract class Module {
     public void installOn(VirtualMachine vm) {
         if (isInstalled(vm)) {
             vm.getModules().remove(this);
-            afterModuleRemoved();
         }
         else {
             vm.getModules().add(this);
-            afterModuleInstalled();
         }
         Storage.saveAll();
     }
@@ -193,14 +185,6 @@ public abstract class Module {
      */
     public void removeSetting(VirtualMachine vm, String key) {
         settings.getOrDefault(vm, new HashMap<>()).remove(key);
-    }
-
-    /**
-     * Returns order in which modules' toolbars should be displayed
-     * @return order in toolbar
-     */
-    public int toolbarOrder() {
-        return 0;
     }
 
     private BooleanProperty isInstalled;

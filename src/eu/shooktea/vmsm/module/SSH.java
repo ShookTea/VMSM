@@ -1,20 +1,9 @@
 package eu.shooktea.vmsm.module;
 
 import com.jcraft.jsch.*;
-import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.ssh.SshConfig;
-import eu.shooktea.vmsm.view.controller.ssh.SshTerminal;
-import javafx.application.Platform;
-import javafx.geometry.Orientation;
-import javafx.scene.Node;
-import javafx.scene.control.Separator;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.ImageView;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -62,10 +51,5 @@ public class SSH extends Module {
         }
         Channel channel = session.openChannel(type);
         return channel;
-    }
-
-    @Override
-    public int toolbarOrder() {
-        return 1000;
     }
 }
