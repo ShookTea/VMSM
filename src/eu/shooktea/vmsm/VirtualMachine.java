@@ -36,6 +36,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -169,6 +170,9 @@ public class VirtualMachine {
     public List<ImageView> getQuickMenuItems() {
         List<ImageView> ret = new ArrayList<>();
         if (pageRoot.isNotNull().get()) ret.add(QuickGuiMenu.toWebPage(getPageRoot(), "home.png", "Go to home page"));
+        getType().getQuickGuiButtons().ifPresent(
+                ivs -> ret.addAll(Arrays.asList(ivs))
+        );
         return ret;
     }
 
