@@ -6,6 +6,7 @@ import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import org.json.JSONObject;
 
@@ -145,6 +146,10 @@ public abstract class Module {
     private static final SSH ssh = new SSH();
 
     public Optional<List<ImageView>> getQuickGuiButtons() {
+        return Optional.empty();
+    }
+
+    public Optional<MenuItem> getMenuItem() {
         return Optional.empty();
     }
 

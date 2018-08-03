@@ -78,6 +78,7 @@ public abstract class VMType {
                     .map(Module::getModuleByName)
                     .filter(Objects::nonNull)
                     .map(obj -> (Module) obj)
+                    .filter(mod -> mod.isInstalled(VM.getOrThrow()))
                     .map(Module::getQuickGuiButtons)
                     .map(opt -> opt.orElse(new ArrayList<>()))
                     .flatMap(Collection::stream)
@@ -87,6 +88,23 @@ public abstract class VMType {
 
     public Optional<MenuItem> getMenuItem(VirtualMachine vm) {
         return Optional.empty();
+    }
+
+    public List<MenuItem> getMenuItemsWithModules(VirtualMachine vm) {
+        List<MenuItem> list = new ArrayList<>();
+        getMenuItem(vm).ifPresent(list::add);
+        getModules().map(arr ->
+                Arrays.stream(arr)
+                .map(Module::getModuleByName)
+                .filter(Objects::nonNull)
+                .map(obj -> (Module)obj)
+                .filter(mod -> mod.isInstalled(vm))
+                .map(Module::getMenuItem)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList())
+        ).ifPresent(list::addAll);
+        return list;
     }
 
     public void update(VirtualMachine vm) {}
