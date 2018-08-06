@@ -17,30 +17,45 @@ public class Config implements StageController {
 
     private Map<String, Screen> screenMap;
     private Stage stage;
+    private ObservableList<Screen> screens;
+
+    private final StringConverter<Screen> screenToString = new StringConverter<Screen>() {
+        @Override
+        public String toString(Screen object) {
+            return "Screen " + (screens.indexOf(object) + 1);
+        }
+
+        @Override
+        public Screen fromString(String string) {
+            return screenMap.get(string);
+        }
+    };
 
     @FXML
     private void initialize() {
-        ObservableList<Screen> screens = Screen.getScreens();
+        screens = Screen.getScreens();
         displayScreen.setItems(screens);
         screenMap = new HashMap<>();
-        StringConverter<Screen> converter = new StringConverter<Screen>() {
-            @Override
-            public String toString(Screen object) {
-                return "Screen " + (screens.indexOf(object) + 1);
-            }
 
-            @Override
-            public Screen fromString(String string) {
-                return screenMap.get(string);
-            }
-        };
         for (Screen screen : screens) {
-            screenMap.put(converter.toString(screen), screen);
+            screenMap.put(screenToString.toString(screen), screen);
         }
-        displayScreen.setConverter(converter);
-        Screen val = converter.fromString((String)Storage.config.get("screen"));
+        displayScreen.setConverter(screenToString);
+        Screen val = screenToString.fromString((String)Storage.config.get("screen"));
         if (val == null) val = screens.get(0);
         displayScreen.setValue(val);
+    }
+
+    @FXML
+    private void cancel() {
+        stage.close();
+    }
+
+    @FXML
+    private void save() {
+        Storage.config.put("screen", screenToString.toString(displayScreen.getValue()));
+        Storage.saveAll();
+        stage.close();
     }
 
 
