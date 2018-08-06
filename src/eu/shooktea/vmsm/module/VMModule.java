@@ -145,10 +145,19 @@ public abstract class VMModule {
     private static final Magento magento = new Magento();
     private static final SSH ssh = new SSH();
 
+    /**
+     * Returns list of buttons to be displayed in quick menu.
+     * @return list of buttons
+     */
     public List<ImageView> getQuickGuiButtons() {
         return new ArrayList<>();
     }
 
+    /**
+     * Returns menu item to right click menu. It can be any class extending {@link MenuItem}, including {@link javafx.scene.control.Menu}.
+     * If {@link Optional#empty()} is returned, nothing will be displayed.
+     * @return optional containing menu item.
+     */
     public Optional<MenuItem> getMenuItem() {
         return Optional.empty();
     }
@@ -198,6 +207,11 @@ public abstract class VMModule {
         settings.getOrDefault(vm, new HashMap<>()).remove(key);
     }
 
+    /**
+     * Returns sort value of module that is used to display quick menu buttons and main menu items in proper order. Modules
+     * are sorted by that value in ascending order.
+     * @return sort value.
+     */
     public int getSortValue() {
         return 0;
     }
