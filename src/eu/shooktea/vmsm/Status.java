@@ -63,8 +63,9 @@ public enum Status {
     }
 
     /**
-     * Returns tooltip text. That text is displayed in tooltip after hovering mouse over state icon.
-     * @return
+     * Returns tooltip text. That text is displayed in tooltip after hovering mouse over state icon. It is also
+     * used in notification about changing VM state.
+     * @return text for tooltip.
      */
     public String getTooltipText() {
         switch (this) {
@@ -75,6 +76,12 @@ public enum Status {
         }
     }
 
+    /**
+     * Returns background color for notification about changed state of VM. When VM's state is set to {@link #RUNNING}
+     * or {@link #STOPPED}, notification via {@link eu.shooktea.vmsm.view.View#showMessage(String, Color)} is used.
+     * Background color of that message is taken from this method and text is taken from {@link #getTooltipText()}.
+     * @return background color for notification.
+     */
     public Color getInfoColor() {
         switch (this) {
             case RUNNING:   return Color.GREEN;
