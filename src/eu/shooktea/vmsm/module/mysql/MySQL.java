@@ -9,7 +9,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,10 +39,10 @@ public class MySQL extends VMModule {
     }
 
     @Override
-    public Optional<List<ImageView>> getQuickGuiButtons() {
+    public List<ImageView> getQuickGuiButtons() {
         ImageView openTerminal = Toolkit.createQuickGuiButton("db-blue.png", "Open MySQL terminal");
         openTerminal.setOnMouseClicked(MysqlTerminal::openMysqlTerminal);
-        return Optional.of(Arrays.asList(openTerminal));
+        return Collections.singletonList(openTerminal);
     }
 
     @Override

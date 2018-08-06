@@ -107,7 +107,7 @@ public class Magento extends VMModule {
     }
 
     @Override
-    public Optional<List<ImageView>> getQuickGuiButtons() {
+    public List<ImageView> getQuickGuiButtons() {
         VirtualMachine vm = VM.getOrThrow();
         List<ImageView> ret = new ArrayList<>();
 
@@ -119,7 +119,7 @@ public class Magento extends VMModule {
         loginAsAdmin.setOnMouseClicked(e -> loginAsAdmin(vm, getStringSetting(vm, "adm_login")));
         ret.add(loginAsAdmin);
 
-        return Optional.of(ret);
+        return ret;
     }
 
     @Override

@@ -76,7 +76,6 @@ public abstract class VMType {
     public List<ImageView> getQuickGuiButtons() {
         return getInstalledModulesStream(VM.getOrThrow())
                 .map(VMModule::getQuickGuiButtons)
-                .map(opt -> opt.orElse(new ArrayList<>()))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }

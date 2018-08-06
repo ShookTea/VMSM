@@ -13,10 +13,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Abstract class representing single module. Module in VMSM is an additional set of tools that can be connected
@@ -148,8 +145,8 @@ public abstract class VMModule {
     private static final Magento magento = new Magento();
     private static final SSH ssh = new SSH();
 
-    public Optional<List<ImageView>> getQuickGuiButtons() {
-        return Optional.empty();
+    public List<ImageView> getQuickGuiButtons() {
+        return new ArrayList<>();
     }
 
     public Optional<MenuItem> getMenuItem() {
