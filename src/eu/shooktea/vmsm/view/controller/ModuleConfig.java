@@ -27,7 +27,7 @@ public class ModuleConfig {
 
         VirtualMachine vm = VM.getOrThrow();
         VMType type = vm.getType();
-        String[] modules = type.getModules().get();
+        String[] modules = type.getModules();
         int index = 0;
         for (String module : modules) {
             createModuleEntry(vm, VMModule.getModuleByName(module), index);

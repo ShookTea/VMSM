@@ -182,10 +182,10 @@ public class Vagrant extends VMType {
     }
 
     @Override
-    public Optional<String[]> getModules() {
-        return Optional.of(new String[]{
+    public String[] getModules() {
+        return new String[]{
             "Magento", "SSH", "MySQL"
-        });
+        };
     }
 
     private VirtualMachine previousUpdateVm = null;

@@ -210,7 +210,7 @@ public class VirtualMachine {
     public List<MenuItem> createMenuItem() {
         List<MenuItem> ret = new ArrayList<>();
         getType().getMenuItem(this).ifPresent(item -> {
-            if (getType().getModules().isPresent() && item instanceof Menu) {
+            if (getType().getModules().length > 0 && item instanceof Menu) {
                 MenuItem openModuleConfig = new MenuItem("Module configuration...");
                 openModuleConfig.setOnAction(ModuleConfig::openModuleConfigWindow);
 

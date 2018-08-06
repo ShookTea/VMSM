@@ -71,7 +71,9 @@ public abstract class VMType {
         setCreationError(checkRootFile(file));
     }
 
-    public Optional<String[]> getModules() { return Optional.empty(); }
+    public String[] getModules() {
+        return new String[0];
+    }
 
     public List<ImageView> getQuickGuiButtons() {
         return getInstalledModulesStream(VM.getOrThrow())
@@ -95,7 +97,7 @@ public abstract class VMType {
     }
 
     private Stream<VMModule> getInstalledModulesStream(VirtualMachine vm) {
-        return getModules().map(Arrays::stream).orElse(Stream.empty())
+        return Arrays.stream(getModules())
                 .map(VMModule::getModuleByName)
                 .filter(Objects::nonNull)
                 .map(obj -> (VMModule)obj)
