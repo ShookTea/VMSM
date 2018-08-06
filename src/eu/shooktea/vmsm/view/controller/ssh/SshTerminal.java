@@ -70,7 +70,7 @@ public class SshTerminal implements UserInfo, StageController {
     }
 
     public static void openSshTerminal(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ssh/SshTerminal.fxml", "SSH Terminal", false);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ssh/SshTerminal.fxml", "SSH Terminal");
     }
 
     @Override

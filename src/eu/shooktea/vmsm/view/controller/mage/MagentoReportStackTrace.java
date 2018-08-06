@@ -17,7 +17,7 @@ public class MagentoReportStackTrace {
     public static void openStackTraceWindow(MagentoReport report) {
         if (report == null) return;
         MagentoReportStackTrace mrst =
-                View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoReportStackTrace.fxml", "Stack trace \"" + report.getText() + "\"", false);
+                View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoReportStackTrace.fxml", "Stack trace \"" + report.getText() + "\"");
         mrst.setReport(report);
     }
 }

@@ -85,7 +85,7 @@ public class ModuleInfo {
     public static void openModuleInfo(MagentoModule module) {
         String path = "/eu/shooktea/vmsm/view/fxml/mage/ModuleInfo.fxml";
         String title = module.getCodePool() + "/" + module.getNamespace() + "_" + module.getName() + " - module info";
-        ModuleInfo contr = View.createNewWindow(path, title, false);
+        ModuleInfo contr = View.createNewWindow(path, title);
         contr.module = module;
         contr.setValue();
     }

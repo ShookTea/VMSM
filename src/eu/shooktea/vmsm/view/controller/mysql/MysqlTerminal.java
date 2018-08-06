@@ -156,7 +156,7 @@ public class MysqlTerminal implements StageController {
     }
 
     public static void openMysqlTerminal(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/MysqlTerminal.fxml", "MySQL Terminal", false);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/MysqlTerminal.fxml", "MySQL Terminal");
     }
 
     private class Console {
