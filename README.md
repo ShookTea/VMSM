@@ -5,12 +5,12 @@
 Virtual Machine Server Manager
 
 **index**
-1. [Installation](#installation)
-    * [.JAR file](#jar-file)
-    * [Download and compile](#download-and-compile)
-    * [(Windows) pin VMSM to task bar / start screen](#windows-pin-vmsm-to-task-bar--start-screen)
+* [Installation](#installation)
+* [.JAR file](#jar-file)
+* [Download and compile](#download-and-compile)
+* [(Windows) pin VMSM to task bar / start screen](#windows-pin-vmsm-to-task-bar--start-screen)
     
-JavaDoc documentation can be found at [shooktea.github.io/VMSM](https://shooktea.github.io/VMSM)
+JavaDoc and project documentation can be found at [shooktea.github.io/VMSM](https://shooktea.github.io/VMSM).
 
 ## Installation
 **System requirements:**
