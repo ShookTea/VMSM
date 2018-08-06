@@ -10,6 +10,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -63,8 +64,9 @@ public class View {
         scene.setOnMouseEntered(e -> stage().setOpacity(OPACITY_ON));
         scene.setOnMouseExited(e -> stage().setOpacity(OPACITY_OFF));
         stage().setOpacity(OPACITY_OFF);
-        scene.getWindow().setX(0);
-        scene.getWindow().setY(0);
+        Point2D upperLeftCorner = ScreenManager.getUpperLeftCorner();
+        scene.getWindow().setX(upperLeftCorner.getX());
+        scene.getWindow().setY(upperLeftCorner.getY());
         SimpleGuiController.init(view, guiPane);
         stage().show();
     }
@@ -113,6 +115,9 @@ public class View {
             stage.setScene(new Scene(element));
             stage.setTitle(title);
             stage.show();
+            Point2D pos = ScreenManager.getCenterPosition(stage.getWidth(), stage.getHeight());
+            stage.setX(pos.getX());
+            stage.setY(pos.getY());
             return controller;
         } catch (IOException e) {
             e.printStackTrace();

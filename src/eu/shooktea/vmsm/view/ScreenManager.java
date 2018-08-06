@@ -23,9 +23,25 @@ public class ScreenManager {
         Storage.config.put("screen", converter.toString(screen));
     }
 
+    public static Rectangle2D getScreenBounds() {
+        return getCurrentScreen().getBounds();
+    }
+
     public static Point2D getUpperLeftCorner() {
-        Rectangle2D bounds = getCurrentScreen().getVisualBounds();
+        Rectangle2D bounds = getScreenBounds();
         return new Point2D(bounds.getMinX(), bounds.getMinY());
+    }
+
+    public static Point2D getSize() {
+        Rectangle2D bounds = getScreenBounds();
+        return new Point2D(bounds.getWidth(), bounds.getHeight());
+    }
+
+    public static Point2D getCenterPosition(double width, double height) {
+        Rectangle2D bounds = getScreenBounds();
+        double x = bounds.getMinX() + (bounds.getWidth() - width) / 2;
+        double y = bounds.getMinY() + (bounds.getHeight() - height) / 2;
+        return new Point2D(x, y);
     }
 
     public static final ObservableList<Screen> screens = Screen.getScreens();
