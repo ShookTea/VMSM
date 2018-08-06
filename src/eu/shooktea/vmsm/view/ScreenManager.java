@@ -2,6 +2,8 @@ package eu.shooktea.vmsm.view;
 
 import eu.shooktea.vmsm.Storage;
 import javafx.collections.ObservableList;
+import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.util.StringConverter;
 
@@ -13,7 +15,7 @@ public class ScreenManager {
 
     public static Screen getCurrentScreen() {
         Screen val = converter.fromString((String) Storage.config.get("screen"));
-        if (val == null) val = screens.get(0);
+        if (val == null) val = Screen.getPrimary();
         return val;
     }
 
@@ -21,13 +23,18 @@ public class ScreenManager {
         Storage.config.put("screen", converter.toString(screen));
     }
 
+    public static Point2D getUpperLeftCorner() {
+        Rectangle2D bounds = getCurrentScreen().getVisualBounds();
+        return new Point2D(bounds.getMinX(), bounds.getMinY());
+    }
+
     public static final ObservableList<Screen> screens = Screen.getScreens();
-    private static final Map<String, Screen> screenMap = new HashMap();
+    private static final Map<String, Screen> screenMap = new HashMap<>();
 
     public static final StringConverter<Screen> converter = new StringConverter<Screen>() {
         @Override
         public String toString(Screen object) {
-            return "Screen " + (screens.indexOf(object) + 1);
+            return "Screen " + (screens.indexOf(object) + 1) + (object == Screen.getPrimary() ? " [PRIMARY]" : "");
         }
 
         @Override
