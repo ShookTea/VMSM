@@ -1,8 +1,10 @@
 package eu.shooktea.vmsm.view.controller.simplegui;
 
 import eu.shooktea.vmsm.Storage;
+import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.controller.Config;
 import eu.shooktea.vmsm.view.controller.NewVM;
 import eu.shooktea.vmsm.view.controller.VmManager;
 import javafx.scene.control.*;
@@ -28,6 +30,7 @@ public class RightClickMenu {
             list.addAll(items);
         });
         list.add(separator());
+        list.add(config());
         list.add(exit());
 
         ContextMenu menu = new ContextMenu();
@@ -48,6 +51,12 @@ public class RightClickMenu {
     private MenuItem exit() {
         MenuItem item = new MenuItem("Exit VMSM");
         item.setOnAction(e -> System.exit(0));
+        return item;
+    }
+
+    private MenuItem config() {
+        MenuItem item = new MenuItem("Settings", Toolkit.createMenuImage("run.png"));
+        item.setOnAction(Config::openConfigWindow);
         return item;
     }
 
