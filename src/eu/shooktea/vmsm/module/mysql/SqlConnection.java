@@ -4,7 +4,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.SSH;
+import eu.shooktea.vmsm.module.ssh.SSH;
 import org.json.JSONObject;
 
 import java.sql.*;

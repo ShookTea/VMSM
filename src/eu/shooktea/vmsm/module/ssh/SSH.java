@@ -1,8 +1,9 @@
-package eu.shooktea.vmsm.module;
+package eu.shooktea.vmsm.module.ssh;
 
 import com.jcraft.jsch.*;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.ssh.SshConfig;
 import eu.shooktea.vmsm.view.controller.ssh.SshTerminal;
 import javafx.scene.control.Menu;
