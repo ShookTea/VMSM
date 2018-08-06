@@ -9,7 +9,25 @@ import org.json.JSONObject;
 
 import java.sql.*;
 
+/**
+ * Representation of single connection with database. Creation of instance of connection can be done either by
+ * calling contructor or using {@link MySQL#createConnection()} method.
+ * <p>
+ * Constructing object alone only load all configuration required for opening connection. To actually use that connection
+ * you must call {@link #open()} first. On the end of using that connection you must call {@link #close()} to release
+ * all resources and, including registered port if SSH tunnelling is used.
+ * <p>
+ * If the connection is open (you can check it with {@link #isOpen()} method), you can pass single MySQL queries to
+ * {@link #query(String)} method.
+ */
 public class SqlConnection {
+
+    /**
+     * Creates new instance of connection. That instance cannot yet accept any queries - you need to call {@link #open()}
+     * first.
+     * @param sql MySQL module, containing all required configuration for current virtual machine
+     * @param vm current virtual machine
+     */
     public SqlConnection(MySQL sql, VirtualMachine vm) {
         SSH ssh = SSH.getModuleByName("SSH");
 
@@ -82,6 +100,13 @@ public class SqlConnection {
         sqlPort = port == null ? 3306 : Integer.parseInt(port);
     }
 
+    /**
+     * Opens new connection to database. If SSH tunnelling is used, method registers port. Opening new connection
+     * with SSH tunnelling is not possible if one of them is already opened, so you always need to call {@link #close()}
+     * if your connection is no longer needed.
+     * @throws JSchException if SSH tunnelling failed
+     * @throws SQLException if connection to database failed
+     */
     public void open() throws JSchException, SQLException {
         if (isOpen) return;
         int assignedPort = sqlPort;

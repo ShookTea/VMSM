@@ -13,6 +13,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Module representing MySQL connection.
+ * <p>
+ * MySQL module can be configured by host address, port, username, password and name of database. Port by default
+ * is 3306 and host address is {@code 127.0.0.1}, as most probably connection will be established via SSH tunnelling.
+ * If no tunnelling is used, host address should be a proper address to VM's database.
+ * <p>
+ * SSH tunnelling can be also specified. If {@link eu.shooktea.vmsm.module.ssh.SSH} module is on and configured, then
+ * configuration of tunnelling is taken automatically from there, otherwise it need to be filled in manually.
+ */
 public class MySQL extends VMModule {
     @Override
     public String getName() {
@@ -29,6 +39,10 @@ public class MySQL extends VMModule {
         return Optional.of(MysqlConfig::openMysqlConfigWindow);
     }
 
+    /**
+     * Creates new connection for current VM with its configuration.
+     * @return new MySQL connection
+     */
     public SqlConnection createConnection() {
         return new SqlConnection(this, VM.getOrThrow());
     }
