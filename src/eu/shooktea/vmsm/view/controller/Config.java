@@ -4,7 +4,11 @@ import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.view.ScreenManager;
 import eu.shooktea.vmsm.view.View;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Region;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -30,6 +34,16 @@ public class Config implements StageController {
         ScreenManager.setScreen(displayScreen.getValue());
         Storage.saveAll();
         stage.close();
+        Label alertContent = new Label("Changes to configuration has been saved. You need to restart application to apply them.");
+        alertContent.setWrapText(true);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Configuration");
+        alert.setHeaderText("Configuration saved");
+        alert.getDialogPane().setMinHeight(Region.USE_COMPUTED_SIZE);
+        alert.getDialogPane().setPrefHeight(Region.USE_COMPUTED_SIZE);
+        alert.getDialogPane().setMaxHeight(Region.USE_COMPUTED_SIZE);
+        alert.getDialogPane().setContent(alertContent);
+        alert.show();
     }
 
 
