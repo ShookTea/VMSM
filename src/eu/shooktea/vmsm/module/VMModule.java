@@ -21,14 +21,14 @@ import java.util.Optional;
  * {@link eu.shooktea.vmsm.vmtype.VMType} describes which modules can work with given type of virtual machine.
  * <p>
  * Because of the way modules work in VMSM, it's constructor should never be called anywhere except in declaration
- * of modules in {@code Module} class, where new modules are created. Modules there should be effectively singletons.
+ * of modules in {@code VMModule} class, where new modules are created. Modules there should be effectively singletons.
  */
-public abstract class Module {
+public abstract class VMModule {
     /**
-     * Main constructor of Module. Every module that rewrites it's constructor should call also this constructor. It is
+     * Main constructor of VMModule. Every module that rewrites it's constructor should call also this constructor. It is
      * only called once, during initialization of modules.
      */
-    protected Module() {
+    protected VMModule() {
         isInstalled = new SimpleBooleanProperty();
         isInstalled.bind(Bindings.createBooleanBinding(() ->
                 VM.isSet() && VM.getOrThrow().getModules().contains(this)
@@ -52,8 +52,8 @@ public abstract class Module {
      * Returns list of modules that need to be on in order to allow that module to be turned on.
      * @return array of dependencies
      */
-    public Module[] getDependencies() {
-        return new Module[0];
+    public VMModule[] getDependencies() {
+        return new VMModule[0];
     }
 
     /**
@@ -93,7 +93,7 @@ public abstract class Module {
 
     @Override
     public boolean equals(Object ob) {
-        if (ob instanceof Module) {
+        if (ob instanceof VMModule) {
             return this.getClass().getName().equals(ob.getClass().getName());
         }
         return false;
@@ -132,7 +132,7 @@ public abstract class Module {
      * @param <T> class of module
      * @return module with given class
      */
-    public static <T extends Module> T getModuleByName(String name) {
+    public static <T extends VMModule> T getModuleByName(String name) {
         switch (name.toUpperCase()) {
             case "MAGENTO": return (T)magento;
             case "SSH": return (T)ssh;

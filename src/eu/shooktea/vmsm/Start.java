@@ -23,7 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
-import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -43,8 +43,8 @@ public class Start extends Application {
         isStartCalled = true;
         View.initialize(stage);
         VM.addListener((oldVM, newVM) -> {
-            if (oldVM != null) for (Module m : oldVM.getModules()) m.afterModuleTurnedOff();
-            if (newVM != null) for (Module m : newVM.getModules()) m.afterModuleLoaded();
+            if (oldVM != null) for (VMModule m : oldVM.getModules()) m.afterModuleTurnedOff();
+            if (newVM != null) for (VMModule m : newVM.getModules()) m.afterModuleLoaded();
             VM.ifNotNull(VirtualMachine::update);
         }).vmChanged(null, VM.get());
         VM.addListener(Storage::saveAll);

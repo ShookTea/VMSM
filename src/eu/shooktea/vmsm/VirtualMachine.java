@@ -23,7 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
-import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.ModuleConfig;
 import eu.shooktea.vmsm.view.controller.simplegui.QuickGuiMenu;
 import eu.shooktea.vmsm.vmtype.VMType;
@@ -76,7 +76,7 @@ public class VirtualMachine {
         obj.put("type", type.get().getTypeName());
 
         JSONObject modules = new JSONObject();
-        for (Module module : getModules()) {
+        for (VMModule module : getModules()) {
             JSONObject config = new JSONObject();
             module.storeInJSON(config, this);
             modules.put(module.getName(), config);
@@ -145,7 +145,7 @@ public class VirtualMachine {
      * Returns list of all modules installed currently on that virtual machine.
      * @return list of installed modules
      */
-    public ObservableList<Module> getModules() {
+    public ObservableList<VMModule> getModules() {
         return modules.getValue();
     }
 
@@ -155,7 +155,7 @@ public class VirtualMachine {
      */
     public void update() {
         getType().update(this);
-        modules.forEach(Module::loopUpdate);
+        modules.forEach(VMModule::loopUpdate);
     }
 
     /**
@@ -227,7 +227,7 @@ public class VirtualMachine {
     private ObjectProperty<File> mainPath;
     private ObjectProperty<URL> pageRoot;
     private ObjectProperty<VMType> type;
-    private ListProperty<Module> modules;
+    private ListProperty<VMModule> modules;
     private ObjectProperty<Status> status = new SimpleObjectProperty<>(Status.UNDEFINED);
 
     /**
@@ -246,7 +246,7 @@ public class VirtualMachine {
 
         JSONObject modules = json.has("modules") ? json.getJSONObject("modules") : new JSONObject();
         for (String moduleName : modules.keySet()) {
-            Module module = Module.getModuleByName(moduleName);
+            VMModule module = VMModule.getModuleByName(moduleName);
             module.loadFromJSON(modules.getJSONObject(module.getName()), vm);
             vm.getModules().add(module);
         }

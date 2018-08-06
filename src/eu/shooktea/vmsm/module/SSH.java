@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * Module representing SSH connection with VM.
  */
-public class SSH extends Module {
+public class SSH extends VMModule {
     @Override
     public String getName() {
         return "SSH";

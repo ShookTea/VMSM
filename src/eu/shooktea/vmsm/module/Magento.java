@@ -9,7 +9,6 @@ import eu.shooktea.vmsm.view.controller.mage.CreateNewAdmin;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;
 import eu.shooktea.vmsm.view.controller.mage.MagentoNewModule;
 import eu.shooktea.vmsm.view.controller.mage.Modules;
-import eu.shooktea.vmsm.view.controller.mysql.MysqlConfig;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.control.Menu;
@@ -26,7 +25,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.invoke.SwitchPoint;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,7 +38,7 @@ import java.util.Optional;
 /**
  * Module representing Magento e-commerce.
  */
-public class Magento extends Module {
+public class Magento extends VMModule {
 
     @Override
     public String getName() {

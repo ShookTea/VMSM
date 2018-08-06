@@ -25,7 +25,7 @@ package eu.shooktea.vmsm.vmtype;
 
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.NewVM;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -75,7 +75,7 @@ public abstract class VMType {
 
     public List<ImageView> getQuickGuiButtons() {
         return getInstalledModulesStream(VM.getOrThrow())
-                .map(Module::getQuickGuiButtons)
+                .map(VMModule::getQuickGuiButtons)
                 .map(opt -> opt.orElse(new ArrayList<>()))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
@@ -88,20 +88,20 @@ public abstract class VMType {
     public List<MenuItem> getMenuItemsWithModules(VirtualMachine vm) {
         List<MenuItem> list = new ArrayList<>();
         list.addAll(getInstalledModulesStream(vm)
-                .map(Module::getMenuItem)
+                .map(VMModule::getMenuItem)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList()));
         return list;
     }
 
-    private Stream<Module> getInstalledModulesStream(VirtualMachine vm) {
+    private Stream<VMModule> getInstalledModulesStream(VirtualMachine vm) {
         return getModules().map(Arrays::stream).orElse(Stream.empty())
-                .map(Module::getModuleByName)
+                .map(VMModule::getModuleByName)
                 .filter(Objects::nonNull)
-                .map(obj -> (Module)obj)
+                .map(obj -> (VMModule)obj)
                 .filter(mod -> mod.isInstalled(vm))
-                .sorted(Comparator.comparing(Module::getSortValue));
+                .sorted(Comparator.comparing(VMModule::getSortValue));
     }
 
     public void update(VirtualMachine vm) {}

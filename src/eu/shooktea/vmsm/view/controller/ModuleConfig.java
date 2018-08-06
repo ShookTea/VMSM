@@ -2,7 +2,7 @@ package eu.shooktea.vmsm.view.controller;
 
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.When;
@@ -30,7 +30,7 @@ public class ModuleConfig {
         String[] modules = type.getModules().get();
         int index = 0;
         for (String module : modules) {
-            createModuleEntry(vm, Module.getModuleByName(module), index);
+            createModuleEntry(vm, VMModule.getModuleByName(module), index);
             index += 2;
         }
         ColumnConstraints textColumn = new ColumnConstraints();
@@ -38,7 +38,7 @@ public class ModuleConfig {
         grid.getColumnConstraints().add(textColumn);
     }
 
-    private void createModuleEntry(VirtualMachine vm, Module module, int rowIndex) {
+    private void createModuleEntry(VirtualMachine vm, VMModule module, int rowIndex) {
         Label name = new Label(module.getName());
         name.setFont(new Font(22));
         name.setMaxWidth(Double.MAX_VALUE);
@@ -85,7 +85,7 @@ public class ModuleConfig {
         });
     }
 
-    private Map<ToggleButton,Module> switchButtons = new HashMap<>();
+    private Map<ToggleButton, VMModule> switchButtons = new HashMap<>();
 
     public static void openModuleConfigWindow(Object... lambdaArgs) {
         View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ModuleConfig.fxml", "Module configuration");

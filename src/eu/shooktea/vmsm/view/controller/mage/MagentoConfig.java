@@ -5,7 +5,7 @@ import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.Magento;
 import eu.shooktea.vmsm.module.MagentoReport;
-import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.fxml.FXML;
@@ -30,7 +30,7 @@ public class MagentoConfig implements StageController {
     @FXML
     private void initialize() {
         vm = VM.getOrThrow();
-        magento = Module.getModuleByName("Magento");
+        magento = VMModule.getModuleByName("Magento");
         loadSetting(magento, vm, magentoPath, "path");
         loadSetting(magento, vm, adminLogin, "adm_login");
 
@@ -51,7 +51,7 @@ public class MagentoConfig implements StageController {
         }
     }
 
-    private void loadSetting(Module module, VirtualMachine vm, TextField field, String name) {
+    private void loadSetting(VMModule module, VirtualMachine vm, TextField field, String name) {
         String value = module.getStringSetting(vm, name);
         if (value != null) {
             field.setText(value);
@@ -98,7 +98,7 @@ public class MagentoConfig implements StageController {
         stage.close();
     }
 
-    private void saveConf(TextField textField, String name, Module module, VirtualMachine vm) {
+    private void saveConf(TextField textField, String name, VMModule module, VirtualMachine vm) {
         String trim = textField.getText().trim();
         if (trim.isEmpty()) {
             module.removeSetting(vm, name);

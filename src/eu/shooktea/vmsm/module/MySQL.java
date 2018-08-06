@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class MySQL extends Module {
+public class MySQL extends VMModule {
     @Override
     public String getName() {
         return "MySQL";
