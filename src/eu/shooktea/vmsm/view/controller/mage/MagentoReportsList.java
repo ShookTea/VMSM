@@ -38,7 +38,7 @@ public class MagentoReportsList {
         TableColumn<MagentoReport, LocalDateTime> date = new TableColumn<>("Time");
         date.setCellValueFactory(new PropertyValueFactory<>("time"));
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss");
-        date.setCellFactory(column -> new TableCell<>() {
+        date.setCellFactory(column -> new TableCell<MagentoReport, LocalDateTime>() {
             @Override
             protected void updateItem(LocalDateTime item, boolean empty) {
                 super.updateItem(item, empty);
