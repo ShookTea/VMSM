@@ -100,7 +100,7 @@ public class View {
         return primaryStage;
     }
 
-    public static <T extends Region, C> C createNewWindow(String fxmlPath, String title, boolean isModal) {
+    public static <T extends Region, C> C createNewWindow(String fxmlPath, String title) {
         try {
             URL location = View.class.getResource(fxmlPath);
             FXMLLoader loader = new FXMLLoader(location);
@@ -113,24 +113,13 @@ public class View {
             }
             stage.setScene(new Scene(element));
             stage.setTitle(title);
-            if (isModal) {
-                stage.initOwner(primaryStage);
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.showAndWait();
-            }
-            else {
-                stage.show();
-            }
+            stage.show();
             return controller;
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
             return null;
         }
-    }
-
-    public static <T extends Region, C> C createNewWindow(String fxmlPath, String title) {
-        return createNewWindow(fxmlPath, title, false);
     }
 
     public static void openURL(URL url) {
