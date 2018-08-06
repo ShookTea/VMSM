@@ -3,7 +3,7 @@ package eu.shooktea.vmsm.view.controller.mysql;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.MySQL;
+import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.SSH;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.StageController;

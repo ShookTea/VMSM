@@ -1,7 +1,8 @@
-package eu.shooktea.vmsm.module;
+package eu.shooktea.vmsm.module.mysql;
 
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
+import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.mysql.MysqlConfig;
 import eu.shooktea.vmsm.view.controller.mysql.MysqlTerminal;
 import javafx.scene.control.Menu;

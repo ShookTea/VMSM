@@ -1,9 +1,10 @@
-package eu.shooktea.vmsm.module;
+package eu.shooktea.vmsm.module.mysql;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.SSH;
 import org.json.JSONObject;
 
 import java.sql.*;

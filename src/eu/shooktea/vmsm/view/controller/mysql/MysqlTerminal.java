@@ -1,12 +1,10 @@
 package eu.shooktea.vmsm.view.controller.mysql;
 
 import com.jcraft.jsch.JSchException;
-import eu.shooktea.vmsm.module.MySQL;
-import eu.shooktea.vmsm.module.SqlConnection;
+import eu.shooktea.vmsm.module.mysql.MySQL;
+import eu.shooktea.vmsm.module.mysql.SqlConnection;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.StageController;
-import javafx.application.Platform;
-import javafx.beans.binding.IntegerBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;

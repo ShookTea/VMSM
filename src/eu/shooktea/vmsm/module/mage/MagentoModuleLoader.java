@@ -1,8 +1,8 @@
 package eu.shooktea.vmsm.module.mage;
 
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.MySQL;
-import eu.shooktea.vmsm.module.SqlConnection;
+import eu.shooktea.vmsm.module.mysql.MySQL;
+import eu.shooktea.vmsm.module.mysql.SqlConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
