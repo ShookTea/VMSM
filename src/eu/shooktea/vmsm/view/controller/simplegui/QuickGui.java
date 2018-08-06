@@ -75,7 +75,7 @@ class QuickGui {
         requestedExit = true;
         new Thread(() -> {
             try {
-                Thread.sleep(2000); //2 seconds
+                Thread.sleep(5000); //5 seconds
             } catch (InterruptedException ignored) {}
             Platform.runLater(() -> {
                 if (requestedExit) {
