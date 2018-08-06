@@ -26,7 +26,7 @@ package eu.shooktea.vmsm.vmtype;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.VirtualMachine.Status;
+import eu.shooktea.vmsm.Status;
 import eu.shooktea.vmsm.view.controller.NewVM;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;

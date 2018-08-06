@@ -34,16 +34,13 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Single virtual machine with HTTP server on it.
@@ -161,18 +158,39 @@ public class VirtualMachine {
         modules.forEach(Module::loopUpdate);
     }
 
+    /**
+     * Returns VM status property.
+     * @return status property
+     * @see Status
+     */
     public ObjectProperty<Status> statusProperty() {
         return status;
     }
 
+    /**
+     * Sets new status of VM.
+     * @param status new status
+     * @see Status
+     */
     public void setStatus(Status status) {
         statusProperty().setValue(status);
     }
 
+    /**
+     * Returns status of VM.
+     * @return status of VM
+     * @see Status
+     */
     public Status getStatus() {
         return statusProperty().getValue();
     }
 
+    /**
+     * Returns VM's quick menu items. Quick menu is displayed in quarter circle after pressing left mouse button.
+     * Menu items are mostly dependent from type of VM (and, indirectly, from its modules), with one exception: every
+     * VM with set root address will have "Home" button that launches web browser with that address.
+     * @return quick menu items of VM.
+     */
     public List<ImageView> getQuickMenuItems() {
         List<ImageView> ret = new ArrayList<>();
 
@@ -183,6 +201,12 @@ public class VirtualMachine {
         return ret;
     }
 
+    /**
+     * Returns VM's main menu item. Main menu is displayed after pressing right mouse button. These are mostly dependent
+     * from type of VM. If choosen VM type returns full menu instead of single menu item AND it supports at least one
+     * module, this method will return that menu with additional separator and "Module configuration" menu item.
+     * @return menu items of VM
+     */
     public List<MenuItem> createMenuItem() {
         List<MenuItem> ret = new ArrayList<>();
         getType().getMenuItem(this).ifPresent(item -> {
@@ -227,36 +251,5 @@ public class VirtualMachine {
             vm.getModules().add(module);
         }
         return vm;
-    }
-
-    public enum Status {
-        RUNNING, STOPPED, UNDEFINED;
-
-        public String getResourceName() {
-            switch (this) {
-                case RUNNING:   return "green_ball.png";
-                case STOPPED:   return "red_ball.png";
-                case UNDEFINED: return "yellow_ball.png";
-                default: throw new RuntimeException();
-            }
-        }
-
-        public String getTooltipText() {
-            switch (this) {
-                case RUNNING:   return "VM is on.";
-                case STOPPED:   return "VM is off.";
-                case UNDEFINED: return null;
-                default: throw new RuntimeException();
-            }
-        }
-
-        public Color getInfoColor() {
-            switch (this) {
-                case RUNNING:   return Color.GREEN;
-                case STOPPED:   return Color.RED;
-                case UNDEFINED: return null;
-                default: throw new RuntimeException();
-            }
-        }
     }
 }

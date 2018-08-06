@@ -117,11 +117,7 @@ public class Storage {
         pw.close();
     }
 
-    /**
-     * Tries to load configuration data. If configuration file doesn't exist, method does nothing. If both configuration file
-     * and backup file exist, but configuration file is empty, data from backup file is used instead.
-     */
-    public static void loadAll() {
+    static void loadAll() {
         try {
             tryLoadAll();
         } catch (IOException e) {
@@ -200,6 +196,15 @@ public class Storage {
         return file;
     }
 
+    /**
+     * Returns list of ignored Vagrant machines. These machines were added to that list during scan for existing
+     * VMs that weren't manually added to VMSM by user. If user doesn't want to see notifications about VM every
+     * one minute, ignoring VM will add that VM to this list. During scan VMSM doesn't display notification about
+     * any of the VMs in that list.
+     * <p>
+     * The scan itself is run by command {@code vagrant global-status}.
+     * @return list of Vagrant machines ignored by user.
+     */
     public static List<String> getIgnoredVagrantMachines() {
         return ignoredVagrantMachines;
     }
@@ -222,9 +227,14 @@ public class Storage {
     private static File backupFile = getBackupFile(vmsmFile);
     private static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
     private static List<String> ignoredVagrantMachines = new ArrayList<>();
+
+    /**
+     *Map used as configuration of VMSM. Values are stored in JSON under "config" label. These values can be of any
+     * correct JSON type, including {@link JSONObject} and {@link JSONArray}.
+     */
     public static Map<String, Object> config = new HashMap<>();
 
-    public static void checkVmsmFiles() {
+    static void checkVmsmFiles() {
         try {
             if (!vmsmFile.getParentFile().exists()) vmsmFile.getParentFile().mkdirs();
             if (!vmsmFile.exists())
