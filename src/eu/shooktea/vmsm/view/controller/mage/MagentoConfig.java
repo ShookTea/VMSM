@@ -4,7 +4,7 @@ import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.mage.Magento;
-import eu.shooktea.vmsm.module.mage.MagentoReport;
+import eu.shooktea.vmsm.module.mage.Report;
 import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.StageController;
@@ -22,7 +22,7 @@ public class MagentoConfig implements StageController {
     @FXML private TextField magentoPath;
     @FXML private TextField adminLogin;
     @FXML private Label magentoInfo;
-    @FXML private ChoiceBox<MagentoReport.HoldTime> holdReports;
+    @FXML private ChoiceBox<Report.HoldTime> holdReports;
 
     private VirtualMachine vm;
     private Magento magento;
@@ -34,7 +34,7 @@ public class MagentoConfig implements StageController {
         loadSetting(magento, vm, magentoPath, "path");
         loadSetting(magento, vm, adminLogin, "adm_login");
 
-        holdReports.setItems(MagentoReport.HoldTime.createList());
+        holdReports.setItems(Report.HoldTime.createList());
         Long holdValue = null;
         Object readHoldValue = magento.getSetting(vm, "report_keep_time");
         if (readHoldValue instanceof Long) {
@@ -44,10 +44,10 @@ public class MagentoConfig implements StageController {
             holdValue = ((Integer)readHoldValue).longValue();
         }
 
-        if (holdValue == null) holdReports.setValue(MagentoReport.HoldTime.MONTH);
+        if (holdValue == null) holdReports.setValue(Report.HoldTime.MONTH);
         else {
-            MagentoReport.HoldTime time = MagentoReport.HoldTime.fromTime(holdValue);
-            holdReports.setValue(time == null ? MagentoReport.HoldTime.MONTH : time);
+            Report.HoldTime time = Report.HoldTime.fromTime(holdValue);
+            holdReports.setValue(time == null ? Report.HoldTime.MONTH : time);
         }
     }
 

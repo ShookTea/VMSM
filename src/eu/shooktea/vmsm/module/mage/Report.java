@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 /**
  * Class representing single exception report in Magento.
  */
-public class MagentoReport {
-    private MagentoReport(String name, long timestamp, String text) {
+public class Report {
+    private Report(String name, long timestamp, String text) {
         this.name = new SimpleStringProperty(name);
         this.timestamp = new SimpleLongProperty(timestamp);
         this.text = new SimpleStringProperty(text);
@@ -104,7 +104,7 @@ public class MagentoReport {
         allReports.clear();
         allReports.addAll(getReportsFromConfig(module, vm, reportsDir));
         List<String> reportNames = allReports.stream()
-                .map(MagentoReport::getName)
+                .map(Report::getName)
                 .collect(Collectors.toList());
         Arrays.stream(reportsDir.listFiles())
                 .filter(file -> !reportNames.contains(file.getName()))
@@ -117,7 +117,7 @@ public class MagentoReport {
                     } catch (IOException e) {
                         throw new RuntimeException("Cannot read report text from file " + file.toString(), e);
                     }
-                    MagentoReport newReport = new MagentoReport(name, timestamp, text);
+                    Report newReport = new Report(name, timestamp, text);
                     allReports.add(newReport);
                     notifyReports.add(newReport);
                     CHANGES = true;
@@ -125,8 +125,8 @@ public class MagentoReport {
         storeReportsInConfig(module, vm, allReports);
     }
 
-    public static ObservableList<MagentoReport> notifyReports = FXCollections.observableArrayList();
-    public static ObservableList<MagentoReport> allReports = FXCollections.observableArrayList();
+    public static ObservableList<Report> notifyReports = FXCollections.observableArrayList();
+    public static ObservableList<Report> allReports = FXCollections.observableArrayList();
     public static IntegerProperty newReportsCount = new SimpleIntegerProperty();
     private static VirtualMachine previousMachine = null;
 
@@ -134,9 +134,9 @@ public class MagentoReport {
         newReportsCount.bind(Bindings.createIntegerBinding(() -> notifyReports.size(), notifyReports));
     }
 
-    private static void storeReportsInConfig(Magento module, VirtualMachine vm, List<MagentoReport> reports) {
+    private static void storeReportsInConfig(Magento module, VirtualMachine vm, List<Report> reports) {
         JSONArray array = new JSONArray();
-        for (MagentoReport report : reports) {
+        for (Report report : reports) {
             JSONObject obj = new JSONObject();
             obj.put("name", report.getName());
             obj.put("timestamp", report.getTimestamp());
@@ -147,12 +147,12 @@ public class MagentoReport {
         if (CHANGES) Storage.saveAll();
     }
 
-    private static ObservableList<MagentoReport> getReportsFromConfig(Magento module, VirtualMachine vm, File reportsDir) {
+    private static ObservableList<Report> getReportsFromConfig(Magento module, VirtualMachine vm, File reportsDir) {
         Object reportsObj = module.getSetting(vm, "reports");
         if (reportsObj == null) reportsObj = new JSONArray();
         if (!(reportsObj instanceof JSONArray)) throw new RuntimeException("Magento reports are not array; reports.toString = \"" + reportsObj.toString() + "\"");
         JSONArray reports = (JSONArray)reportsObj;
-        ObservableList<MagentoReport> reportsFromConfig = FXCollections.observableArrayList();
+        ObservableList<Report> reportsFromConfig = FXCollections.observableArrayList();
         long currentTimestamp = System.currentTimeMillis();
         reports.iterator().forEachRemaining(obj -> {
             JSONObject json = (JSONObject)obj;
@@ -164,7 +164,7 @@ public class MagentoReport {
             if (currentTimestamp - timestamp > MAX_TIME_DIFFERENCE) {
                 keep = new File(reportsDir, name).exists();
             }
-            if (keep) reportsFromConfig.add(new MagentoReport(name, timestamp, text));
+            if (keep) reportsFromConfig.add(new Report(name, timestamp, text));
             if (!keep) CHANGES = true;
         });
         return reportsFromConfig;

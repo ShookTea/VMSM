@@ -17,9 +17,9 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.util.*;
 
-public class MagentoModuleLoader extends Task<ObservableList<MagentoModule>> {
+public class ModuleLoader extends Task<ObservableList<MagentoModule>> {
 
-    public MagentoModuleLoader(Magento magento, VirtualMachine vm) {
+    public ModuleLoader(Magento magento, VirtualMachine vm) {
         this.magento = magento;
         this.vm = vm;
         this.versions = new HashMap<>();

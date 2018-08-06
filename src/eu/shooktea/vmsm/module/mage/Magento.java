@@ -67,7 +67,7 @@ public class Magento extends VMModule {
         if (!root.exists()) return;
 
         File reports = new File(root, "var/report");
-        if (reports.exists()) MagentoReport.update(this, vm, reports);
+        if (reports.exists()) Report.update(this, vm, reports);
     }
 
     private String getAdminAddress(VirtualMachine vm) {
@@ -216,7 +216,7 @@ public class Magento extends VMModule {
     }
 
     public Task<ObservableList<MagentoModule>> createModuleLoaderTask() {
-        return new MagentoModuleLoader(this, VM.getOrThrow());
+        return new ModuleLoader(this, VM.getOrThrow());
     }
 
     private void loginAsAdmin(VirtualMachine vm) {
