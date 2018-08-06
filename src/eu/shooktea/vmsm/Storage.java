@@ -35,7 +35,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -108,6 +110,7 @@ public class Storage {
             JSONArray array = new JSONArray(ignoredVagrantMachines);
             root.put("ignored_vagrant_machines", array);
         }
+        root.put("config", new JSONObject(Storage.config));
 
         PrintWriter pw = new PrintWriter(vmsmFile);
         pw.println(root.toString());
@@ -159,6 +162,11 @@ public class Storage {
         if (obj.has("ignored_vagrant_machines")) {
             JSONArray array = obj.getJSONArray("ignored_vagrant_machines");
             array.iterator().forEachRemaining(entry -> ignoredVagrantMachines.add(entry.toString()));
+        }
+
+        Storage.config.clear();
+        if (obj.has("config")) {
+            Storage.config.putAll(obj.getJSONObject("config").toMap());
         }
     }
 
@@ -214,6 +222,7 @@ public class Storage {
     private static File backupFile = getBackupFile(vmsmFile);
     private static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
     private static List<String> ignoredVagrantMachines = new ArrayList<>();
+    public static Map<String, Object> config = new HashMap<>();
 
     public static void checkVmsmFiles() {
         try {

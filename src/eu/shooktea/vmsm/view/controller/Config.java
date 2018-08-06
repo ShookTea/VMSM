@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.view.controller;
 
+import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.view.View;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -37,6 +38,9 @@ public class Config implements StageController {
             screenMap.put(converter.toString(screen), screen);
         }
         displayScreen.setConverter(converter);
+        Screen val = converter.fromString((String)Storage.config.get("screen"));
+        if (val == null) val = screens.get(0);
+        displayScreen.setValue(val);
     }
 
 
