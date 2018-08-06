@@ -1,7 +1,6 @@
-package eu.shooktea.vmsm.module;
+package eu.shooktea.vmsm.module.mage;
 
 import eu.shooktea.vmsm.Storage;
-import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;

@@ -1,7 +1,7 @@
 package eu.shooktea.vmsm.view.controller.mage;
 
-import eu.shooktea.vmsm.module.Magento;
-import eu.shooktea.vmsm.module.MagentoModule;
+import eu.shooktea.vmsm.module.mage.Magento;
+import eu.shooktea.vmsm.module.mage.MagentoModule;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.StageController;
 import javafx.application.Platform;

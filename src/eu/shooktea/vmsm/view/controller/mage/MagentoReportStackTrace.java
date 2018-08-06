@@ -1,6 +1,6 @@
 package eu.shooktea.vmsm.view.controller.mage;
 
-import eu.shooktea.vmsm.module.MagentoReport;
+import eu.shooktea.vmsm.module.mage.MagentoReport;
 import eu.shooktea.vmsm.view.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;

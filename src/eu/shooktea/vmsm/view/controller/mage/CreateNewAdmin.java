@@ -3,7 +3,7 @@ package eu.shooktea.vmsm.view.controller.mage;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.Magento;
+import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.module.MySQL;
 import eu.shooktea.vmsm.module.SqlConnection;
 import eu.shooktea.vmsm.view.View;

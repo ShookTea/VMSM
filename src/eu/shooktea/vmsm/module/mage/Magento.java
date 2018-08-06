@@ -1,9 +1,12 @@
-package eu.shooktea.vmsm.module;
+package eu.shooktea.vmsm.module.mage;
 
 import com.jcraft.jsch.JSchException;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.MySQL;
+import eu.shooktea.vmsm.module.SqlConnection;
+import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.mage.CreateNewAdmin;
 import eu.shooktea.vmsm.view.controller.mage.MagentoConfig;

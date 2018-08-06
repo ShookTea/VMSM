@@ -2,8 +2,8 @@ package eu.shooktea.vmsm.view.controller.mage;
 
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.Magento;
-import eu.shooktea.vmsm.module.MagentoReport;
+import eu.shooktea.vmsm.module.mage.Magento;
+import eu.shooktea.vmsm.module.mage.MagentoReport;
 import eu.shooktea.vmsm.view.View;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

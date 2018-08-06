@@ -1,4 +1,4 @@
-package eu.shooktea.vmsm.module;
+package eu.shooktea.vmsm.module.mage;
 
 import eu.shooktea.vmsm.Toolkit;
 import javafx.beans.property.ReadOnlyStringProperty;
