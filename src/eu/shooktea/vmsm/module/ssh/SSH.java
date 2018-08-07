@@ -5,7 +5,7 @@ import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.ssh.SshConfig;
-import eu.shooktea.vmsm.view.controller.ssh.SshTerminal;
+import eu.shooktea.vmsm.view.controller.ssh.Terminal;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
@@ -41,7 +41,7 @@ public class SSH extends VMModule {
      * @return new channel of communication or {@code null} if connection timed out.
      * @throws JSchException if anything wrong happens during connection
      */
-    public Channel openChannel(VirtualMachine vm, UserInfo ui, String type) throws JSchException {
+    public Channel openChannel(VirtualMachine vm, DefaultUserInfo ui, String type) throws JSchException {
         String user = getStringSetting(vm, "user");
         String passwd = getStringSetting(vm, "password");
         String host = getStringSetting(vm, "host");
@@ -61,10 +61,22 @@ public class SSH extends VMModule {
         return channel;
     }
 
+    /**
+     * Creates new connection to shell.
+     * @param vm virtual machine
+     * @param ui user info
+     * @return connection to shell via SSH
+     * @throws JSchException if anything wrong happens during connection
+     */
+    public SshConnection createConnection(VirtualMachine vm, DefaultUserInfo ui) throws JSchException {
+        ChannelShell shell = (ChannelShell)openChannel(vm, ui, "shell");
+        return new SshConnection(shell);
+    }
+
     @Override
     public List<ImageView> getQuickGuiButtons() {
         ImageView openTerminal = Toolkit.createQuickGuiButton("terminal.png", "Open SSH terminal");
-        openTerminal.setOnMouseClicked(SshTerminal::openSshTerminal);
+        openTerminal.setOnMouseClicked(Terminal::openTerminal);
         return Collections.singletonList(openTerminal);
     }
 
@@ -73,7 +85,7 @@ public class SSH extends VMModule {
         Menu root = new Menu("SSH", Toolkit.createMenuImage("terminal.png"));
 
         MenuItem openTerminal = new MenuItem("Open terminal...");
-        openTerminal.setOnAction(SshTerminal::openSshTerminal);
+        openTerminal.setOnAction(Terminal::openTerminal);
 
         MenuItem config = new MenuItem("SSH configuration...", Toolkit.createMenuImage("run.png"));
         config.setOnAction(SshConfig::openSshConfigWindow);
@@ -85,5 +97,14 @@ public class SSH extends VMModule {
     @Override
     public int getSortValue() {
         return 1000;
+    }
+
+    /**
+     * Converts given shell-fromatted string to HTML.
+     * @param ssh shell-formatted string
+     * @return HTML webpage
+     */
+    public static String sshToHtml(String ssh) {
+        return SshHtmlConverter.sshToHtml(ssh);
     }
 }
