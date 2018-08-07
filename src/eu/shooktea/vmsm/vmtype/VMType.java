@@ -169,8 +169,9 @@ public abstract class VMType {
     }
 
     /**
-     * Checks if root path of VM should be a directory.
-     * @return
+     * Checks if root path of VM should be a directory. It is used by VM creation window, when it needs to choose
+     * whether accept directories or files.
+     * @return {@code true} if VM's root path is a directory, {@code false} otherwise.
      */
     public boolean isMainPathDirectory() {
         return true;
