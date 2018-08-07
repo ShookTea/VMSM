@@ -36,7 +36,7 @@ public class Terminal implements UserInfo, StageController {
             connection.init();
             reloadContent();
         } catch (JSchException | IOException e) {
-            connection.println(e.getMessage());
+            connection.println(e);
         }
     }
 
@@ -109,7 +109,7 @@ public class Terminal implements UserInfo, StageController {
             try {
                 connection.close();
             } catch (JSchException e1) {
-                connection.println(e1.getMessage());
+                connection.println(e1);
             }
         });
     }

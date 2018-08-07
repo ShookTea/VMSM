@@ -25,7 +25,8 @@ public class SshConnection {
         if (shell == null) return;
         shell.setAgentForwarding(true);
         Console console = new Console();
-        shell.setOutputStream(new PrintStream(console, true));
+        stream = new PrintStream(console, true);
+        shell.setOutputStream(stream);
 
         PipedInputStream pin = new PipedInputStream();
         pout = new PipedOutputStream(pin);
@@ -65,6 +66,10 @@ public class SshConnection {
         print(text + "\n");
     }
 
+    public void println(Throwable thr) {
+        thr.printStackTrace(stream);
+    }
+
     private void pushCommand() {
         String command = input.trim();
         consoleDisplay += command + "\n";
@@ -72,6 +77,14 @@ public class SshConnection {
         if (command.isEmpty()) return;
 
         executingCommand = true;
+        byte[] line = command.getBytes();
+        try {
+            pout.write(line, 0, line.length);
+            pout.write('\n');
+        } catch (IOException e1) {
+            e1.printStackTrace(stream);
+        }
+        executingCommand = false;
     }
 
     public String getAsHtml() {
@@ -91,6 +104,7 @@ public class SshConnection {
 
     private final ChannelShell shell;
     private PipedOutputStream pout;
+    private PrintStream stream;
     private String consoleDisplay = "";
     private String input = "";
     private boolean executingCommand = false;
