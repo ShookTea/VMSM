@@ -25,11 +25,11 @@ public class Terminal implements UserInfo {
     private void initialize() {
         try {
             engine = view.getEngine();
-            createContent("OOO<br/>iii");
             view.requestFocus();
             ssh = SSH.getModuleByName("SSH");
             vm = VM.getOrThrow();
             connection = ssh.createConnection(vm, this);
+            reloadContent();
         } catch (JSchException e) {
             e.printStackTrace();
         }
@@ -38,11 +38,11 @@ public class Terminal implements UserInfo {
     @FXML
     private void keyEvent(KeyEvent event) {
         connection.keyTyped(event);
-        createContent(connection.getAsHtml());
+        reloadContent();
     }
 
-    private void createContent(String content) {
-        engine.loadContent(HTML_OPEN + content + HTML_CLOSE);
+    private void reloadContent() {
+        engine.loadContent(HTML_OPEN + connection.getAsHtml() + HTML_CLOSE);
     }
 
     private static final String HTML_STYLE =
