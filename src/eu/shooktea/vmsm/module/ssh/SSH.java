@@ -5,7 +5,6 @@ import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.ssh.SshConfig;
-import eu.shooktea.vmsm.view.controller.ssh.SshTerminal;
 import eu.shooktea.vmsm.view.controller.ssh.Terminal;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -88,13 +87,10 @@ public class SSH extends VMModule {
         MenuItem openTerminal = new MenuItem("Open terminal...");
         openTerminal.setOnAction(Terminal::openTerminal);
 
-        MenuItem oldTerminal = new MenuItem("Open old terminal...");
-        oldTerminal.setOnAction(SshTerminal::openSshTerminal);
-
         MenuItem config = new MenuItem("SSH configuration...", Toolkit.createMenuImage("run.png"));
         config.setOnAction(SshConfig::openSshConfigWindow);
 
-        root.getItems().addAll(oldTerminal, config);
+        root.getItems().addAll(openTerminal, config);
         return Optional.of(root);
     }
 
