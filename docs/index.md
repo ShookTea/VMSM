@@ -15,7 +15,6 @@
 ### For developers
 * [Cloning and dependencies](dev/init_project.md)
 * [JavaDoc](javadoc/index.html)
-* Rules of involving
 * Toolkit
 * Storage
 * View
