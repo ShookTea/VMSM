@@ -72,6 +72,7 @@ public class SshConnection {
 
     public void print(String text) {
         consoleDisplay += text;
+        if (consoleDisplay.endsWith("\u001B[H\u001B[J")) consoleDisplay = "";
         onTerminalUpdate.run();
     }
 
@@ -135,7 +136,7 @@ public class SshConnection {
     private class Console extends OutputStream {
         public void write(int i) {
             Platform.runLater(() -> {
-                consoleDisplay += String.valueOf((char)i);
+                print(String.valueOf((char)i));
                 onTerminalUpdate.run();
             });
         }
