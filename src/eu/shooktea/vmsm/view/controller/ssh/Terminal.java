@@ -1,9 +1,9 @@
 package eu.shooktea.vmsm.view.controller.ssh;
 
 import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.UserInfo;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.ssh.DefaultUserInfo;
 import eu.shooktea.vmsm.module.ssh.SSH;
 import eu.shooktea.vmsm.module.ssh.SshConnection;
 import eu.shooktea.vmsm.view.StageController;
@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import javax.swing.*;
 import java.io.IOException;
 
-public class Terminal implements UserInfo, StageController {
+public class Terminal implements DefaultUserInfo, StageController {
     @FXML private WebView view;
     private WebEngine engine;
     private SshConnection connection;
@@ -63,26 +63,6 @@ public class Terminal implements UserInfo, StageController {
 
     public static void openTerminal(Object... lambdaArgs) {
         View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ssh/Terminal.fxml", "SSH terminal");
-    }
-
-    @Override
-    public String getPassphrase() {
-        return JOptionPane.showInputDialog("SSH terminal requested passphrase. Your passphrase: ");
-    }
-
-    @Override
-    public String getPassword() {
-        return JOptionPane.showInputDialog("SSH terminal requested password. Your password: ");
-    }
-
-    @Override
-    public boolean promptPassword(String message) {
-        return promptYesNo(message);
-    }
-
-    @Override
-    public boolean promptPassphrase(String message) {
-        return promptYesNo(message);
     }
 
     @Override

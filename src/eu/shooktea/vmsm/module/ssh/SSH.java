@@ -41,7 +41,7 @@ public class SSH extends VMModule {
      * @return new channel of communication or {@code null} if connection timed out.
      * @throws JSchException if anything wrong happens during connection
      */
-    public Channel openChannel(VirtualMachine vm, UserInfo ui, String type) throws JSchException {
+    public Channel openChannel(VirtualMachine vm, DefaultUserInfo ui, String type) throws JSchException {
         String user = getStringSetting(vm, "user");
         String passwd = getStringSetting(vm, "password");
         String host = getStringSetting(vm, "host");
@@ -68,7 +68,7 @@ public class SSH extends VMModule {
      * @return connection to shell via SSH
      * @throws JSchException if anything wrong happens during connection
      */
-    public SshConnection createConnection(VirtualMachine vm, UserInfo ui) throws JSchException {
+    public SshConnection createConnection(VirtualMachine vm, DefaultUserInfo ui) throws JSchException {
         ChannelShell shell = (ChannelShell)openChannel(vm, ui, "shell");
         return new SshConnection(shell);
     }
