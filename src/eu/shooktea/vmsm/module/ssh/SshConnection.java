@@ -38,7 +38,7 @@ public class SshConnection {
         if (event.getCode() == KeyCode.UNDEFINED) {
             String character = event.getCharacter();
             if (character.equals("\r") || character.equals("\n")) {
-                print("\n");
+                pushCommand();
             }
             else if (character.equals(" ") || character.equals("\t")) {
                 input += character;
@@ -60,6 +60,13 @@ public class SshConnection {
         print(text + "\n");
     }
 
+    private void pushCommand() {
+        String command = input;
+        consoleDisplay += command + "\nssh# ";
+        input = "";
+
+    }
+
     public String getAsHtml() {
         String toRet = consoleDisplay + input;
         return toRet.replaceAll("\\n", "<br/>");
@@ -67,7 +74,7 @@ public class SshConnection {
 
     private final ChannelShell shell;
     private PipedOutputStream pout;
-    private String consoleDisplay = "";
+    private String consoleDisplay = "ssh# ";
     private String input = "";
 
     private class Console extends OutputStream {
