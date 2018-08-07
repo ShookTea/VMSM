@@ -1,4 +1,4 @@
-[To previous page](../index.md)
+[← back to index](../index.md)
 
 ## Installation
 
