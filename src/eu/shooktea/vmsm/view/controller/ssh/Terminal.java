@@ -13,6 +13,7 @@ public class Terminal {
     private void initialize() {
         engine = view.getEngine();
         createContent("OOO<br/>iii");
+        view.requestFocus();
     }
 
     private void createContent(String content) {

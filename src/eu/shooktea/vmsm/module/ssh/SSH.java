@@ -86,12 +86,15 @@ public class SSH extends VMModule {
         Menu root = new Menu("SSH", Toolkit.createMenuImage("terminal.png"));
 
         MenuItem openTerminal = new MenuItem("Open terminal...");
-        openTerminal.setOnAction(SshTerminal::openSshTerminal);
+        openTerminal.setOnAction(Terminal::openTerminal);
+
+        MenuItem oldTerminal = new MenuItem("Open old terminal...");
+        oldTerminal.setOnAction(SshTerminal::openSshTerminal);
 
         MenuItem config = new MenuItem("SSH configuration...", Toolkit.createMenuImage("run.png"));
         config.setOnAction(SshConfig::openSshConfigWindow);
 
-        root.getItems().addAll(openTerminal, config);
+        root.getItems().addAll(oldTerminal, config);
         return Optional.of(root);
     }
 
