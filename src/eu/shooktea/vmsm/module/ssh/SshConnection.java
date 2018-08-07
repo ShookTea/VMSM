@@ -110,7 +110,7 @@ public class SshConnection {
                 .replaceAll("\\n", "<br/>")
                 ;
         toRet = "<span>" + toRet + "</span>";
-        return toRet;
+        return SshHtmlConverter.sshToHtml(toRet);
     }
 
     public void close() throws JSchException {
