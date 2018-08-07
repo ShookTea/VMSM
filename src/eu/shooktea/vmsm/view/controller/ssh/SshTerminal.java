@@ -6,8 +6,8 @@ import com.jcraft.jsch.UserInfo;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.ssh.SSH;
-import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.StageController;
+import eu.shooktea.vmsm.view.View;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -16,8 +16,6 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.*;
-import java.util.ArrayDeque;
-import java.util.Queue;
 
 public class SshTerminal implements UserInfo, StageController {
 
