@@ -46,7 +46,9 @@ public class Terminal implements DefaultUserInfo, StageController {
     }
 
     private void reloadContent() {
-        engine.loadContent(connection.getAsHtml());
+        String consoleContent = connection.getConsoleContent();
+        String htmlContent = SSH.sshToHtml(consoleContent);
+        engine.loadContent(htmlContent);
     }
 
     public static void openTerminal(Object... lambdaArgs) {

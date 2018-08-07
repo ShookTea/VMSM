@@ -98,4 +98,13 @@ public class SSH extends VMModule {
     public int getSortValue() {
         return 1000;
     }
+
+    /**
+     * Converts given shell-fromatted string to HTML.
+     * @param ssh shell-formatted string
+     * @return HTML webpage
+     */
+    public static String sshToHtml(String ssh) {
+        return SshHtmlConverter.sshToHtml(ssh);
+    }
 }

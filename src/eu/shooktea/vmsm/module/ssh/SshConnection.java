@@ -102,9 +102,8 @@ public class SshConnection {
         executingCommand = false;
     }
 
-    public String getAsHtml() {
-        String toRet = consoleDisplay + input;
-        return SshHtmlConverter.sshToHtml(toRet);
+    public String getConsoleContent() {
+        return consoleDisplay + input;
     }
 
     public void close() throws JSchException {
