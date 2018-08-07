@@ -106,6 +106,7 @@ public class SqlConnection {
      * if your connection is no longer needed.
      * @throws JSchException if SSH tunnelling failed
      * @throws SQLException if connection to database failed
+     * @see #close()
      */
     public void open() throws JSchException, SQLException {
         if (isOpen) return;
@@ -118,6 +119,12 @@ public class SqlConnection {
         isOpen = true;
     }
 
+    /**
+     * Closes connection to database. It is required to close every connection that isn't needed anymore. If connection
+     * uses SSH tunnelling then opening new connection is not possible when the previous one is still not closed.
+     * @throws SQLException if closing SSH tunnelling failed. It will not be thrown if connection doesn't use SSH tunnelling.
+     * @see #open()
+     */
     public void close() throws SQLException {
         if (!isOpen) return;
         if (session != null) session.disconnect();
@@ -125,10 +132,29 @@ public class SqlConnection {
         isOpen = false;
     }
 
+    /**
+     * Checks if connection is currently open. Connection must be opened before sending queries to MySQL and must be
+     * closed when it is no longer needed.
+     * @return {@code true} if connection is open, {@code false} otherwise.
+     * @see #open()
+     * @see #close()
+     */
     public boolean isOpen() {
         return isOpen;
     }
 
+    /**
+     * Sends SQL query to database. If query is a {@code SELECT} query then method will return {@link ResultSet}
+     * with all values returned by database, otherwise method will return {@link Integer} with count of updated rows.
+     * <p>
+     * Connection to database must be opened before sending queries to database. When all queries has been sent and
+     * connection is no longer needed, it needs to be closed in order to release it's resources.
+     * @param query SQL query
+     * @return result of SQL - either {@link ResultSet} or {@link Integer}.
+     * @throws SQLException if connection is not open yet.
+     * @see #open()
+     * @see #close()
+     */
     public Object query(String query) throws SQLException {
         if (!isOpen || connection == null)
             throw new SQLException("Connection is not yet established");
