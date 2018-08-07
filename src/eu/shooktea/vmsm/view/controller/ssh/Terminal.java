@@ -51,8 +51,10 @@ public class Terminal implements UserInfo, StageController {
 
     private static final String HTML_STYLE =
             "background-color: black; color: white; font-family: monospaced; font-size: 13px;";
+    private static final String HTML_HEAD =
+            "<meta charset='UTF-8'/><style>" + SshConnection.styles + "</style>";
     private static final String HTML_OPEN =
-            "<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body style='" + HTML_STYLE + "'>";
+            "<!DOCTYPE html><html><head>" + HTML_HEAD + "</head><body style='" + HTML_STYLE + "'>";
     private static final String HTML_CLOSE = "</body></html>";
 
     public static void openTerminal(Object... lambdaArgs) {

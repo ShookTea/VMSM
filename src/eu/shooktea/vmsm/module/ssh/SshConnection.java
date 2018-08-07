@@ -89,8 +89,12 @@ public class SshConnection {
 
     public String getAsHtml() {
         String toRet = consoleDisplay + input;
-        toRet = toRet.replaceAll("\\e\\[([0-9]+(;[0-9]+)*)m", "[$1]");
-        toRet = toRet.replaceAll("\\n", "<br/>");
+        toRet = toRet
+                .replaceAll("\\e\\[([0-9]+)m", "</span><span class='bash_$1'>")
+                .replaceAll("\\e\\[([0-9]+);([0-9]+)m", "</span><span class='bash_$1 bash_$2'>")
+//                .replace("<", "&lt;").replace(">", "&gt;")
+                .replaceAll("\\n", "<br/>")
+                ;
         toRet = "<span>" + toRet + "</span>";
         return toRet;
     }
@@ -120,5 +124,31 @@ public class SshConnection {
                 onTerminalUpdate.run();
             });
         }
+    }
+
+    public static final String styles
+            = ".bash_0 {}"
+            + ".bash_1, .bash_01 {font-weight: bold;}"
+            + ".bash_4, .bash_04 {text-decoration: underline;}"
+            + ".bash_8, .bash_08 {display: none;}"
+            + color(30, "black")
+            + color(31, "red")
+            + color(32, "green")
+            + color(33, "yellow")
+            + color(34, "blue")
+            + color(35, "magenta")
+            + color(36, "cyan")
+            + color(37, "lightgrey")
+            + color(90, "darkgrey")
+            + color(91, "red")
+            + color(92, "green")
+            + color(93, "yellow")
+            + color(94, "blue")
+            + color(95, "magenta")
+            + color(96, "cyan")
+            ;
+
+    private static String color(int code, String color) {
+        return ".bash_" + code + " {color: " + color + ";}";
     }
 }
