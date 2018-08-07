@@ -3,7 +3,6 @@ package eu.shooktea.vmsm.module.ssh;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSchException;
 import javafx.application.Platform;
-import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 
 import java.io.*;
@@ -36,6 +35,14 @@ public class SshConnection {
 
     public void keyTyped(KeyEvent event) {
         System.out.println("KeyCode = " + event.getCode() + ", Character = " + event.getCharacter());
+    }
+
+    public void println(String text) {
+        consoleDisplay += text + "\n";
+    }
+
+    public String getAsHtml() {
+        return consoleDisplay;
     }
 
     private final ChannelShell shell;
