@@ -72,7 +72,7 @@ public class SshConnection {
 
     private void pushCommand() {
         String command = input.trim();
-        consoleDisplay += command + "\n";
+//        consoleDisplay += command + "\n";
         input = "";
         if (command.isEmpty()) return;
 
@@ -89,7 +89,10 @@ public class SshConnection {
 
     public String getAsHtml() {
         String toRet = consoleDisplay + input;
-        return toRet.replaceAll("\\n", "<br/>");
+        toRet = toRet.replaceAll("\\e\\[([0-9]+(;[0-9]+)*)m", "[$1]");
+        toRet = toRet.replaceAll("\\n", "<br/>");
+        toRet = "<span>" + toRet + "</span>";
+        return toRet;
     }
 
     public void close() throws JSchException {
