@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Module representing Magento e-commerce.
+ * Module representing Magento e-commerce platform.
  */
 public class Magento extends VMModule {
 
@@ -71,17 +71,13 @@ public class Magento extends VMModule {
     }
 
     private String getAdminAddress(VirtualMachine vm) {
-        return getConfigFromLocalXmlFile(vm, "admin/routers/adminhtml/args/frontName", "admin");
-    }
-
-    public String getConfigFromLocalXmlFile(VirtualMachine vm, String pathString, String defaultValue) {
         try {
             File localXmlFile = getLocalXmlFile(vm);
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = db.parse(localXmlFile);
             Element config = doc.getDocumentElement();
             config.normalize();
-            String[] path = pathString.split("/");
+            String[] path = "admin/routers/adminhtml/args/frontName".split("/");
             for (String s : path) {
                 config = (Element)config.getElementsByTagName(s).item(0);
             }
@@ -89,10 +85,10 @@ public class Magento extends VMModule {
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
             System.exit(1);
-            return defaultValue;
+            return "admin";
         } catch (Throwable e) {
             e.printStackTrace();
-            return defaultValue;
+            return "admin";
         }
     }
 
@@ -215,6 +211,11 @@ public class Magento extends VMModule {
         if (!file.delete()) file.deleteOnExit();
     }
 
+    /**
+     * Creates task loading list of Magento modules.
+     * @return task loading list of modules
+     * @see MagentoModule
+     */
     public Task<ObservableList<MagentoModule>> createModuleLoaderTask() {
         return new ModuleLoader(this, VM.getOrThrow());
     }
@@ -310,11 +311,35 @@ public class Magento extends VMModule {
         return 0;
     }
 
+    /**
+     * Directory to be removed by {@link #deleteAllInVar(VirtualMachine, DeleteDir)}. All of these directories
+     * are inside {@code /var} Magento directory.
+     */
     public enum DeleteDir {
+        /**
+         * Cache files located in /var/cache. Used by Magento to improve website speed by connecting all {@code .xml}
+         * files.
+         */
         CACHE("Cache deleted", "cache"),
+        /**
+         * Logs files located in /var/log.
+         */
         LOGS("Logs deleted", "log"),
+        /**
+         * Exception reports files located in /var/report.
+         */
         REPORTS("Reports deleted", "report"),
+        /**
+         * User sessions located in /var/session.
+         */
         SESSION("Sessions deleted", "session"),
+        /**
+         * All directories from other values of {@link DeleteDir} enum.
+         * @see #CACHE
+         * @see #LOGS
+         * @see #REPORTS
+         * @see #SESSION
+         */
         ALL("Unnecessary /var files deleted", "cache", "log", "report", "session");
 
 
@@ -323,7 +348,14 @@ public class Magento extends VMModule {
             this.deleteInfo = deleteInfo;
         }
 
+        /**
+         * Array containing names of directories inside /var directory. These directories will be removed.
+         */
         public final String[] path;
+
+        /**
+         * Information to be displayed when files are properly removed.
+         */
         public final String deleteInfo;
     }
 

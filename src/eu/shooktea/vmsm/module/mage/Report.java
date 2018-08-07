@@ -125,9 +125,15 @@ public class Report {
         storeReportsInConfig(module, vm, allReports);
     }
 
+    /**
+     * List of new reports that user has not yet seen.
+     */
     public static ObservableList<Report> notifyReports = FXCollections.observableArrayList();
+    /**
+     * List of all reports stored by VMSM.
+     */
     public static ObservableList<Report> allReports = FXCollections.observableArrayList();
-    public static IntegerProperty newReportsCount = new SimpleIntegerProperty();
+    private static IntegerProperty newReportsCount = new SimpleIntegerProperty();
     private static VirtualMachine previousMachine = null;
 
     static {
@@ -170,9 +176,18 @@ public class Report {
         return reportsFromConfig;
     }
 
+    /**
+     * Maximal difference in milliseconds between current time and time of report creation. If that difference
+     * is surpassed, report will be removed from VMSM, unless report file still exists.
+     * @see HoldTime
+     */
     public static long MAX_TIME_DIFFERENCE = -1;
     private static boolean CHANGES = false;
 
+    /**
+     * Enum representing possible max time differences with label to display.
+     * @see #MAX_TIME_DIFFERENCE
+     */
     public enum HoldTime {
         NEVER("Never", 0),
         HOUR("1 hour", 1000L * 60 * 60),
@@ -184,7 +199,7 @@ public class Report {
         YEAR("1 year", DAY.timeMillis * 365),
         ETERNITY("Eternity", Long.MAX_VALUE);
 
-        private HoldTime(String name, long timeMillis) {
+        HoldTime(String name, long timeMillis) {
             this.name = name;
             this.timeMillis = timeMillis;
         }
@@ -194,13 +209,30 @@ public class Report {
             return name;
         }
 
+        /**
+         * Label representing given max time difference.
+         */
         public final String name;
+        /**
+         * Max time difference.
+         * @see #MAX_TIME_DIFFERENCE
+         */
         public final long timeMillis;
 
+        /**
+         * Returns observable list of all {@link HoldTime} values.
+         * @return list of {@code HoldTime} values.
+         */
         public static ObservableList<HoldTime> createList() {
             return FXCollections.observableArrayList(HoldTime.values());
         }
 
+        /**
+         * Returns {@link HoldTime} based on its max time difference in milliseconds. If no correct {@code HoldTime}
+         * is found, it will remove {@link HoldTime#NEVER}.
+         * @param l max time difference in milliseconds
+         * @return {@code HoldTime} with choosen max time difference; {@link HoldTime#NEVER} if no correct {@code HoldTime} is found.
+         */
         public static HoldTime fromTime(long l) {
             return Arrays.stream(HoldTime.values())
                     .filter(t -> t.timeMillis == l)

@@ -17,9 +17,12 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.util.*;
 
+/**
+ * Concurrent task loading list of {@link MagentoModule} installed on Magento.
+ */
 public class ModuleLoader extends Task<ObservableList<MagentoModule>> {
 
-    public ModuleLoader(Magento magento, VirtualMachine vm) {
+    ModuleLoader(Magento magento, VirtualMachine vm) {
         this.magento = magento;
         this.vm = vm;
         this.versions = new HashMap<>();
@@ -85,7 +88,7 @@ public class ModuleLoader extends Task<ObservableList<MagentoModule>> {
                     String setupTagName = getSetupTagName(configElement, fullModuleName[0], fullModuleName[1]);
                     String sqlVersion = getSqlVersion(setupTagName);
                     String xmlVersion = getXmlVersion(fullModuleName[0], fullModuleName[1], configElement);
-                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], sqlVersion, xmlVersion, rootFile, configElement, setupTagName));
+                    ret.add(new MagentoModule(codePool, fullModuleName[0], fullModuleName[1], sqlVersion, xmlVersion, rootFile, setupTagName));
                 }
             }
         } catch (Exception ex) {
