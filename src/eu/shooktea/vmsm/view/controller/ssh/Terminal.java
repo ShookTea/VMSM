@@ -38,6 +38,7 @@ public class Terminal implements UserInfo {
     @FXML
     private void keyEvent(KeyEvent event) {
         connection.keyTyped(event);
+        createContent(connection.getAsHtml());
     }
 
     private void createContent(String content) {

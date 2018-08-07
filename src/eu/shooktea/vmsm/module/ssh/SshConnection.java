@@ -3,6 +3,7 @@ package eu.shooktea.vmsm.module.ssh;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSchException;
 import javafx.application.Platform;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.io.*;
@@ -34,11 +35,17 @@ public class SshConnection {
     }
 
     public void keyTyped(KeyEvent event) {
-        System.out.println("KeyCode = " + event.getCode() + ", Character = " + event.getCharacter());
+        if (event.getCode() == KeyCode.UNDEFINED) { //simple print
+            print(event.getCharacter());
+        }
+    }
+
+    public void print(String text) {
+        consoleDisplay += text;
     }
 
     public void println(String text) {
-        consoleDisplay += text + "\n";
+        print(text + "\n");
     }
 
     public String getAsHtml() {
