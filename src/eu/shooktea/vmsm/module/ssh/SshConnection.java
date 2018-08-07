@@ -43,18 +43,22 @@ public class SshConnection {
             }
             else if (character.equals(" ") || character.equals("\t")) {
                 input += character;
+                onTerminalUpdate.run();
             }
             else {
                 input += character.trim();
+                onTerminalUpdate.run();
             }
         }
         else if (event.getCode() == KeyCode.BACK_SPACE && input.length() > 0) {
             input = input.substring(0, input.length() - 1);
+            onTerminalUpdate.run();
         }
     }
 
     public void print(String text) {
         consoleDisplay += text;
+        onTerminalUpdate.run();
     }
 
     public void println(String text) {
@@ -62,9 +66,11 @@ public class SshConnection {
     }
 
     private void pushCommand() {
-        String command = input;
+        String command = input.trim();
         consoleDisplay += command + "\n";
         input = "";
+        if (command.isEmpty()) return;
+
         executingCommand = true;
     }
 
@@ -73,16 +79,28 @@ public class SshConnection {
         return toRet.replaceAll("\\n", "<br/>");
     }
 
+    public void close() throws JSchException {
+        if (shell.isClosed()) return;
+        shell.disconnect();
+        shell.getSession().disconnect();
+    }
+
+    public void setOnTerminalUpdate(Runnable runnable) {
+        this.onTerminalUpdate = runnable;
+    }
+
     private final ChannelShell shell;
     private PipedOutputStream pout;
-    private String consoleDisplay = "ssh# ";
+    private String consoleDisplay = "";
     private String input = "";
     private boolean executingCommand = false;
+    private Runnable onTerminalUpdate = () -> {};
 
     private class Console extends OutputStream {
         public void write(int i) {
             Platform.runLater(() -> {
                 consoleDisplay += String.valueOf((char)i);
+                onTerminalUpdate.run();
             });
         }
     }

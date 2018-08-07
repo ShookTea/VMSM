@@ -6,15 +6,18 @@ import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.ssh.SSH;
 import eu.shooktea.vmsm.module.ssh.SshConnection;
+import eu.shooktea.vmsm.view.StageController;
 import eu.shooktea.vmsm.view.View;
 import javafx.fxml.FXML;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.io.IOException;
 
-public class Terminal implements UserInfo {
+public class Terminal implements UserInfo, StageController {
     @FXML private WebView view;
     private WebEngine engine;
     private SshConnection connection;
@@ -29,16 +32,17 @@ public class Terminal implements UserInfo {
             ssh = SSH.getModuleByName("SSH");
             vm = VM.getOrThrow();
             connection = ssh.createConnection(vm, this);
+            connection.setOnTerminalUpdate(this::reloadContent);
+            connection.init();
             reloadContent();
-        } catch (JSchException e) {
-            e.printStackTrace();
+        } catch (JSchException | IOException e) {
+            connection.println(e.getMessage());
         }
     }
 
     @FXML
     private void keyEvent(KeyEvent event) {
         connection.keyTyped(event);
-        reloadContent();
     }
 
     private void reloadContent() {
@@ -97,5 +101,16 @@ public class Terminal implements UserInfo {
     @Override
     public void showMessage(String message) {
         connection.println(message);
+    }
+
+    @Override
+    public void setStage(Stage stage) {
+        stage.setOnCloseRequest(e -> {
+            try {
+                connection.close();
+            } catch (JSchException e1) {
+                connection.println(e1.getMessage());
+            }
+        });
     }
 }
