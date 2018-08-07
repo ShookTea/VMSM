@@ -27,6 +27,7 @@ public class SshConnection {
         Console console = new Console();
         stream = new PrintStream(console, true);
         shell.setOutputStream(stream);
+        shell.setPtySize(200, 500, 800, 600);
 
         PipedInputStream pin = new PipedInputStream();
         pout = new PipedOutputStream(pin);
@@ -72,7 +73,6 @@ public class SshConnection {
 
     private void pushCommand() {
         String command = input.trim();
-//        consoleDisplay += command + "\n";
         input = "";
         if (command.isEmpty()) return;
 
