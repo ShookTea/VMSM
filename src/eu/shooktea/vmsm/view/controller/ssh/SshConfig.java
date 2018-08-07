@@ -3,9 +3,9 @@ package eu.shooktea.vmsm.view.controller.ssh;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.SSH;
+import eu.shooktea.vmsm.module.ssh.SSH;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
@@ -18,10 +18,13 @@ public class SshConfig implements StageController {
     @FXML private PasswordField password;
     @FXML private CheckBox fingerprints;
 
+    private SSH ssh;
+    private VirtualMachine vm;
+
     @FXML
     private void initialize() {
-        VirtualMachine vm = VM.getOrThrow();
-        SSH ssh = SSH.getModuleByName("SSH");
+        vm = VM.getOrThrow();
+        ssh = SSH.getModuleByName("SSH");
         String hostAddress = ssh.getStringSetting(vm, "host");
         String userName = ssh.getStringSetting(vm, "user");
         String password = ssh.getStringSetting(vm, "password");
@@ -36,8 +39,6 @@ public class SshConfig implements StageController {
 
     @FXML
     private void save() {
-        VirtualMachine vm = VM.getOrThrow();
-        SSH ssh = SSH.getModuleByName("SSH");
         ssh.setSetting(vm, "host", host.getText());
         ssh.setSetting(vm, "user", username.getText());
         ssh.setSetting(vm, "password", password.getText());
@@ -54,6 +55,6 @@ public class SshConfig implements StageController {
     private Stage stage;
 
     public static void openSshConfigWindow(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ssh/SshConfig.fxml", "SSH Configuration", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/ssh/SshConfig.fxml", "SSH Configuration");
     }
 }

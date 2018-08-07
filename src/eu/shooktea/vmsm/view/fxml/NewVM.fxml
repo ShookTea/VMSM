@@ -93,7 +93,7 @@
                                        <Rectangle2D />
                                    </viewport>
                                    <image>
-                                       <Image url="@../../resources/Warning_small.png" />
+                                       <Image url="@../../resources/warning_small.png" />
                                    </image>
                                </ImageView>
                            </graphic>

@@ -26,6 +26,7 @@ package eu.shooktea.vmsm.view.controller;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.StageController;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.Bindings;
@@ -171,6 +172,10 @@ public class NewVM implements StageController {
         if (lambdaArgs.length > 0 && lambdaArgs[0] instanceof VirtualMachine) {
             machineToEdit = (VirtualMachine)lambdaArgs[0];
         }
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/NewVM.fxml", "New VM", true);
+        NewVM nvm = View.createNewWindow("/eu/shooktea/vmsm/view/fxml/NewVM.fxml", "New VM");
+        if (lambdaArgs.length == 2 && lambdaArgs[0] instanceof String && lambdaArgs[1] instanceof String) {
+            nvm.vmPath.setText(lambdaArgs[1].toString());
+            nvm.vmType.setValue(VMType.getByName(lambdaArgs[0].toString()));
+        }
     }
 }

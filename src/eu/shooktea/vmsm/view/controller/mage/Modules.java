@@ -1,9 +1,9 @@
 package eu.shooktea.vmsm.view.controller.mage;
 
-import eu.shooktea.vmsm.module.Magento;
-import eu.shooktea.vmsm.module.MagentoModule;
+import eu.shooktea.vmsm.module.mage.Magento;
+import eu.shooktea.vmsm.module.mage.MagentoModule;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -27,10 +27,12 @@ public class Modules implements StageController {
     private Task<ObservableList<MagentoModule>> task;
     private ObservableList<MagentoModule> allModules;
 
+    private Magento magento;
+
     @FXML
     private void initialize() {
+        magento = Magento.getModuleByName("Magento");
         initColumns();
-        Magento magento = Magento.getModuleByName("Magento");
         task = magento.createModuleLoaderTask();
         task.setOnSucceeded(e -> Platform.runLater(() -> {loadTable(task); filtersPane.setExpanded(true);}));
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -81,7 +83,7 @@ public class Modules implements StageController {
     }
 
     public static void openModulesWindow(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/Modules.fxml", "Magento modules", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/Modules.fxml", "Magento modules");
     }
 
     @Override
@@ -94,7 +96,7 @@ public class Modules implements StageController {
         if (e.getClickCount() != 2) return;
         MagentoModule module = table.getSelectionModel().getSelectedItem();
         if (module == null) return;
-        ModuleInfo.openModuleInfo(Magento.getModuleByName("Magento"), module);
+        ModuleInfo.openModuleInfo(module);
 
     }
 }

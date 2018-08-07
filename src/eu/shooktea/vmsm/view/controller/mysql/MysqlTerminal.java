@@ -1,12 +1,10 @@
 package eu.shooktea.vmsm.view.controller.mysql;
 
 import com.jcraft.jsch.JSchException;
-import eu.shooktea.vmsm.module.MySQL;
-import eu.shooktea.vmsm.module.SqlConnection;
+import eu.shooktea.vmsm.module.mysql.MySQL;
+import eu.shooktea.vmsm.module.mysql.SqlConnection;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
-import javafx.application.Platform;
-import javafx.beans.binding.IntegerBinding;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -156,7 +154,7 @@ public class MysqlTerminal implements StageController {
     }
 
     public static void openMysqlTerminal(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/MysqlTerminal.fxml", "MySQL Terminal", false);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/MysqlTerminal.fxml", "MySQL Terminal");
     }
 
     private class Console {

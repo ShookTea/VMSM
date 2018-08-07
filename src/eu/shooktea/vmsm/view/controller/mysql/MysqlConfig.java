@@ -3,10 +3,10 @@ package eu.shooktea.vmsm.view.controller.mysql;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.MySQL;
-import eu.shooktea.vmsm.module.SSH;
+import eu.shooktea.vmsm.module.mysql.MySQL;
+import eu.shooktea.vmsm.module.ssh.SSH;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -35,12 +35,14 @@ public class MysqlConfig implements StageController {
 
     private VirtualMachine vm;
     private MySQL mysql;
+    private SSH ssh;
     private Stage stage;
 
     @FXML
     private void initialize() {
         vm = VM.getOrThrow();
         mysql = MySQL.getModuleByName("MySQL");
+        ssh = SSH.getModuleByName("SSH");
         bindSsh();
         loadMysqlSettings();
         Boolean sshEnabled = (Boolean)mysql.getSetting(vm, "ssh_enabled");
@@ -80,7 +82,6 @@ public class MysqlConfig implements StageController {
         defaults.put("port", "22");
         defaults.put("local_port", "3307");
 
-        SSH ssh = SSH.getModuleByName("SSH");
         if (ssh.isInstalled(vm)) {
             String defHost = ssh.getStringSetting(vm, "host");
             if (defHost != null && !defHost.trim().isEmpty()) defaults.put("host", defHost);
@@ -131,6 +132,6 @@ public class MysqlConfig implements StageController {
     }
 
     public static void openMysqlConfigWindow(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/MysqlConfig.fxml", "MySQL config", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/MysqlConfig.fxml", "MySQL config");
     }
 }

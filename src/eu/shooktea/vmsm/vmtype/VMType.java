@@ -23,34 +23,54 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.NewVM;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
 
 import java.io.File;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+/**
+ * Representation of type of virtual machine. While every virtual machine can have multiple modules, it will always
+ * have one and only one type. That type is set when creating new virtual machine in VMSM and cannot be changed.
+ */
 public abstract class VMType {
 
-    public VMType() {
+    VMType() {
         typeName = new SimpleStringProperty("typeName");
         creationInfo = new SimpleStringProperty("");
         toolBarElements = new SimpleListProperty<>();
     }
 
+    /**
+     * Returns name of type that will be displayed on list of types during creation of virtual machine.
+     * @return name of type
+     */
     public String getTypeName() {
         return typeName.getValue();
     }
 
+    /**
+     * Returns current creation error that is displayed when something wrong is happening during creation of virtual
+     * machine with selected type.
+     * @return creation error
+     */
     public String getCreationError() {
         return creationError.getValue();
     }
 
     /**
+     * Returns creation information to be displayed in new virtual machine window.
+     * <p>
      * It IS used in {@link NewVM#initialize()}. Do not remove it.
      * @return creation info
      */
@@ -58,24 +78,80 @@ public abstract class VMType {
         return creationInfo.get();
     }
 
-    public void setCreationError(String err) {
+    private void setCreationError(String err) {
         creationError.setValue(err);
     }
 
+    /**
+     * Checks file that has been selected as root file for virtual machine of that type. If root file is incorrect,
+     * it will store information about that in creation error. Otherwise it will store empty string there.
+     * @param file VM's root file selected by user
+     * @see #getCreationError()
+     */
     public final void checkVmRootFile(File file) {
         setCreationError(checkRootFile(file));
     }
 
-    public ObservableList<Node> getToolBarElements() {
-        return toolBarElements.getValue();
+    /**
+     * Returns array with names of VMSM modules that are compatible with selected VM.
+     * @return array of modules' names.
+     */
+    public String[] getModules() {
+        return new String[0];
     }
 
-    public Optional<Menu> getMenu() {
+    /**
+     * Creates list of quick menu buttons. It takes all installed modules on virtual machine, sort them by their sort
+     * value and returns their buttons.
+     * @return list of quick menu buttons
+     * @see VMModule#getSortValue()
+     */
+    public List<ImageView> getQuickGuiButtons() {
+        return getInstalledModulesStream(VM.getOrThrow())
+                .map(VMModule::getQuickGuiButtons)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns optional that can contain menu item for current virtual machine. If that menu item is a full {@link javafx.scene.control.Menu},
+     * it will be used as root for module menu items.
+     * @param vm current virtual machine
+     * @return optional that can contain menu item.
+     */
+    public Optional<MenuItem> getMenuItem(VirtualMachine vm) {
         return Optional.empty();
     }
 
-    public Optional<String[]> getModules() { return Optional.empty(); }
+    /**
+     * Returns list of modules' menu items. It takes all installed modules on virtual machine, sort them by their sort
+     * value and returns their menu items.
+     * @param vm current virtual machine
+     * @return list of menu items
+     */
+    public List<MenuItem> getMenuItemsWithModules(VirtualMachine vm) {
+        List<MenuItem> list = new ArrayList<>();
+        list.addAll(getInstalledModulesStream(vm)
+                .map(VMModule::getMenuItem)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList()));
+        return list;
+    }
 
+    private Stream<VMModule> getInstalledModulesStream(VirtualMachine vm) {
+        return Arrays.stream(getModules())
+                .map(VMModule::getModuleByName)
+                .filter(Objects::nonNull)
+                .map(obj -> (VMModule)obj)
+                .filter(mod -> mod.isInstalled(vm))
+                .sorted(Comparator.comparing(VMModule::getSortValue));
+    }
+
+    /**
+     * Updates type data. Runs every 5 seconds.
+     * @param vm current virtual machine.
+     */
     public void update(VirtualMachine vm) {}
 
     /**
@@ -92,21 +168,34 @@ public abstract class VMType {
         return getTypeName();
     }
 
+    /**
+     * Checks if root path of VM should be a directory. It is used by VM creation window, when it needs to choose
+     * whether accept directories or files.
+     * @return {@code true} if VM's root path is a directory, {@code false} otherwise.
+     */
     public boolean isMainPathDirectory() {
         return true;
     }
 
-    protected ReadOnlyStringProperty typeName;
-    protected ReadOnlyStringProperty creationInfo;
-    protected ListProperty<Node> toolBarElements;
+    ReadOnlyStringProperty typeName;
+    ReadOnlyStringProperty creationInfo;
+    private ListProperty<Node> toolBarElements;
     private final StringProperty creationError = new SimpleStringProperty("");
 
+    /**
+     * Returns type of VM based on it's name.
+     * @param name name of VM type
+     * @return type with selected name, or {@code null} if VM type with that name has not been found.
+     */
     public static VMType getByName(String name) {
         return types.stream()
                 .filter(type -> type.getTypeName().equals(name))
                 .findAny().get();
     }
 
+    /**
+     * Returns observable list containing all types of virtual machines.
+     */
     public static final ObservableList<VMType> types = FXCollections.observableArrayList(
             new Vagrant()
     );

@@ -23,51 +23,36 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm.vmtype;
 
+import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.Status;
+import eu.shooktea.vmsm.view.controller.NewVM;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.scene.Node;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
+/**
+ * Representation of Vagrant type of virtual machine. It required from root directory to contain .vagrant/machines directory.
+ */
 public class Vagrant extends VMType {
-    public Vagrant() {
+    Vagrant() {
         super();
         this.typeName = new SimpleStringProperty("Vagrant");
         this.creationInfo = new SimpleStringProperty("Main path contains .vagrant/machines directory.");
-        this.toolBarElements = new SimpleListProperty(FXCollections.observableArrayList(createToolBarElements()));
         update(null);
-    }
-
-    private List<Node> createToolBarElements() {
-        ImageView vagrantIcon = Toolkit.createToolbarImage("vagrant_icon.png");
-        statusIcon = Toolkit.createToolbarImage(statusProperty.get().getResourceName());
-        Tooltip tooltip = new Tooltip(statusProperty.get().getTooltipText());
-        Tooltip.install(statusIcon, tooltip);
-
-        statusProperty.addListener(((observable, oldValue, newValue) -> Platform.runLater(() -> {
-            statusIcon.setImage(Toolkit.createToolbarImage(newValue.getResourceName()).getImage());
-            tooltip.setText(newValue.getTooltipText());
-        })));
-
-        statusIcon.setOnMouseClicked((e) -> statusIconClicked());
-
-        return Arrays.asList(vagrantIcon, statusIcon);
     }
 
     @Override
@@ -90,8 +75,11 @@ public class Vagrant extends VMType {
     }
 
     private void updateStatus(VirtualMachine vm, boolean afterVmChange) {
-        if (isMachineStateChanging || vm == null) {
-            statusProperty.setValue(Status.UNDEFINED);
+        if (vm == null) {
+            return;
+        }
+        if (isMachineStateChanging) {
+            vm.setStatus(Status.UNDEFINED);
             return;
         }
         try {
@@ -105,9 +93,9 @@ public class Vagrant extends VMType {
                     String line;
                     while ((line = input.readLine()) != null) {
                         if (!isMachineStateChanging && line.contains("The VM is running."))
-                            statusProperty.setValue(Status.RUNNING);
+                            vm.setStatus(Status.RUNNING);
                         if (!isMachineStateChanging && (line.contains("The VM is powered off.") || line.contains("The VM is in an aborted state.")))
-                            statusProperty.setValue(Status.STOPPED);
+                            vm.setStatus(Status.STOPPED);
                     }
                     process.waitFor();
                     if (afterVmChange) isMachineStateChanging = false;
@@ -127,15 +115,47 @@ public class Vagrant extends VMType {
     public void update(VirtualMachine vm) {
         boolean vmChange = vm != previousUpdateVm;
         if (vmChange) {
-            statusProperty.setValue(Status.UNDEFINED);
             previousUpdateVm = vm;
+            if (previousUpdateVm != null) previousUpdateVm.setStatus(Status.UNDEFINED);
         }
         updateStatus(vm, vmChange);
     }
 
+    @Override
+    public List<ImageView> getQuickGuiButtons() {
+        List<ImageView> ret = super.getQuickGuiButtons();
+        if (previousUpdateVm == null) return ret;
+
+        ImageView switchStatus = Toolkit.createQuickGuiButton(previousUpdateVm.getStatus().getResourceName(), previousUpdateVm.getStatus().getTooltipText());
+        switchStatus.setOnMouseClicked(e -> statusIconClicked());
+
+        ret.add(switchStatus);
+        return ret;
+    }
+
+    @Override
+    public Optional<MenuItem> getMenuItem(VirtualMachine vm) {
+        Menu root = new Menu(vm.getName(), Toolkit.createMenuImage("vagrant_icon.png"));
+
+        MenuItem on = new MenuItem("Switch on", Toolkit.createMenuImage("play.png"));
+        on.setOnAction(e -> this.switchMachine(vm, "up"));
+        on.setDisable(vm.getStatus() != Status.STOPPED);
+
+        MenuItem reset = new MenuItem("Reset", Toolkit.createMenuImage("play_all.png"));
+        reset.setOnAction(e -> this.switchMachine(vm, "reload"));
+        reset.setDisable(vm.getStatus() != Status.RUNNING);
+
+        MenuItem off = new MenuItem("Switch off", Toolkit.createMenuImage("stop.png"));
+        off.setOnAction(e -> this.switchMachine(vm, "halt"));
+        off.setDisable(vm.getStatus() != Status.RUNNING);
+
+        root.getItems().addAll(on, reset, off);
+        return Optional.of(root);
+    }
+
     private void statusIconClicked() {
         if (previousUpdateVm == null) return;
-        Status status = statusProperty.get();
+        Status status = previousUpdateVm.getStatus();
         if (status == Status.UNDEFINED) return;
 
         if (status == Status.RUNNING) switchMachine(previousUpdateVm, "halt");
@@ -145,7 +165,7 @@ public class Vagrant extends VMType {
     private void switchMachine(VirtualMachine vm, String action) {
         try {
             isMachineStateChanging = true;
-            statusProperty.setValue(Status.UNDEFINED);
+            vm.setStatus(Status.UNDEFINED);
             ProcessBuilder builder = new ProcessBuilder("vagrant", action).directory(vm.getMainPath());
             Process process = builder.start();
             new Thread(() -> {
@@ -165,59 +185,91 @@ public class Vagrant extends VMType {
     }
 
     @Override
-    public Optional<Menu> getMenu() {
-        MenuItem launch = new MenuItem("Start VM", Toolkit.createMenuImage("play.png"));
-        launch.disableProperty().bind(statusProperty.isNotEqualTo(Status.STOPPED));
-        launch.setOnAction((event) -> switchMachine(previousUpdateVm, "up"));
-
-        MenuItem restart = new MenuItem("Restart VM", Toolkit.createMenuImage("play_all.png"));
-        restart.disableProperty().bind(statusProperty.isNotEqualTo(Status.RUNNING));
-        restart.setOnAction((event) -> switchMachine(previousUpdateVm, "reload"));
-
-        MenuItem stop = new MenuItem("Stop VM", Toolkit.createMenuImage("stop.png"));
-        stop.disableProperty().bind(statusProperty.isNotEqualTo(Status.RUNNING));
-        stop.setOnAction((event) -> switchMachine(previousUpdateVm, "halt"));
-
-        Menu menu = new Menu(
-                "Vagrant",
-                Toolkit.createMenuImage("vagrant_icon.png"),
-                launch, restart, stop
-        );
-        return Optional.of(menu);
-    }
-
-    @Override
-    public Optional<String[]> getModules() {
-        return Optional.of(new String[]{
+    public String[] getModules() {
+        return new String[]{
             "Magento", "SSH", "MySQL"
-        });
+        };
     }
 
     private VirtualMachine previousUpdateVm = null;
-
-    private ObjectProperty<Status> statusProperty = new SimpleObjectProperty<>(Status.UNDEFINED);
-    private ImageView statusIcon;
     private boolean isMachineStateChanging = false;
 
-    public enum Status {
-        RUNNING, STOPPED, UNDEFINED;
-
-        public String getResourceName() {
-            switch (this) {
-                case RUNNING:   return "green_ball.png";
-                case STOPPED:   return "red_ball.png";
-                case UNDEFINED: return "yellow_ball.png";
-                default: throw new RuntimeException();
-            }
+    /**
+     * Searches for all Vagrant virtual machines that have not yet been added to VMSM.
+     */
+    public static void searchUnregisteredVms() {
+        try {
+            ProcessBuilder builder = new ProcessBuilder("vagrant", "global-status");
+            Process process = builder.start();
+            new Thread(() -> {
+                try {
+                    List<String> entries = new ArrayList<>();
+                    Scanner sc = new Scanner(process.getInputStream());
+                    Thread thr = new Thread(() -> {
+                        boolean start = false;
+                        boolean stop = false;
+                        while (sc.hasNextLine()) {
+                            String line = sc.nextLine().trim();
+                            if (line.startsWith("------")) start = true;
+                            else if (line.isEmpty()) stop = true;
+                            else if (start && !stop) {
+                                String[] entry = line.split("\\s+");
+                                String directory = entry[4];
+                                entries.add(directory);
+                            }
+                        }
+                    });
+                    thr.start();
+                    process.waitFor();
+                    thr.interrupt();
+                    thr.join(1000);
+                    Platform.runLater(() -> checkGlobalVagrantMachines(entries));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.exit(1);
+                }
+            }).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
         }
+    }
 
-        public String getTooltipText() {
-            switch (this) {
-                case RUNNING:   return "Vagrant machine is currently switched on.";
-                case STOPPED:   return "Vagrant machine is currently switched off.";
-                case UNDEFINED: return "Vagrant machine state is currently unknown.";
-                default: throw new RuntimeException();
+    private static void checkGlobalVagrantMachines(List<String> directories) {
+        List<String> vms = Storage.getVmList()
+                .stream()
+                .filter(vm -> vm.getType().getTypeName().equals("Vagrant"))
+                .map(VirtualMachine::getMainPath)
+                .map(File::toString)
+                .collect(Collectors.toList());
+
+        List<String> ignored = Storage.getIgnoredVagrantMachines();
+
+        ignored.removeIf(elem -> !directories.contains(elem));
+        directories.removeIf(ignored::contains);
+        directories.removeIf(vms::contains);
+
+        for (String dir : directories) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("New VM detected");
+            alert.setHeaderText("Virtual machine detected");
+            alert.setContentText("VMSM detected a Vagrant machine in " + dir + ". Do you want to add it to your VMs?");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+
+            ButtonType add = new ButtonType("Add VM", ButtonBar.ButtonData.APPLY);
+            ButtonType notAdd = new ButtonType("Do not add", ButtonBar.ButtonData.CANCEL_CLOSE);
+            ButtonType ignore = new ButtonType("Ignore");
+
+            alert.getButtonTypes().setAll(add, notAdd, ignore);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == add) {
+                NewVM.openNewVmWindow("Vagrant", dir);
             }
+            else if (result.get() == ignore) {
+                ignored.add(dir);
+            }
+
+            Storage.saveAll();
         }
     }
 }

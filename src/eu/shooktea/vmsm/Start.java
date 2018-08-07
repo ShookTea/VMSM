@@ -23,7 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
-import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -36,17 +36,15 @@ public class Start extends Application {
     /**
      * Main method for JavaFX application that initializes GUI. You shouldn't call it by your own.
      * @param stage primary stage
-     * @throws Exception if anything wrong happens during initialization of GUI.
      */
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         if (isStartCalled) return;
         isStartCalled = true;
-
         View.initialize(stage);
         VM.addListener((oldVM, newVM) -> {
-            if (oldVM != null) for (Module m : oldVM.getModules()) m.afterModuleTurnedOff();
-            if (newVM != null) for (Module m : newVM.getModules()) m.afterModuleLoaded();
+            if (oldVM != null) for (VMModule m : oldVM.getModules()) m.afterModuleTurnedOff();
+            if (newVM != null) for (VMModule m : newVM.getModules()) m.afterModuleLoaded();
             VM.ifNotNull(VirtualMachine::update);
         }).vmChanged(null, VM.get());
         VM.addListener(Storage::saveAll);
@@ -61,6 +59,7 @@ public class Start extends Application {
     public static void main(String[] args) {
         if (isMainCalled) return;
         isMainCalled = true;
+
         Storage.checkVmsmFiles();
         Toolkit.turnOffSSL();
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");

@@ -34,7 +34,10 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -103,17 +106,18 @@ public class Storage {
         JSONArray vms = new JSONArray(list);
         root.put("VMs", vms);
         VM.ifNotNull(vm -> root.put("current_vm", vm.getName()));
+        if (ignoredVagrantMachines != null && !ignoredVagrantMachines.isEmpty()) {
+            JSONArray array = new JSONArray(ignoredVagrantMachines);
+            root.put("ignored_vagrant_machines", array);
+        }
+        root.put("config", new JSONObject(Storage.config));
 
         PrintWriter pw = new PrintWriter(vmsmFile);
         pw.println(root.toString());
         pw.close();
     }
 
-    /**
-     * Tries to load configuration data. If configuration file doesn't exist, method does nothing. If both configuration file
-     * and backup file exist, but configuration file is empty, data from backup file is used instead.
-     */
-    public static void loadAll() {
+    static void loadAll() {
         try {
             tryLoadAll();
         } catch (IOException e) {
@@ -149,6 +153,17 @@ public class Storage {
                 VM.set(vmList.get(0));
             }
         }
+
+        ignoredVagrantMachines = new ArrayList<>();
+        if (obj.has("ignored_vagrant_machines")) {
+            JSONArray array = obj.getJSONArray("ignored_vagrant_machines");
+            array.iterator().forEachRemaining(entry -> ignoredVagrantMachines.add(entry.toString()));
+        }
+
+        Storage.config.clear();
+        if (obj.has("config")) {
+            Storage.config.putAll(obj.getJSONObject("config").toMap());
+        }
     }
 
     private static File getVmsmFile() {
@@ -182,6 +197,19 @@ public class Storage {
     }
 
     /**
+     * Returns list of ignored Vagrant machines. These machines were added to that list during scan for existing
+     * VMs that weren't manually added to VMSM by user. If user doesn't want to see notifications about VM every
+     * one minute, ignoring VM will add that VM to this list. During scan VMSM doesn't display notification about
+     * any of the VMs in that list.
+     * <p>
+     * The scan itself is run by command {@code vagrant global-status}.
+     * @return list of Vagrant machines ignored by user.
+     */
+    public static List<String> getIgnoredVagrantMachines() {
+        return ignoredVagrantMachines;
+    }
+
+    /**
      * Returns list of registered virtual machines. That list should be used only to read data; while you can
      * change content of that list, it won't be saved automatically - added or removed list will be updated in configuration
      * file only after calling {@link #saveAll()}, either directly or indirectly by doing some action that uses that method.
@@ -198,8 +226,15 @@ public class Storage {
     private static File vmsmFile = getVmsmFile();
     private static File backupFile = getBackupFile(vmsmFile);
     private static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
+    private static List<String> ignoredVagrantMachines = new ArrayList<>();
 
-    public static void checkVmsmFiles() {
+    /**
+     *Map used as configuration of VMSM. Values are stored in JSON under "config" label. These values can be of any
+     * correct JSON type, including {@link JSONObject} and {@link JSONArray}.
+     */
+    public static Map<String, Object> config = new HashMap<>();
+
+    static void checkVmsmFiles() {
         try {
             if (!vmsmFile.getParentFile().exists()) vmsmFile.getParentFile().mkdirs();
             if (!vmsmFile.exists())

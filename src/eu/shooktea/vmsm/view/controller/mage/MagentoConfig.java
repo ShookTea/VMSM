@@ -3,14 +3,14 @@ package eu.shooktea.vmsm.view.controller.mage;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.MagentoReport;
-import eu.shooktea.vmsm.module.Module;
+import eu.shooktea.vmsm.module.mage.Magento;
+import eu.shooktea.vmsm.module.mage.Report;
+import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
@@ -21,21 +21,22 @@ import java.io.File;
 public class MagentoConfig implements StageController {
     @FXML private TextField magentoPath;
     @FXML private TextField adminLogin;
-    @FXML private PasswordField adminPassword;
     @FXML private Label magentoInfo;
-    @FXML private ChoiceBox<MagentoReport.HoldTime> holdReports;
+    @FXML private ChoiceBox<Report.HoldTime> holdReports;
+
+    private VirtualMachine vm;
+    private Magento magento;
 
     @FXML
     private void initialize() {
-        VirtualMachine vm = VM.getOrThrow();
-        Module module = Module.getModuleByName("Magento");
-        loadSetting(module, vm, magentoPath, "path");
-        loadSetting(module, vm, adminLogin, "adm_login");
-        loadSetting(module, vm, adminPassword, "adm_pass");
+        vm = VM.getOrThrow();
+        magento = VMModule.getModuleByName("Magento");
+        loadSetting(magento, vm, magentoPath, "path");
+        loadSetting(magento, vm, adminLogin, "adm_login");
 
-        holdReports.setItems(MagentoReport.HoldTime.createList());
+        holdReports.setItems(Report.HoldTime.createList());
         Long holdValue = null;
-        Object readHoldValue = module.getSetting(vm, "report_keep_time");
+        Object readHoldValue = magento.getSetting(vm, "report_keep_time");
         if (readHoldValue instanceof Long) {
             holdValue = (Long)readHoldValue;
         }
@@ -43,14 +44,14 @@ public class MagentoConfig implements StageController {
             holdValue = ((Integer)readHoldValue).longValue();
         }
 
-        if (holdValue == null) holdReports.setValue(MagentoReport.HoldTime.MONTH);
+        if (holdValue == null) holdReports.setValue(Report.HoldTime.MONTH);
         else {
-            MagentoReport.HoldTime time = MagentoReport.HoldTime.fromTime(holdValue);
-            holdReports.setValue(time == null ? MagentoReport.HoldTime.MONTH : time);
+            Report.HoldTime time = Report.HoldTime.fromTime(holdValue);
+            holdReports.setValue(time == null ? Report.HoldTime.MONTH : time);
         }
     }
 
-    private void loadSetting(Module module, VirtualMachine vm, TextField field, String name) {
+    private void loadSetting(VMModule module, VirtualMachine vm, TextField field, String name) {
         String value = module.getStringSetting(vm, name);
         if (value != null) {
             field.setText(value);
@@ -76,31 +77,28 @@ public class MagentoConfig implements StageController {
     }
 
     public static void openMagentoConfig(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoConfig.fxml", "Magento Config", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoConfig.fxml", "Magento Config");
     }
 
     @FXML
     private void saveSettings() {
-        VirtualMachine vm = VM.getOrThrow();
-        Module module = Module.getModuleByName("Magento");
         File file = new File(magentoPath.getText().trim());
         if (!checkFile(file)) {
-            module.removeSetting(vm, "path");
+            magento.removeSetting(vm, "path");
         }
         else {
-            saveConf(magentoPath, "path", module, vm);
+            saveConf(magentoPath, "path", magento, vm);
         }
 
-        saveConf(adminLogin, "adm_login", module, vm);
-        saveConf(adminPassword, "adm_pass", module, vm);
+        saveConf(adminLogin, "adm_login", magento, vm);
 
-        module.setSetting(vm, "report_keep_time", holdReports.getValue().timeMillis);
+        magento.setSetting(vm, "report_keep_time", holdReports.getValue().timeMillis);
 
         Storage.saveAll();
         stage.close();
     }
 
-    private void saveConf(TextField textField, String name, Module module, VirtualMachine vm) {
+    private void saveConf(TextField textField, String name, VMModule module, VirtualMachine vm) {
         String trim = textField.getText().trim();
         if (trim.isEmpty()) {
             module.removeSetting(vm, name);

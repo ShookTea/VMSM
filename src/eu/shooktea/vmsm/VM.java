@@ -6,7 +6,9 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Singleton object for keeping currently displayed virtual machine.
@@ -133,11 +135,29 @@ public class VM {
     }
 
     /**
-     * Calls some action if the virtual machine is setted.
-     * @param consumer action to be done if VM is setted.
+     * Calls some action if the virtual machine is set.
+     * @param consumer action to be done if VM is set.
      */
     public static void ifNotNull(Consumer<VirtualMachine> consumer) {
-        if (get() != null) consumer.accept(get());
+        ifNotNullOrElse(consumer, () -> {});
+    }
+
+    /**
+     * Calls some action if the virtual machine is not set.
+     * @param runnable action to be done if VM is not set.
+     */
+    public static void ifNull(Runnable runnable) {
+        ifNotNullOrElse(vm -> {}, runnable);
+    }
+
+    /**
+     * Calls some action depending on whether virtual machine is set or not.
+     * @param consumer action to be done if VM is set.
+     * @param runnable action to be done if VM is not set.
+     */
+    public static void ifNotNullOrElse(Consumer<VirtualMachine> consumer, Runnable runnable) {
+        if (get() == null) runnable.run();
+        else consumer.accept(get());
     }
 
     /**
@@ -158,6 +178,29 @@ public class VM {
      */
     public static boolean isNotEqual(VirtualMachine vm) {
         return !isEqual(vm);
+    }
+
+    /**
+     * Performs mapping from Virtual Machine to some other object. If mapping returns optional, you can use {@link #flatMap(Function)}
+     * to prevent returning {@code Optional<Optional<T>>}.
+     * @param mapper function mapper
+     * @param <T> return type in optional
+     * @return optional holding result of function if VM is set, empty optional otherwise.
+     */
+    public static <T> Optional<T> map(Function<VirtualMachine, T> mapper) {
+        if (isSet()) return Optional.of(mapper.apply(get()));
+        else return Optional.empty();
+    }
+
+    /**
+     * Performs mapping from Virtual Machine to some optional.
+     * @param mapper function mapper
+     * @param <T> return type in optional
+     * @return optional holding result of function if VM is set, empty optional otherwise.
+     */
+    public static <T> Optional<T> flatMap(Function<VirtualMachine, Optional<T>> mapper) {
+        if (isSet()) return mapper.apply(get());
+        else return Optional.empty();
     }
 
     private static ObjectProperty<VirtualMachine> currentVm = new SimpleObjectProperty<>(null);

@@ -2,10 +2,9 @@ package eu.shooktea.vmsm.view.controller.mage;
 
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.Module;
-import eu.shooktea.vmsm.module.Magento;
+import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -43,8 +42,14 @@ public class MagentoNewModule implements StageController {
 
     private Stage stage;
 
+    private VirtualMachine vm;
+    private Magento magento;
+
     @FXML
     private void initialize() {
+        vm = VM.getOrThrow();
+        magento = Magento.getModuleByName("Magento");
+
         namespaceField.setOnKeyTyped(e -> updateTextFields(false));
         nameField.setOnKeyTyped(e -> updateTextFields(false));
         fullModuleNameField.setOnKeyTyped(e -> updateTextFields(true));
@@ -75,8 +80,6 @@ public class MagentoNewModule implements StageController {
 
     @FXML
     private void createAction() {
-        VirtualMachine vm = VM.getOrThrow();
-        Magento magento = Module.getModuleByName("Magento");
         String path = magento.getStringSetting(vm, "path");
         if (path == null) {
             showError("You haven't configured Magento main directory!");
@@ -110,7 +113,7 @@ public class MagentoNewModule implements StageController {
             createModuleDeclaration(moduleDeclarationRoot, fullModuleName);
             createModuleConfigFile(moduleRoot, fullModuleName, version);
             if (removeCache.isSelected()) {
-                Magento.deleteAllInVar("cache");
+                magento.deleteAllInVar(vm, Magento.DeleteDir.CACHE);
             }
             stage.close();
         } catch (Exception e) {
@@ -127,7 +130,8 @@ public class MagentoNewModule implements StageController {
         Element config = doc.createElement("config");
         doc.appendChild(config);
 
-        Element module = createChild(moduleName, config);
+        Element modules = createChild("modules", config);
+        Element module = createChild(moduleName, modules);
         Element active = createChild("active", module);
         Element pool = createChild("codePool", module);
 
@@ -261,6 +265,6 @@ public class MagentoNewModule implements StageController {
     }
 
     public static void openMagentoNewModuleWindow(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoNewModule.fxml", "New module", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/MagentoNewModule.fxml", "New module");
     }
 }

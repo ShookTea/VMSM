@@ -3,11 +3,11 @@ package eu.shooktea.vmsm.view.controller.mage;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.Magento;
-import eu.shooktea.vmsm.module.MySQL;
-import eu.shooktea.vmsm.module.SqlConnection;
+import eu.shooktea.vmsm.module.mage.Magento;
+import eu.shooktea.vmsm.module.mysql.MySQL;
+import eu.shooktea.vmsm.module.mysql.SqlConnection;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -27,10 +27,13 @@ public class CreateNewAdmin implements StageController {
     @FXML private Label error;
     private Stage stage;
 
+    private VirtualMachine vm;
+    private MySQL sql;
+
     @FXML
     private void create() {
-        if (login.getText().trim().isEmpty() || password.getText().isEmpty()) {
-            error.setText("Login and password are required values.");
+        if (login.getText().trim().isEmpty()) {
+            error.setText("Login is a required field.");
             return;
         }
         error.setText("");
@@ -42,13 +45,12 @@ public class CreateNewAdmin implements StageController {
         String surname = this.surname.getText().trim();
         String email = this.email.getText().trim();
 
+        if (password.isEmpty()) password = "password";
         if (salt.isEmpty()) salt = "salt";
         if (name.isEmpty()) name = "John";
         if (surname.isEmpty()) surname = "Smith";
         if (email.isEmpty()) email = "johnsmith@example.tld";
 
-        MySQL sql = MySQL.getModuleByName("MySQL");
-        VirtualMachine vm = VM.getOrThrow();
         connection = sql.createConnection();
         try {
             connection.open();
@@ -74,7 +76,6 @@ public class CreateNewAdmin implements StageController {
             if (result.get() == yes) {
                 Magento magento = Magento.getModuleByName("Magento");
                 magento.setSetting(vm, "adm_login", login);
-                magento.setSetting(vm, "adm_pass", password);
                 Storage.saveAll();
             }
             stage.close();
@@ -108,7 +109,9 @@ public class CreateNewAdmin implements StageController {
             dialog.showAndWait();
         }
         else {
-            View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/CreateNewAdmin.fxml", "Create new admin", true);
+            CreateNewAdmin cna = View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mage/CreateNewAdmin.fxml", "Create new admin");
+            cna.sql = sql;
+            cna.vm = vm;
         }
     }
 

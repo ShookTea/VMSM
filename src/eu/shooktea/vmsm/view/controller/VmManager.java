@@ -59,8 +59,6 @@ public class VmManager {
                         Storage.removeVM(vm);
                         if (VM.isEqual(vm))
                             VM.unset();
-                        else
-                            View.reloadGUI();
                     }
                 }
             });
@@ -74,6 +72,6 @@ public class VmManager {
     }
 
     public static void openVmManagerWindow(Object... lambdaArgs) {
-        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/VmManager.fxml", "VM Manager", true);
+        View.createNewWindow("/eu/shooktea/vmsm/view/fxml/VmManager.fxml", "VM Manager");
     }
 }
