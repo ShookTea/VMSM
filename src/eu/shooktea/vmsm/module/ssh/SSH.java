@@ -6,6 +6,7 @@ import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.ssh.SshConfig;
 import eu.shooktea.vmsm.view.controller.ssh.SshTerminal;
+import eu.shooktea.vmsm.view.controller.ssh.Terminal;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
@@ -76,7 +77,7 @@ public class SSH extends VMModule {
     @Override
     public List<ImageView> getQuickGuiButtons() {
         ImageView openTerminal = Toolkit.createQuickGuiButton("terminal.png", "Open SSH terminal");
-        openTerminal.setOnMouseClicked(SshTerminal::openSshTerminal);
+        openTerminal.setOnMouseClicked(Terminal::openTerminal);
         return Collections.singletonList(openTerminal);
     }
 
