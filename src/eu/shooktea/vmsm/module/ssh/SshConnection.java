@@ -37,10 +37,18 @@ public class SshConnection {
     public void keyTyped(KeyEvent event) {
         if (event.getCode() == KeyCode.UNDEFINED) {
             String character = event.getCharacter();
-            if (character.equals("\r") || character.equals("\n"))
+            if (character.equals("\r") || character.equals("\n")) {
                 print("\n");
-            else
-                print(character);
+            }
+            else if (character.equals(" ") || character.equals("\t")) {
+                input += character;
+            }
+            else {
+                input += character.trim();
+            }
+        }
+        else if (event.getCode() == KeyCode.BACK_SPACE && input.length() > 0) {
+            input = input.substring(0, input.length() - 1);
         }
     }
 
@@ -53,7 +61,8 @@ public class SshConnection {
     }
 
     public String getAsHtml() {
-        return consoleDisplay.replaceAll("\\n", "<br/>");
+        String toRet = consoleDisplay + input;
+        return toRet.replaceAll("\\n", "<br/>");
     }
 
     private final ChannelShell shell;
