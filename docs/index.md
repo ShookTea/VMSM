@@ -1,8 +1,8 @@
 ## Virtual Machine Server Manager
 ### For users
 
-* Installation
-* Opening virtual machine
+* [Installation](user/install.md)
+* Virtual machines
 * Using SSH
 * Using MySQL
 * Working with Magento
