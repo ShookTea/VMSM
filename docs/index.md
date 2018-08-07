@@ -2,7 +2,7 @@
 ### For users
 
 * [Installation and introduction](user/install.md)
-* Virtual machines
+* [Virtual machines](user/vms.md)
 * Using SSH
 * Using MySQL
 * Working with Magento
