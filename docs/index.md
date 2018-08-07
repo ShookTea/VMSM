@@ -3,22 +3,9 @@
 
 * [Installation and introduction](user/install.md)
 * [Virtual machines](user/vms.md)
-* Using SSH
-* Using MySQL
-* Working with Magento
-    * Var files
-    * Modules management
-    * Debugging
-    * Admin accounts
+* [Using SSH](user/ssh.md)
     
     
 ### For developers
 * [Cloning and dependencies](dev/init_project.md)
 * [JavaDoc](javadoc/index.html)
-* Toolkit
-* Storage
-* View
-* VM class
-* Creating new type of virtual machine
-* Creating new modules to virtual machine
-* Creating new windows
