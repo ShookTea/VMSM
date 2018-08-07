@@ -26,14 +26,25 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+/**
+ * Singleton class managing displayed screens.
+ */
 public class View {
     private View() {}
 
+    /**
+     * Initialize view. It should be called only once, by {@link eu.shooktea.vmsm.Start#main(String[])} method.
+     * @param stage primary stage
+     */
     public static void initialize(Stage stage) {
+        if (isInitialized) return;
+        isInitialized = true;
         primaryStage = stage;
         initializeSimpleGui();
         initializeApplicationLoop();
     }
+
+    private static boolean isInitialized = false;
 
     private static void initializeSimpleGui() {
         stage().initStyle(StageStyle.TRANSPARENT);
@@ -97,10 +108,22 @@ public class View {
         Vagrant.searchUnregisteredVms();
     }
 
+    /**
+     * Returns current primary stage.
+     * @return primary stage, containing quick menu button.
+     */
     public static Stage stage() {
         return primaryStage;
     }
 
+    /**
+     * Creates and opens new window. Returns controller of that window.
+     * @param fxmlPath full path to .fxml file
+     * @param title title of newly created window
+     * @param <T> root element type
+     * @param <C> controller class
+     * @return controller of window
+     */
     public static <T extends Region, C> C createNewWindow(String fxmlPath, String title) {
         try {
             URL location = View.class.getResource(fxmlPath);
@@ -126,6 +149,10 @@ public class View {
         }
     }
 
+    /**
+     * Opens URL in browser.
+     * @param url URL to be opened
+     */
     public static void openURL(URL url) {
         try {
             openURL(url.toURI());
@@ -135,6 +162,10 @@ public class View {
         }
     }
 
+    /**
+     * Opens URL in browser.
+     * @param uri URI to be opened
+     */
     public static void openURL(URI uri) {
         if (Desktop.isDesktopSupported()) {
             new Thread(() -> {
@@ -148,14 +179,27 @@ public class View {
         }
     }
 
+    /**
+     * Displays new message with selected text and background color.
+     * @param message text of message
+     * @param bgColor background color
+     */
     public static void showMessage(String message, Color bgColor) {
         SimpleGuiController.addMessage(message, bgColor);
     }
 
+    /**
+     * Displays new message with selected text and default background color.
+     * @param message text of message
+     */
     public static void showMessage(String message) {
         showMessage(message, defaultBackgroundColor);
     }
 
     private static Stage primaryStage;
+
+    /**
+     * Default color of the background.
+     */
     public static final Color defaultBackgroundColor = Color.WHITE;
 }
