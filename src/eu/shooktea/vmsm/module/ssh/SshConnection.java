@@ -35,8 +35,12 @@ public class SshConnection {
     }
 
     public void keyTyped(KeyEvent event) {
-        if (event.getCode() == KeyCode.UNDEFINED) { //simple print
-            print(event.getCharacter());
+        if (event.getCode() == KeyCode.UNDEFINED) {
+            String character = event.getCharacter();
+            if (character.equals("\r") || character.equals("\n"))
+                print("\n");
+            else
+                print(character);
         }
     }
 
@@ -49,7 +53,7 @@ public class SshConnection {
     }
 
     public String getAsHtml() {
-        return consoleDisplay;
+        return consoleDisplay.replaceAll("\\n", "<br/>");
     }
 
     private final ChannelShell shell;
