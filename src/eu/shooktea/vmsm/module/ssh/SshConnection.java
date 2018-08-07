@@ -7,6 +7,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing single SSH connection.
@@ -56,6 +58,16 @@ public class SshConnection {
             input = input.substring(0, input.length() - 1);
             onTerminalUpdate.run();
         }
+        else if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN) {
+            if (currentHistoryPos == -1) currentHistoryPos = commandLineHistory.size();
+            if (event.getCode() == KeyCode.UP) currentHistoryPos--;
+            else currentHistoryPos++;
+            currentHistoryPos = Math.min(currentHistoryPos, commandLineHistory.size());
+            currentHistoryPos = Math.max(currentHistoryPos, 0);
+            if (currentHistoryPos == commandLineHistory.size()) input = "";
+            else input = commandLineHistory.get(currentHistoryPos);
+            onTerminalUpdate.run();
+        }
     }
 
     public void print(String text) {
@@ -75,6 +87,8 @@ public class SshConnection {
         String command = input.trim();
         input = "";
         if (command.isEmpty()) return;
+        commandLineHistory.add(command);
+        currentHistoryPos = -1;
 
         executingCommand = true;
         byte[] line = command.getBytes();
@@ -92,7 +106,6 @@ public class SshConnection {
         toRet = toRet
                 .replaceAll("\\e\\[([0-9]+)m", "</span><span class='bash_$1'>")
                 .replaceAll("\\e\\[([0-9]+);([0-9]+)m", "</span><span class='bash_$1 bash_$2'>")
-//                .replace("<", "&lt;").replace(">", "&gt;")
                 .replaceAll("\\n", "<br/>")
                 ;
         toRet = "<span>" + toRet + "</span>";
@@ -116,6 +129,8 @@ public class SshConnection {
     private String input = "";
     private boolean executingCommand = false;
     private Runnable onTerminalUpdate = () -> {};
+    private List<String> commandLineHistory = new ArrayList<>();
+    private int currentHistoryPos = -1;
 
     private class Console extends OutputStream {
         public void write(int i) {
