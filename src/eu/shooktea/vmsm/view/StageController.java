@@ -21,10 +21,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package eu.shooktea.vmsm.view.controller;
+package eu.shooktea.vmsm.view;
 
 import javafx.stage.Stage;
 
+/**
+ * Special interface for controllers that need to get reference to their stages.
+ * {@link View#createNewWindow(String, String)} automatically handles controllers implementing that interface and gives
+ * reference to stage via {@link #setStage(Stage)} method.
+ */
 public interface StageController {
-    public void setStage(Stage stage);
+
+    /**
+     * Sets stage of that controller.
+     * @param stage stage
+     */
+    void setStage(Stage stage);
 }

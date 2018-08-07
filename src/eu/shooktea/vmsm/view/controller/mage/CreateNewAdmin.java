@@ -7,7 +7,7 @@ import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.mysql.SqlConnection;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;

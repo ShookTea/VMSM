@@ -26,6 +26,7 @@ package eu.shooktea.vmsm.view.controller;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.StageController;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.beans.binding.Bindings;

@@ -4,7 +4,7 @@ import com.jcraft.jsch.JSchException;
 import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.mysql.SqlConnection;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;

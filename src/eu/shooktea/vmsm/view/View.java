@@ -2,7 +2,6 @@ package eu.shooktea.vmsm.view;
 
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.view.controller.StageController;
 import eu.shooktea.vmsm.view.controller.simplegui.SimpleGuiController;
 import eu.shooktea.vmsm.vmtype.Vagrant;
 import javafx.animation.Animation;
@@ -117,7 +116,9 @@ public class View {
     }
 
     /**
-     * Creates and opens new window. Returns controller of that window.
+     * Creates and opens new window. Returns controller of that window. If controller class implements
+     * {@link StageController}, it will sent new stage to it via {@link StageController#setStage(Stage)} method.
+     *
      * @param fxmlPath full path to .fxml file
      * @param title title of newly created window
      * @param <T> root element type

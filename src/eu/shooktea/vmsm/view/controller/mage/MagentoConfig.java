@@ -7,7 +7,7 @@ import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.module.mage.Report;
 import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;

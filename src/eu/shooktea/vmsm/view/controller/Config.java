@@ -2,6 +2,7 @@ package eu.shooktea.vmsm.view.controller;
 
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.view.ScreenManager;
+import eu.shooktea.vmsm.view.StageController;
 import eu.shooktea.vmsm.view.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

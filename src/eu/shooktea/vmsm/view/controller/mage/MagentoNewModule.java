@@ -4,7 +4,7 @@ import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

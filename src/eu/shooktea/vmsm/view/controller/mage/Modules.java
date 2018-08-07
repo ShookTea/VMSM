@@ -3,7 +3,7 @@ package eu.shooktea.vmsm.view.controller.mage;
 import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.module.mage.MagentoModule;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.vmsm.view.controller.StageController;
+import eu.shooktea.vmsm.view.StageController;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
