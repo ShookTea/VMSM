@@ -44,8 +44,11 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+/**
+ * Representation of Vagrant type of virtual machine. It required from root directory to contain .vagrant/machines directory.
+ */
 public class Vagrant extends VMType {
-    public Vagrant() {
+    Vagrant() {
         super();
         this.typeName = new SimpleStringProperty("Vagrant");
         this.creationInfo = new SimpleStringProperty("Main path contains .vagrant/machines directory.");
@@ -191,6 +194,9 @@ public class Vagrant extends VMType {
     private VirtualMachine previousUpdateVm = null;
     private boolean isMachineStateChanging = false;
 
+    /**
+     * Searches for all Vagrant virtual machines that have not yet been added to VMSM.
+     */
     public static void searchUnregisteredVms() {
         try {
             ProcessBuilder builder = new ProcessBuilder("vagrant", "global-status");
