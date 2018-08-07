@@ -61,6 +61,18 @@ public class SSH extends VMModule {
         return channel;
     }
 
+    /**
+     * Creates new connection to shell.
+     * @param vm virtual machine
+     * @param ui user info
+     * @return connection to shell via SSH
+     * @throws JSchException if anything wrong happens during connection
+     */
+    public SshConnection createConnection(VirtualMachine vm, UserInfo ui) throws JSchException {
+        ChannelShell shell = (ChannelShell)openChannel(vm, ui, "shell");
+        return new SshConnection(shell);
+    }
+
     @Override
     public List<ImageView> getQuickGuiButtons() {
         ImageView openTerminal = Toolkit.createQuickGuiButton("terminal.png", "Open SSH terminal");

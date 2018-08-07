@@ -26,7 +26,6 @@ public class SshTerminal implements UserInfo, StageController {
 
     private ChannelShell channel;
     private PrintStream printStream;
-    private Queue<Character> inputStream = new ArrayDeque<>();
 
     private VirtualMachine vm;
     private SSH ssh;
