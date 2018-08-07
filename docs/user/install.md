@@ -23,3 +23,20 @@ java -jar VMSM.jar
 1. Close Properties dialog,
 1. Right-click shortcut and select `Pin to task bar` and/or `Pin to start screen`,
 1. Delete shortcut.
+
+## Introduction to VMSM
+When you start VMSM for the first time, you will see small button with "VMSM" label on upper left corner of your screen.
+
+![VMSM application button](vmsm_app.png)
+
+After pressing it with your primary mouse button, you will see a quick menu buttons around main button.
+
+![Quick menu](quick_menu.png)
+
+After pressing main button with your secondary mouse button, you will see a main menu of VMSM.
+
+![Main menu](main_menu.png)
+
+Content of both of these menus change when working with VMSM, i.e. adding new virtual machine or modules.
+
+To close VMSM, click X button on Quick Menu or choose "Exit VMSM" from main menu.

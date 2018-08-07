@@ -1,7 +1,7 @@
 ## Virtual Machine Server Manager
 ### For users
 
-* [Installation](user/install.md)
+* [Installation and introduction](user/install.md)
 * Virtual machines
 * Using SSH
 * Using MySQL
