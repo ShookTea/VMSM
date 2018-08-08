@@ -31,11 +31,15 @@ public class TabScreen implements StageController {
         connection = sql.createConnection();
         try {
             connection.open();
+            String query =
+                    "SELECT `TABLE_NAME`, `TABLE_ROWS` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA`='energa'";
+            setTablesListContent(new TableContent(connection.query(query)));
         } catch (JSchException | SQLException e) {
             e.printStackTrace();
             requestStageClose();
             return;
         }
+
     }
 
     public void setDataTableContent(TableContent content) {
@@ -67,6 +71,7 @@ public class TabScreen implements StageController {
                 }
             }
         });
+        tablesList.setItems(content.getRows());
     }
 
     @Override

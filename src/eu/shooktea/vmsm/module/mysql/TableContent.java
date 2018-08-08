@@ -8,7 +8,18 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 public class TableContent {
-    public TableContent(ResultSet set) throws SQLException {
+    public TableContent(Object object) throws SQLException {
+        if (object instanceof ResultSet) {
+            loadFromResultSet((ResultSet)object);
+        }
+        else {
+            columnNames = new String[]{"Result"};
+            TableEntry row = new TableEntry(new String[] {object.toString()});
+            rows = FXCollections.observableArrayList(row);
+        }
+    }
+
+    private void loadFromResultSet(ResultSet set) throws SQLException {
         ResultSetMetaData metaData = set.getMetaData();
         int count = metaData.getColumnCount();
         this.columnNames = new String[count];
