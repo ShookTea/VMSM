@@ -21,11 +21,16 @@ public class TabScreen implements StageController {
 
     private @FXML TableView<TableEntry> dataTable;
     private @FXML ListView<TableEntry> tablesList;
+    private @FXML TextArea selectFilters;
+    private @FXML Spinner<Integer> offsetSpinner;
+    private @FXML Spinner<Integer> limitSpinner;
 
     private SqlConnection connection;
 
     @FXML
     private void initialize() {
+        offsetSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
+        limitSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, 300));
         dataTable.setPlaceholder(new Label("No table selected"));
         MySQL sql = MySQL.getModuleByName("MySQL");
         connection = sql.createConnection();
@@ -46,6 +51,23 @@ public class TabScreen implements StageController {
             String query = "SELECT * FROM `" + tableName + "` LIMIT 300";
             setDataTableQuery(query);
         });
+    }
+
+    @FXML
+    private void applyFilters() {
+        TableEntry selectedItem = tablesList.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) return;
+        String tableName = selectedItem.getValueAt(0);
+        String where = selectFilters.getText().trim();
+        int offset = offsetSpinner.getValue();
+        int limit = limitSpinner.getValue();
+
+        String query = "SELECT * FROM `" + tableName + "`";
+        if (!where.isEmpty()) {
+            query += " WHERE " + where;
+        }
+        query += " LIMIT " + offset + ", " + limit;
+        setDataTableQuery(query);
     }
 
     private void setDataTableQuery(final String query, boolean setInQueryWindow) {
