@@ -13,6 +13,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
@@ -84,16 +86,18 @@ public class TabScreen implements StageController {
     }
 
     @FXML
-    private void queryFieldsClicked() {
+    private void queryFieldsClicked(MouseEvent event) {
+        if (event.getClickCount() != 2 || event.getButton() != MouseButton.PRIMARY) return;
         TableEntry selectedItem = availableFieldsTable.getSelectionModel().getSelectedItem();
         if (selectedItem == null) return;
-        String name = "`" + selectedItem.getValueAt(0) + "`";
+        String name = selectedItem.getValueAt(0);
+        String displayName = "`" + name + "` AS `" + name + "`, ";
         int pos = queryField.getCaretPosition();
         String text = queryField.getText();
-        text = text.substring(0, pos) + name + text.substring(pos);
+        text = text.substring(0, pos) + displayName + text.substring(pos);
         queryField.setText(text);
         queryField.requestFocus();
-        queryField.positionCaret(pos + name.length());
+        queryField.positionCaret(pos + displayName.length());
     }
 
     @FXML

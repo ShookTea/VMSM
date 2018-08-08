@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.14" prefHeight="736.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.mysql.TabScreen">
+<SplitPane dividerPositions="0.2" prefHeight="736.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.mysql.TabScreen">
    <items>
       <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Tables">
          <content>
