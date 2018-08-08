@@ -67,17 +67,16 @@ public class TabScreen implements StageController {
     private void applyFilters() {
         TableEntry selectedItem = tablesList.getSelectionModel().getSelectedItem();
         if (selectedItem == null) return;
-        String tableName = selectedItem.getValueAt(0);
         String where = selectFilters.getText().trim();
         int offset = offsetSpinner.getValue();
         int limit = limitSpinner.getValue();
 
-        String query = "SELECT * FROM `" + tableName + "`";
+        String query = "SELECT * FROM (" + queryField.getText() + ") AS `main_table`";
         if (!where.isEmpty()) {
             query += " WHERE " + where;
         }
         query += " LIMIT " + offset + ", " + limit;
-        setTableQuery(dataTable, query);
+        setTableQuery(dataTable, query, false);
     }
 
     @FXML
