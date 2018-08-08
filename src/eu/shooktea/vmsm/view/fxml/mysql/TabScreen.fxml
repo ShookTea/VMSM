@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.2" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.mysql.TabScreen">
+<SplitPane dividerPositions="0.14" prefHeight="736.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.mysql.TabScreen">
    <items>
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
-            <Label text="Tables">
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Tables">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>

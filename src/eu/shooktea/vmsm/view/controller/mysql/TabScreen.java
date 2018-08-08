@@ -26,6 +26,7 @@ public class TabScreen implements StageController {
 
     @FXML
     private void initialize() {
+        dataTable.setPlaceholder(new Label("No table selected"));
         MySQL sql = MySQL.getModuleByName("MySQL");
         connection = sql.createConnection();
         try {
