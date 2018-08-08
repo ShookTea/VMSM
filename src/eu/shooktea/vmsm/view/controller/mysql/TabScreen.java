@@ -46,20 +46,33 @@ public class TabScreen implements StageController {
             int rows = Integer.parseInt(newValue.getValueAt(1));
             int max = 300;
             String query = "SELECT * FROM `" + tableName + "`";
-            if (rows > max) {
-                query += " LIMIT " + max;
-            }
-
-            try {
-                setDataTableContent(new TableContent(connection.query(query)));
-            } catch (SQLException e) {
-                e.printStackTrace();
-                requestStageClose();
-            }
+            setDataTableQuery(query);
         });
     }
 
+    private void setDataTableQuery(final String query) {
+        setDataTableContent(null);
+        dataTable.setPlaceholder(new Label("Loading data..."));
+        new Thread(() -> {
+            try {
+                TableContent content = new TableContent(connection.query(query));
+                Platform.runLater(() -> {
+                    setDataTableContent(content);
+                    dataTable.setPlaceholder(new Label("Table is empty."));
+                });
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Platform.runLater(this::requestStageClose);
+            }
+        }).start();
+    }
+
     public void setDataTableContent(TableContent content) {
+        if (content == null) {
+            dataTable.getItems().clear();
+            dataTable.getColumns().clear();
+            return;
+        }
         ObservableList<TableColumn<TableEntry, ?>> columns = dataTable.getColumns();
         columns.clear();
         for (int i = 0; i < content.getColumnCount(); i++) {
