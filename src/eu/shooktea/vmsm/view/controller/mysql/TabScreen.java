@@ -1,8 +1,6 @@
 package eu.shooktea.vmsm.view.controller.mysql;
 
 import com.jcraft.jsch.JSchException;
-import com.mysql.cj.xdevapi.Table;
-import com.sun.javafx.scene.control.skin.TextAreaSkin;
 import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.mysql.SqlConnection;
 import eu.shooktea.vmsm.module.mysql.TableContent;
@@ -11,20 +9,23 @@ import eu.shooktea.vmsm.view.StageController;
 import eu.shooktea.vmsm.view.View;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
+import java.util.stream.Collectors;
 
 
 public class TabScreen implements StageController {
 
     private @FXML Tab dataTab;
-    private @FXML TableView<TableEntry> dataTable;
+    private @FXML TextField tableNameFilter;
     private @FXML ListView<TableEntry> tablesList;
+
+    private @FXML TableView<TableEntry> dataTable;
     private @FXML TextArea selectFilters;
     private @FXML Spinner<Integer> offsetSpinner;
     private @FXML Spinner<Integer> limitSpinner;
@@ -171,6 +172,22 @@ public class TabScreen implements StageController {
             }
         });
     }
+
+    @FXML
+    private void tableNameFilterKey() {
+        String filter = tableNameFilter.getText().trim();
+        if (allTableEntries == null) allTableEntries = tablesList.getItems();
+        if (filter.isEmpty())
+            tablesList.setItems(allTableEntries);
+        else
+        tablesList.setItems(FXCollections.observableArrayList(
+                allTableEntries.stream()
+                .filter(te -> te.getValueAt(0).toUpperCase().contains(filter.toUpperCase()))
+                .collect(Collectors.toList())
+        ));
+    }
+
+    private ObservableList<TableEntry> allTableEntries;
 
     private void requestStageClose() {
         try {
