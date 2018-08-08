@@ -28,7 +28,7 @@
       </TitledPane>
       <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Data">
+          <Tab fx:id="dataTab" text="Data">
             <content>
               <VBox>
                      <children>
@@ -99,12 +99,32 @@
           </Tab>
             <Tab text="Query">
                <content>
-                  <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
-                    <items>
-                        <TitledPane />
-                        <TitledPane />
-                    </items>
-                  </SplitPane>
+                  <VBox>
+                     <children>
+                        <TitledPane expanded="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Columns" />
+                        <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Query" VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                                 <children>
+                                    <TextArea fx:id="queryField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="SELECT * FROM `table_name`" VBox.vgrow="ALWAYS">
+                                       <font>
+                                          <Font name="Monospaced Regular" size="13.0" />
+                                       </font>
+                                    </TextArea>
+                                    <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
+                                       <children>
+                                          <Button defaultButton="true" mnemonicParsing="false" onAction="#runQueryField" text="Run query" />
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets top="15.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </content>
+                        </TitledPane>
+                     </children>
+                  </VBox>
                </content>
             </Tab>
         </tabs>

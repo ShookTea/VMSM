@@ -24,6 +24,8 @@ public class TabScreen implements StageController {
     private @FXML TextArea selectFilters;
     private @FXML Spinner<Integer> offsetSpinner;
     private @FXML Spinner<Integer> limitSpinner;
+    private @FXML TextArea queryField;
+    private @FXML Tab dataTab;
 
     private SqlConnection connection;
 
@@ -73,15 +75,22 @@ public class TabScreen implements StageController {
         setDataTableQuery(query);
     }
 
+    @FXML
+    private void runQueryField() {
+        setDataTableQuery(queryField.getText(), false);
+    }
+
     private void setDataTableQuery(final String query, boolean setInQueryWindow) {
         setDataTableContent(null);
         dataTable.setPlaceholder(new Label("Loading data..."));
+        if (setInQueryWindow) queryField.setText(query);
         new Thread(() -> {
             try {
                 TableContent content = new TableContent(connection.query(query));
                 Platform.runLater(() -> {
                     setDataTableContent(content);
                     dataTable.setPlaceholder(new Label("Table is empty."));
+                    dataTab.getTabPane().getSelectionModel().select(dataTab);
                 });
             } catch (SQLException e) {
                 e.printStackTrace();
