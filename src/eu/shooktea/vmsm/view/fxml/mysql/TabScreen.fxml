@@ -35,7 +35,7 @@
                                    <children>
                                        <TableView fx:id="dataTable" tableMenuButtonVisible="true" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
                                        <columnResizePolicy>
-                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                          <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
                                        </columnResizePolicy>
                                     </TableView>
                                    </children>
