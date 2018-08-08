@@ -57,8 +57,10 @@ public class VmManager {
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get() == ButtonType.OK) {
                         Storage.removeVM(vm);
-                        if (VM.isEqual(vm))
+                        if (VM.isEqual(vm)) {
                             VM.unset();
+                            if (Storage.getVmList().size() > 0) VM.set(Storage.getVmList().get(0));
+                        }
                     }
                 }
             });
