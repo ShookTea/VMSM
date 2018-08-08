@@ -46,6 +46,9 @@ public class TabScreen implements StageController {
             int rows = Integer.parseInt(newValue.getValueAt(1));
             int max = 300;
             String query = "SELECT * FROM `" + tableName + "`";
+            if (rows > max) {
+                query += " LIMIT " + max;
+            }
             setDataTableQuery(query);
         });
     }
