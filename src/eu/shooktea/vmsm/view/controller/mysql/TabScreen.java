@@ -48,7 +48,7 @@ public class TabScreen implements StageController {
         });
     }
 
-    private void setDataTableQuery(final String query) {
+    private void setDataTableQuery(final String query, boolean setInQueryWindow) {
         setDataTableContent(null);
         dataTable.setPlaceholder(new Label("Loading data..."));
         new Thread(() -> {
@@ -63,6 +63,10 @@ public class TabScreen implements StageController {
                 Platform.runLater(this::requestStageClose);
             }
         }).start();
+    }
+
+    private void setDataTableQuery(String query) {
+        setDataTableQuery(query, true);
     }
 
     public void setDataTableContent(TableContent content) {
