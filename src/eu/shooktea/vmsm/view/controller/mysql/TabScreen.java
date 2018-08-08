@@ -14,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
@@ -40,6 +39,23 @@ public class TabScreen implements StageController {
             return;
         }
 
+        tablesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) return;
+            String tableName = newValue.getValueAt(0);
+            int rows = Integer.parseInt(newValue.getValueAt(1));
+            int max = 300;
+            String query = "SELECT * FROM `" + tableName + "`";
+            if (rows > max) {
+                query += " LIMIT " + max;
+            }
+
+            try {
+                setDataTableContent(new TableContent(connection.query(query)));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                requestStageClose();
+            }
+        });
     }
 
     public void setDataTableContent(TableContent content) {
