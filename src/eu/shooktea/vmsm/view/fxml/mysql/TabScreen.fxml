@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -14,45 +13,47 @@
 
 <SplitPane dividerPositions="0.14" prefHeight="736.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.mysql.TabScreen">
    <items>
-      <VBox prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Tables">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </Label>
-            <ListView fx:id="tablesList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-         </children></VBox>
-      <VBox prefHeight="501.0" prefWidth="594.0">
-         <children>
-            <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-              <tabs>
-                <Tab text="Data">
-                  <content>
-                    <VBox>
-                           <children>
-                               <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
-                                   <children>
-                                       <TableView fx:id="dataTable" tableMenuButtonVisible="true" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
-                                       <columnResizePolicy>
-                                          <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
-                                       </columnResizePolicy>
-                                    </TableView>
-                                   </children>
-                                 <columnConstraints>
-                                    <ColumnConstraints />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints />
-                                 </rowConstraints>
-                               </GridPane>
-                           </children>
-                    </VBox>
-                  </content>
-                </Tab>
-              </tabs>
-            </TabPane>
-         </children>
-      </VBox>
+      <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Tables">
+         <content>
+            <ListView fx:id="tablesList" prefHeight="200.0" prefWidth="200.0" />
+         </content>
+      </TitledPane>
+      <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Data">
+            <content>
+              <VBox>
+                     <children>
+                         <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                             <children>
+                                 <TableView fx:id="dataTable" tableMenuButtonVisible="true" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                             </children>
+                           <columnConstraints>
+                              <ColumnConstraints />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints />
+                           </rowConstraints>
+                         </GridPane>
+                     </children>
+              </VBox>
+            </content>
+          </Tab>
+            <Tab text="Query">
+               <content>
+                  <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+                    <items>
+                        <TitledPane />
+                        <TitledPane />
+                    </items>
+                  </SplitPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
    </items>
 </SplitPane>
