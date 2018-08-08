@@ -1,6 +1,7 @@
 package eu.shooktea.vmsm.view.controller.mysql;
 
 import com.jcraft.jsch.JSchException;
+import com.mysql.cj.xdevapi.Table;
 import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.mysql.SqlConnection;
 import eu.shooktea.vmsm.module.mysql.TableContent;
@@ -19,13 +20,15 @@ import java.sql.SQLException;
 
 public class TabScreen implements StageController {
 
+    private @FXML Tab dataTab;
     private @FXML TableView<TableEntry> dataTable;
     private @FXML ListView<TableEntry> tablesList;
     private @FXML TextArea selectFilters;
     private @FXML Spinner<Integer> offsetSpinner;
     private @FXML Spinner<Integer> limitSpinner;
+
     private @FXML TextArea queryField;
-    private @FXML Tab dataTab;
+    private @FXML TableView<TableEntry> availableFieldsTable;
 
     private SqlConnection connection;
 
@@ -54,7 +57,9 @@ public class TabScreen implements StageController {
             offsetSpinner.getValueFactory().setValue(0);
             limitSpinner.getValueFactory().setValue(300);
             String query = "SELECT * FROM `" + tableName + "` LIMIT 300";
-            setDataTableQuery(query);
+            String query2 = "DESCRIBE `" + tableName + "`";
+            setTableQuery(dataTable, query);
+            setTableQuery(availableFieldsTable, query2, false);
         });
     }
 
@@ -72,24 +77,28 @@ public class TabScreen implements StageController {
             query += " WHERE " + where;
         }
         query += " LIMIT " + offset + ", " + limit;
-        setDataTableQuery(query);
+        setTableQuery(dataTable, query);
     }
 
     @FXML
     private void runQueryField() {
-        setDataTableQuery(queryField.getText(), false);
+        setTableQuery(dataTable, queryField.getText(), false);
     }
 
-    private void setDataTableQuery(final String query, boolean setInQueryWindow) {
-        setDataTableContent(null);
-        dataTable.setPlaceholder(new Label("Loading data..."));
+    private void setTableQuery(TableView<TableEntry> table, String query) {
+        setTableQuery(table, query, true);
+    }
+
+    private void setTableQuery(TableView<TableEntry> table, final String query, boolean setInQueryWindow) {
+        setTableContent(table, null);
+        table.setPlaceholder(new Label("Loading data..."));
         if (setInQueryWindow) queryField.setText(query);
         new Thread(() -> {
             try {
                 TableContent content = new TableContent(connection.query(query));
                 Platform.runLater(() -> {
-                    setDataTableContent(content);
-                    dataTable.setPlaceholder(new Label("Table is empty."));
+                    setTableContent(table, content);
+                    table.setPlaceholder(new Label("Table is empty."));
                     dataTab.getTabPane().getSelectionModel().select(dataTab);
                 });
             } catch (SQLException e) {
@@ -99,17 +108,13 @@ public class TabScreen implements StageController {
         }).start();
     }
 
-    private void setDataTableQuery(String query) {
-        setDataTableQuery(query, true);
-    }
-
-    public void setDataTableContent(TableContent content) {
+    private void setTableContent(TableView<TableEntry> table, TableContent content) {
         if (content == null) {
-            dataTable.getItems().clear();
-            dataTable.getColumns().clear();
+            table.getItems().clear();
+            table.getColumns().clear();
             return;
         }
-        ObservableList<TableColumn<TableEntry, ?>> columns = dataTable.getColumns();
+        ObservableList<TableColumn<TableEntry, ?>> columns = table.getColumns();
         columns.clear();
         for (int i = 0; i < content.getColumnCount(); i++) {
             final int index = i;
@@ -117,10 +122,10 @@ public class TabScreen implements StageController {
             column.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValueAt(index)));
             columns.add(column);
         }
-        dataTable.setItems(content.getRows());
+        table.setItems(content.getRows());
     }
 
-    public void setTablesListContent(TableContent content) {
+    private void setTablesListContent(TableContent content) {
         tablesList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tablesList.setCellFactory(lv -> new ListCell<TableEntry>() {
             @Override
