@@ -32,9 +32,9 @@
             <content>
               <VBox>
                      <children>
-                        <TitledPane text="Filters and limits">
+                        <TitledPane expanded="false" text="Filters and limits">
                           <content>
-                              <HBox>
+                              <HBox prefHeight="194.0" prefWidth="893.0">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                        <children>
