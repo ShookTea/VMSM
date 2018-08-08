@@ -2,6 +2,7 @@ package eu.shooktea.vmsm.view.controller.mysql;
 
 import com.jcraft.jsch.JSchException;
 import com.mysql.cj.xdevapi.Table;
+import com.sun.javafx.scene.control.skin.TextAreaSkin;
 import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.mysql.SqlConnection;
 import eu.shooktea.vmsm.module.mysql.TableContent;
@@ -12,6 +13,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
@@ -37,6 +39,7 @@ public class TabScreen implements StageController {
         offsetSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0));
         limitSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, 300));
         dataTable.setPlaceholder(new Label("No table selected"));
+        availableFieldsTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         MySQL sql = MySQL.getModuleByName("MySQL");
         connection = sql.createConnection();
         try {
@@ -77,6 +80,19 @@ public class TabScreen implements StageController {
         }
         query += " LIMIT " + offset + ", " + limit;
         setTableQuery(dataTable, query, false);
+    }
+
+    @FXML
+    private void queryFieldsClicked() {
+        TableEntry selectedItem = availableFieldsTable.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) return;
+        String name = "`" + selectedItem.getValueAt(0) + "`";
+        int pos = queryField.getCaretPosition();
+        String text = queryField.getText();
+        text = text.substring(0, pos) + name + text.substring(pos);
+        queryField.setText(text);
+        queryField.requestFocus();
+        queryField.positionCaret(pos + name.length());
     }
 
     @FXML

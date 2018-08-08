@@ -104,7 +104,7 @@
                      <children>
                         <TitledPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" text="Available fields" VBox.vgrow="NEVER">
                            <content>
-                              <TableView fx:id="availableFieldsTable" prefHeight="200.0" prefWidth="200.0">
+                              <TableView fx:id="availableFieldsTable" onMouseClicked="#queryFieldsClicked" prefHeight="200.0" prefWidth="200.0">
                                 <columns>
                                   <TableColumn prefWidth="75.0" text="C1" />
                                   <TableColumn prefWidth="75.0" text="C2" />
