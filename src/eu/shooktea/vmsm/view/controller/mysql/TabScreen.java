@@ -43,12 +43,7 @@ public class TabScreen implements StageController {
         tablesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) return;
             String tableName = newValue.getValueAt(0);
-            int rows = Integer.parseInt(newValue.getValueAt(1));
-            int max = 300;
-            String query = "SELECT * FROM `" + tableName + "`";
-            if (rows > max) {
-                query += " LIMIT " + max;
-            }
+            String query = "SELECT * FROM `" + tableName + "` LIMIT 300";
             setDataTableQuery(query);
         });
     }
