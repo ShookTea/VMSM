@@ -6,17 +6,16 @@ import eu.shooktea.vmsm.view.View;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 
 public class TabScreen extends VBox {
 
     private @FXML TableView<TableEntry> dataTable;
+    private @FXML ListView<TableEntry> tablesList;
 
     public void setDataTableContent(TableContent content) {
-        this.content = content;
         ObservableList<TableColumn<TableEntry, ?>> columns = dataTable.getColumns();
         columns.clear();
         for (int i = 0; i < content.getColumnCount(); i++) {
@@ -28,13 +27,26 @@ public class TabScreen extends VBox {
         dataTable.setItems(content.getRows());
     }
 
-    public TableContent getDataTableContent() {
-        return content;
+    public void setTablesListContent(TableContent content) {
+        tablesList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tablesList.setCellFactory(lv -> new ListCell<TableEntry>() {
+            @Override
+            protected void updateItem(TableEntry item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                }
+                else {
+                    String name = item.getValueAt(0);
+                    String count = item.getValueAt(1);
+                    String rows = "(" + count + " " + (count.equals("1") ? "row" : "rows") + ")";
+                    setText(name + " " + rows);
+                }
+            }
+        });
     }
 
     public static TabScreen showTabScreen(Object... lambdaArgs) {
         return View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/TabScreen.fxml", "Database");
     }
-
-    private TableContent content;
 }
