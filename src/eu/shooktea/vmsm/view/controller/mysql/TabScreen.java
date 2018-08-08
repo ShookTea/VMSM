@@ -48,6 +48,9 @@ public class TabScreen implements StageController {
         tablesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) return;
             String tableName = newValue.getValueAt(0);
+            selectFilters.clear();
+            offsetSpinner.getValueFactory().setValue(0);
+            limitSpinner.getValueFactory().setValue(300);
             String query = "SELECT * FROM `" + tableName + "` LIMIT 300";
             setDataTableQuery(query);
         });
