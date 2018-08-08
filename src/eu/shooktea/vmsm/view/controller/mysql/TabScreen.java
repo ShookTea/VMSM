@@ -13,6 +13,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -215,5 +217,29 @@ public class TabScreen implements StageController {
 
     public static TabScreen showTabScreen(Object... lambdaArgs) {
         return View.createNewWindow("/eu/shooktea/vmsm/view/fxml/mysql/TabScreen.fxml", "Database");
+    }
+
+    @FXML
+    private void queryKeyReleased(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ENTER) {
+            int position = queryField.getCaretPosition();
+            String text = queryField.getText();
+            String before = text.substring(0, position);
+            String after = text.substring(position);
+
+            String trim = before.trim();
+            int iteratePos = trim.length() - 1;
+            int tabs = 0;
+            char[] charArray = trim.toCharArray();
+            for (int i = iteratePos; i >= 0; i--) {
+                if (charArray[i] == '\t') tabs++;
+                else if (charArray[i] == '\n' || charArray[i] == '\r') break;
+            }
+            text = before;
+            for (int i = 0; i < tabs; i++) text += "\t";
+            text += after;
+            queryField.setText(text);
+            queryField.positionCaret(position + tabs);
+        }
     }
 }

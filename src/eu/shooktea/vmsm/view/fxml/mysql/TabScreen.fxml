@@ -128,7 +128,7 @@
                            <content>
                               <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                  <children>
-                                    <TextArea fx:id="queryField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="SELECT * FROM `table_name`" wrapText="true" VBox.vgrow="ALWAYS">
+                                    <TextArea fx:id="queryField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="SELECT * FROM `table_name`" wrapText="true" VBox.vgrow="ALWAYS" onKeyReleased="#queryKeyReleased">
                                        <font>
                                           <Font name="Monospaced Regular" size="13.0" />
                                        </font>
