@@ -1,6 +1,7 @@
 package eu.shooktea.vmsm.view.controller.mysql;
 
 import com.jcraft.jsch.JSchException;
+import eu.shooktea.sqlformatter.SqlFormatter;
 import eu.shooktea.vmsm.module.mysql.*;
 import eu.shooktea.vmsm.view.StageController;
 import eu.shooktea.vmsm.view.View;
