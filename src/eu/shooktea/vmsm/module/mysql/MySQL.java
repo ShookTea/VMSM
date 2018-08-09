@@ -64,13 +64,16 @@ public class MySQL extends VMModule {
     public Optional<MenuItem> getMenuItem() {
         Menu root = new Menu("MySQL", Toolkit.createMenuImage("db-blue.png"));
 
+        MenuItem openGui = new MenuItem("Open database...");
+        openGui.setOnAction(TabScreen::showTabScreen);
+
         MenuItem openTerminal = new MenuItem("Open terminal...");
         openTerminal.setOnAction(MysqlTerminal::openMysqlTerminal);
 
         MenuItem config = new MenuItem("MySQL configuration...", Toolkit.createMenuImage("run.png"));
         config.setOnAction(MysqlConfig::openMysqlConfigWindow);
 
-        root.getItems().addAll(openTerminal, config);
+        root.getItems().addAll(openGui, openTerminal, config);
         return Optional.of(root);
     }
 }
