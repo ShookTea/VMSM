@@ -4,6 +4,7 @@
 * [Installation and introduction](user/install.md)
 * [Virtual machines](user/vms.md)
 * [Using SSH](user/ssh.md)
+* [Using MySQL](user/mysql.md)
     
     
 ### For developers
