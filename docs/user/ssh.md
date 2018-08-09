@@ -13,6 +13,3 @@ After properly configuring SSH module, you can open terminal in main menu (`SSH/
 button with computer icon.
 
 ![SSH Console](ssh_console.png)
-
-Now you can write your commands to input and press "Enter". These commands will be sent via SSH to your virtual machine.
-Reponse will be printed to output area.
