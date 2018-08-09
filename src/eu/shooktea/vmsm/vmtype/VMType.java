@@ -197,7 +197,8 @@ public abstract class VMType {
      * Returns observable list containing all types of virtual machines.
      */
     public static final ObservableList<VMType> types = FXCollections.observableArrayList(
-            new Vagrant()
+            new Vagrant(),
+            new None()
     );
 
 }

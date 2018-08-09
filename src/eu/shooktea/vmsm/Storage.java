@@ -153,6 +153,9 @@ public class Storage {
                 VM.set(vmList.get(0));
             }
         }
+        else if (vmList.size() > 0) {
+            VM.set(vmList.get(0));
+        }
 
         ignoredVagrantMachines = new ArrayList<>();
         if (obj.has("ignored_vagrant_machines")) {

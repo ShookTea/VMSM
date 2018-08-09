@@ -114,9 +114,14 @@ public class SqlConnection {
         if (sshEnabled) assignedPort = createSshForwarding();
 
         String dbUrl = "jdbc:mysql://" + sqlHost + ":" + assignedPort + "/" + sqlDb;
-        connection = DriverManager.getConnection(dbUrl, sqlUsername, sqlPassword);
+        try {
+            connection = DriverManager.getConnection(dbUrl, sqlUsername, sqlPassword);
+            isOpen = true;
+        } catch (SQLException ex) {
+            if (session != null) session.disconnect();
+            throw new SQLException(ex);
+        }
 
-        isOpen = true;
     }
 
     /**

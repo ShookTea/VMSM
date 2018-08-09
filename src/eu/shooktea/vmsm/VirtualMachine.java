@@ -41,6 +41,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Single virtual machine with HTTP server on it.
@@ -209,16 +210,23 @@ public class VirtualMachine {
      */
     public List<MenuItem> createMenuItem() {
         List<MenuItem> ret = new ArrayList<>();
-        getType().getMenuItem(this).ifPresent(item -> {
-            if (getType().getModules().length > 0 && item instanceof Menu) {
+        Optional<MenuItem> menuItem = getType().getMenuItem(this);
+        if (getType().getModules().length > 0 && menuItem.isPresent()) {
+            MenuItem item = menuItem.get();
+            if (item instanceof Menu) {
                 MenuItem openModuleConfig = new MenuItem("Module configuration...");
                 openModuleConfig.setOnAction(ModuleConfig::openModuleConfigWindow);
 
-                Menu m = (Menu)item;
+                Menu m = (Menu) menuItem.get();
                 m.getItems().addAll(new SeparatorMenuItem(), openModuleConfig);
             }
             ret.add(item);
-        });
+        }
+        else if (getType().getModules().length > 0) {
+            MenuItem openModuleConfig = new MenuItem("Module configuration...");
+            openModuleConfig.setOnAction(ModuleConfig::openModuleConfigWindow);
+            ret.add(openModuleConfig);
+        }
         ret.addAll(getType().getMenuItemsWithModules(this));
         return ret;
     }
