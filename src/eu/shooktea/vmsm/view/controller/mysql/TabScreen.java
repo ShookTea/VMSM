@@ -1,17 +1,13 @@
 package eu.shooktea.vmsm.view.controller.mysql;
 
 import com.jcraft.jsch.JSchException;
-import eu.shooktea.vmsm.module.mysql.MySQL;
-import eu.shooktea.vmsm.module.mysql.SqlConnection;
-import eu.shooktea.vmsm.module.mysql.TableContent;
-import eu.shooktea.vmsm.module.mysql.TableEntry;
+import eu.shooktea.vmsm.module.mysql.*;
 import eu.shooktea.vmsm.view.StageController;
 import eu.shooktea.vmsm.view.View;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -20,7 +16,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
 import java.sql.SQLException;
 import java.util.stream.Collectors;
@@ -250,7 +245,7 @@ public class TabScreen implements StageController {
     @FXML
     private void formatQuery() {
         String sql = queryField.getText();
-        String formattedSql = new BasicFormatterImpl().format(sql);
+        String formattedSql = SqlFormatter.format(sql);
         queryField.setText(formattedSql);
     }
 
