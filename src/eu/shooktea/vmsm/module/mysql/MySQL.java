@@ -5,6 +5,7 @@ import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.mysql.MysqlConfig;
 import eu.shooktea.vmsm.view.controller.mysql.MysqlTerminal;
+import eu.shooktea.vmsm.view.controller.mysql.TabScreen;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
@@ -54,8 +55,8 @@ public class MySQL extends VMModule {
 
     @Override
     public List<ImageView> getQuickGuiButtons() {
-        ImageView openTerminal = Toolkit.createQuickGuiButton("db-blue.png", "Open MySQL terminal");
-        openTerminal.setOnMouseClicked(MysqlTerminal::openMysqlTerminal);
+        ImageView openTerminal = Toolkit.createQuickGuiButton("db-blue.png", "Open MySQL GUI");
+        openTerminal.setOnMouseClicked(TabScreen::showTabScreen);
         return Collections.singletonList(openTerminal);
     }
 
@@ -63,13 +64,16 @@ public class MySQL extends VMModule {
     public Optional<MenuItem> getMenuItem() {
         Menu root = new Menu("MySQL", Toolkit.createMenuImage("db-blue.png"));
 
+        MenuItem openGui = new MenuItem("Open database...");
+        openGui.setOnAction(TabScreen::showTabScreen);
+
         MenuItem openTerminal = new MenuItem("Open terminal...");
         openTerminal.setOnAction(MysqlTerminal::openMysqlTerminal);
 
         MenuItem config = new MenuItem("MySQL configuration...", Toolkit.createMenuImage("run.png"));
         config.setOnAction(MysqlConfig::openMysqlConfigWindow);
 
-        root.getItems().addAll(openTerminal, config);
+        root.getItems().addAll(openGui, openTerminal, config);
         return Optional.of(root);
     }
 }
