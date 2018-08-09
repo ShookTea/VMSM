@@ -58,7 +58,7 @@ public class TabScreen implements StageController {
         } catch (JSchException | SQLException e) {
             e.printStackTrace();
             requestStageClose();
-            showError("There is a problem with connection to database; check if you have correctly configured MySQL module and your VM is online.");
+            showError("There is a problem with connection to database; check if you have correctly configured MySQL module and your VM is online. (" + e.getMessage() + ")");
             return;
         }
 
@@ -255,9 +255,11 @@ public class TabScreen implements StageController {
     }
 
     private void showError(String error) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setContentText(error);
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        alert.show();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(error);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.show();
+        });
     }
 }
