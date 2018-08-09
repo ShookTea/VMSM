@@ -11,5 +11,6 @@
     <orderEntry type="library" name="org.reactfx:reactfx:2.0-M5" level="project" />
     <orderEntry type="library" name="com.jcraft:jsch:0.1.54" level="project" />
     <orderEntry type="library" name="mysql:mysql-connector-java:8.0.11" level="project" />
+    <orderEntry type="library" name="org.hibernate:hibernate-core:5.3.4.Final" level="project" />
   </component>
 </module>

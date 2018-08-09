@@ -8,6 +8,7 @@
     ```
 1. Import project to IDE, i.e. IntelliJ
 1. Solve dependencies from Maven:
+    * `org.hibernate:hibernate-core:5.3.4.Final`
     * `org.json:json:20180130`
     * `org.reactfx:reactfx:2.0-M5`
     * `com.jcraft:jsch:0.1.54`
