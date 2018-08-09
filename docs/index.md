@@ -5,6 +5,7 @@
 * [Virtual machines](user/vms.md)
 * [Using SSH](user/ssh.md)
 * [Using MySQL](user/mysql.md)
+* [Troubleshooting](user/troubleshooting.md)
     
     
 ### For developers
