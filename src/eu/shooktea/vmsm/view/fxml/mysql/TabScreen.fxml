@@ -136,6 +136,11 @@
                                     <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
                                        <children>
                                           <Button defaultButton="true" mnemonicParsing="false" onAction="#runQueryField" text="Run query" />
+                                           <Button mnemonicParsing="false" onAction="#formatQuery" text="Format query">
+                                               <HBox.margin>
+                                                   <Insets left="10.0"/>
+                                               </HBox.margin>
+                                           </Button>
                                        </children>
                                        <VBox.margin>
                                           <Insets top="15.0" />

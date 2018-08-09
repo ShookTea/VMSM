@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -18,6 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
 import java.sql.SQLException;
 import java.util.stream.Collectors;
@@ -241,5 +243,12 @@ public class TabScreen implements StageController {
             queryField.setText(text);
             queryField.positionCaret(position + tabs);
         }
+    }
+
+    @FXML
+    private void formatQuery() {
+        String sql = queryField.getText();
+        String formattedSql = new BasicFormatterImpl().format(sql);
+        queryField.setText(formattedSql);
     }
 }
