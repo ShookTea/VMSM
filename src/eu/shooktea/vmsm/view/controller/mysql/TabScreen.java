@@ -18,6 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
@@ -57,6 +58,7 @@ public class TabScreen implements StageController {
         } catch (JSchException | SQLException e) {
             e.printStackTrace();
             requestStageClose();
+            showError("There is a problem with connection to database; check if you have correctly configured MySQL module and your VM is online.");
             return;
         }
 
@@ -127,7 +129,7 @@ public class TabScreen implements StageController {
                 });
             } catch (SQLException e) {
                 e.printStackTrace();
-                Platform.runLater(this::requestStageClose);
+                showError(e.getMessage());
             }
         }).start();
     }
@@ -250,5 +252,12 @@ public class TabScreen implements StageController {
         String sql = queryField.getText();
         String formattedSql = new BasicFormatterImpl().format(sql);
         queryField.setText(formattedSql);
+    }
+
+    private void showError(String error) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText(error);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.show();
     }
 }
