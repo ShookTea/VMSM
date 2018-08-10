@@ -2,6 +2,7 @@ package eu.shooktea.vmsm.view.controller.mysql;
 
 import com.jcraft.jsch.JSchException;
 import eu.shooktea.sqlformatter.SqlFormatter;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.module.mysql.*;
 import eu.shooktea.vmsm.view.StageController;
 import eu.shooktea.vmsm.view.View;
@@ -46,10 +47,11 @@ public class TabScreen implements StageController {
         availableFieldsTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         MySQL sql = MySQL.getModuleByName("MySQL");
         connection = sql.createConnection();
+        String databaseName = sql.getStringSetting(VM.getOrThrow(), "database");
         try {
             connection.open();
             String query =
-                    "SELECT `TABLE_NAME`, `TABLE_ROWS` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA`='energa'";
+                    "SELECT `TABLE_NAME`, `TABLE_ROWS` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA`='" + databaseName + "'";
             setTablesListContent(new TableContent(connection.query(query)));
         } catch (JSchException | SQLException e) {
             e.printStackTrace();
