@@ -21,7 +21,7 @@ public class DockerCompose extends VMType {
                 (dir, name) -> name.equals("docker-compose.yml") || name.equals("docker-compose.yaml")
         );
         if (files == null || files.length < 1) return "There is no file called 'docker-compose.yml' in this directory.";
-        else if (file.length() > 1) return "There are too many 'docker-compose.yml' files in this directory.";
+        else if (files.length > 1) return "There are too many 'docker-compose.yml' files in this directory.";
         else return "";
     }
 }
