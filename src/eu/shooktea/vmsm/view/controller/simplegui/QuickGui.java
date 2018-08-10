@@ -1,7 +1,6 @@
 package eu.shooktea.vmsm.view.controller.simplegui;
 
 import eu.shooktea.fxtoolkit.FXToolkit;
-import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Bounds;
@@ -74,12 +73,12 @@ class QuickGui {
 
     private void requestExit() {
         requestedExit = true;
-        FXToolkit.runPlatformAfter(5000, () -> {
+        FXToolkit.onPlatform(() -> {
             if (requestedExit) {
                 requestedExit = false;
                 closeGui();
             }
-        });
+        }).runAfter(5000);
     }
 
     private static List<Point2D> getPoints(int amountOfPoints) {
