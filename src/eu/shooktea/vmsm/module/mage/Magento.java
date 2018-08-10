@@ -260,6 +260,7 @@ public class Magento extends VMModule {
             else {
                 newQuery += "&" + append;
             }
+            newQuery += "&redirectUrl=" + vm.getPageRoot().toString() + "/" + getAdminAddress(vm);
             URI newUri = new URI(oldUri.getScheme(), oldUri.getAuthority(), oldUri.getPath(), newQuery, oldUri.getFragment());
             View.openURL(newUri);
             codeFile.deleteOnExit();
@@ -362,6 +363,7 @@ public class Magento extends VMModule {
     private static final String openAdminCode =
                     "<?php\n" +
                     "$username = $_GET['username'];\n" +
+                    "$url = $_GET['redirectUrl'];\n" +
                     "require_once 'app/Mage.php';\n" +
                     "umask(0);\n" +
                     "$app = Mage::app('default');\n" +
@@ -377,7 +379,6 @@ public class Magento extends VMModule {
                     "$session->setAcl(Mage::getResourceModel('admin/acl')->loadAcl());\n" +
                     "Mage::dispatchEvent('admin_session_user_login_success',array('user'=>$user));\n" +
                     "if ($session->isLoggedIn()) {\n" +
-                    "    $url = Mage::getUrl(\"adminhtml/\");\n" +
                     "    echo \"<script type='text/javascript'>location.href = '$url';</script>\";\n" +
                     "}\n" +
                     "\n" +
