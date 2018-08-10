@@ -28,7 +28,8 @@ public class DockerCompose extends VMType {
     @Override
     public String[] getModules() {
         return new String[] {
-                "Magento"
+                "Magento",
+                "MySQL",
         };
     }
 }
