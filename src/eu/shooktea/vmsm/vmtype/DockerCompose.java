@@ -24,4 +24,11 @@ public class DockerCompose extends VMType {
         else if (files.length > 1) return "There are too many 'docker-compose.yml' files in this directory.";
         else return "";
     }
+
+    @Override
+    public String[] getModules() {
+        return new String[] {
+                "Magento"
+        };
+    }
 }
