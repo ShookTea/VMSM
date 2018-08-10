@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
-import javax.tools.Tool;
 import java.io.File;
 import java.util.Optional;
 
