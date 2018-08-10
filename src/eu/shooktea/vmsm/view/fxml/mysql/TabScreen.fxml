@@ -111,7 +111,7 @@
                <content>
                   <VBox>
                      <children>
-                        <TitledPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" text="Available fields" VBox.vgrow="NEVER">
+                        <TitledPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Available fields" VBox.vgrow="NEVER">
                            <content>
                               <TableView fx:id="availableFieldsTable" onMouseClicked="#queryFieldsClicked" prefHeight="200.0" prefWidth="200.0">
                                 <columns>
@@ -128,7 +128,7 @@
                            <content>
                               <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                  <children>
-                                    <TextArea fx:id="queryField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="SELECT * FROM `table_name`" wrapText="true" VBox.vgrow="ALWAYS" onKeyReleased="#queryKeyReleased">
+                                    <TextArea fx:id="queryField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyReleased="#queryKeyReleased" promptText="SELECT * FROM `table_name`" wrapText="true" VBox.vgrow="ALWAYS">
                                        <font>
                                           <Font name="Monospaced Regular" size="13.0" />
                                        </font>
@@ -138,7 +138,7 @@
                                           <Button defaultButton="true" mnemonicParsing="false" onAction="#runQueryField" text="Run query" />
                                            <Button mnemonicParsing="false" onAction="#formatQuery" text="Format query">
                                                <HBox.margin>
-                                                   <Insets left="10.0"/>
+                                                   <Insets left="10.0" />
                                                </HBox.margin>
                                            </Button>
                                        </children>
