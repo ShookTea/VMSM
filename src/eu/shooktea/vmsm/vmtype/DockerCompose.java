@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
+import javax.tools.Tool;
 import java.io.File;
 import java.util.Optional;
 
@@ -45,7 +46,15 @@ public class DockerCompose extends VMType {
     }
 
     private MenuItem createMenuItem(VirtualMachine vm) {
+        MenuItem up = new MenuItem("Up", Toolkit.createMenuImage("play.png"));
+        MenuItem upBuild = new MenuItem("Up with --build", Toolkit.createMenuImage("run.png"));
+        MenuItem stop = new MenuItem("Stop", Toolkit.createMenuImage("stop.png"));
+        MenuItem kill = new MenuItem("Kill", Toolkit.createMenuImage("red_ball.png"));
+
         Menu root = new Menu(vm.getName(), Toolkit.createMenuImage("docker_logo.png"));
+        root.getItems().addAll(
+                up, upBuild, stop, kill
+        );
         return root;
     }
 }
