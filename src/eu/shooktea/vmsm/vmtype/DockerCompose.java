@@ -1,8 +1,13 @@
 package eu.shooktea.vmsm.vmtype;
 
+import eu.shooktea.vmsm.Toolkit;
+import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 
 import java.io.File;
+import java.util.Optional;
 
 public class DockerCompose extends VMType {
     DockerCompose() {
@@ -31,5 +36,16 @@ public class DockerCompose extends VMType {
                 "Magento",
                 "MySQL",
         };
+    }
+
+    @Override
+    public Optional<MenuItem> getMenuItem(VirtualMachine vm) {
+        return Optional.of(createMenuItem(vm));
+
+    }
+
+    private MenuItem createMenuItem(VirtualMachine vm) {
+        Menu root = new Menu(vm.getName(), Toolkit.createMenuImage("docker_logo.png"));
+        return root;
     }
 }
