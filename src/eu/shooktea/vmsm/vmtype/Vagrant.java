@@ -57,12 +57,10 @@ public class Vagrant extends VMType {
 
     @Override
     protected String checkRootFile(File file) {
-        if (!file.exists()) {
-            return "Path does not exist.";
-        }
-        if (!file.isDirectory()) {
-            return "Path is not a directory.";
-        }
+        if (file == null) return "You haven't selected a file";
+        if (!file.exists()) return "Path does not exist.";
+        if (!file.isDirectory()) return "Path is not a directory.";
+
         String notCorrect = "Path is not a correct Vagrant root directory.";
         if (file.listFiles(f -> f.getName().equals(".vagrant")).length == 0) {
             return notCorrect;
