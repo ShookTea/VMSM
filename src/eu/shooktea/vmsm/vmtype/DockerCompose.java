@@ -48,8 +48,8 @@ public class DockerCompose extends VMType {
         return Optional.of(createMenuItem(vm));
     }
 
-    public File getDockerComposeFile() {
-        File root = VM.getOrThrow().getMainPath();
+    public File getDockerComposeFile(VirtualMachine vm) {
+        File root = vm.getMainPath();
         File a = new File(root, "docker-compose.yml");
         if (a.exists()) return a;
         a = new File(root, "docker-compose.yaml");
