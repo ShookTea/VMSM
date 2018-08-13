@@ -35,7 +35,7 @@ public class Terminal implements DefaultUserInfo, StageController {
             connection.setOnTerminalUpdate(this::reloadContent);
             connection.init();
             reloadContent();
-        } catch (JSchException | IOException e) {
+        } catch (JSchException e) {
             connection.println(e);
         }
     }
@@ -81,12 +81,6 @@ public class Terminal implements DefaultUserInfo, StageController {
 
     @Override
     public void setStage(Stage stage) {
-        stage.setOnCloseRequest(e -> {
-            try {
-                connection.close();
-            } catch (JSchException e1) {
-                connection.println(e1);
-            }
-        });
+        stage.setOnCloseRequest(e -> connection.close());
     }
 }
