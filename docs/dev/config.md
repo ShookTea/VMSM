@@ -88,4 +88,12 @@ There are two primary reasons why there is a plan to replace JSON with YAML in c
 * **More human-readable format**. It forces to use whitespaces and reduce characters representing objects and tables.
 
 #### How will migration work
-(if .json exists, read from it; saving always to YAML and removing .json files)
+
+The most important part of that migration is: we cannot remove JSON dependency in the moment of migration, because
+users will not have any possibility of loading already existing configuration.
+
+When YAML will be introduced, VMSM will check if JSON configuration file exists and load configuration from it. During
+saving configuration will be saved to YAML file and JSON file will be removed.
+
+In the later update (possibly few days after update that introduces YAML configuration) we will assume that there is no
+more JSON configuration files and JSON dependency can be removed.
