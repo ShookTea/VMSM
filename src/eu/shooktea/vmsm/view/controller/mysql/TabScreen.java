@@ -56,8 +56,8 @@ public class TabScreen implements StageController {
             setTablesListContent(new TableContent(connection.query(query)));
         } catch (JSchException | SQLException e) {
             e.printStackTrace();
-            requestStageClose();
             showError("There is a problem with connection to database; check if you have correctly configured MySQL module and your VM is online. (" + e.getMessage() + ")");
+            requestStageClose();
             return;
         }
 
