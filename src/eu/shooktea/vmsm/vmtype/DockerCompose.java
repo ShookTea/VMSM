@@ -12,7 +12,6 @@ import javafx.scene.control.MenuItem;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.Scanner;
 
 public class DockerCompose extends VMType {
     DockerCompose() {
