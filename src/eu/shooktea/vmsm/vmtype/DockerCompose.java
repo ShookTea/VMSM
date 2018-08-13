@@ -1,13 +1,18 @@
 package eu.shooktea.vmsm.vmtype;
 
+import eu.shooktea.fxtoolkit.FXToolkit;
 import eu.shooktea.vmsm.Toolkit;
+import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.view.View;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
+import java.util.Scanner;
 
 public class DockerCompose extends VMType {
     DockerCompose() {
@@ -46,14 +51,38 @@ public class DockerCompose extends VMType {
 
     private MenuItem createMenuItem(VirtualMachine vm) {
         MenuItem up = new MenuItem("Up", Toolkit.createMenuImage("play.png"));
+        up.setOnAction(e -> runCommand("VM is up", "docker-compose", "up", "-d"));
         MenuItem upBuild = new MenuItem("Up with --build", Toolkit.createMenuImage("run.png"));
+        upBuild.setOnAction(e -> runCommand("VM is up", "docker-compose", "up", "-d", "--build"));
         MenuItem stop = new MenuItem("Stop", Toolkit.createMenuImage("stop.png"));
+        stop.setOnAction(e -> runCommand("VM is down", "docker-compose", "stop"));
         MenuItem kill = new MenuItem("Kill", Toolkit.createMenuImage("red_ball.png"));
+        kill.setOnAction(e -> runCommand("VM is down", "docker-compose", "kill"));
 
         Menu root = new Menu(vm.getName(), Toolkit.createMenuImage("docker_logo.png"));
         root.getItems().addAll(
                 up, upBuild, stop, kill
         );
         return root;
+    }
+
+    private void runCommand(String message, String... command) {
+        VirtualMachine vm = VM.getOrThrow();
+        try {
+            ProcessBuilder builder = new ProcessBuilder(command).directory(vm.getMainPath());
+            Process process = builder.start();
+            FXToolkit.runOnFxThread(() -> View.showMessage(message))
+                    .after(() -> {
+                        try {
+                            System.out.println("Before process.waitingFor()");
+                            process.waitFor();
+                            System.out.println("After process.waitingFor()");
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+            });
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
