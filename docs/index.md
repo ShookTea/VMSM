@@ -11,3 +11,4 @@
 ### For developers
 * [Cloning and dependencies](dev/init_project.md)
 * [JavaDoc](javadoc/index.html)
+* [Configuration file](dev/config.md)
