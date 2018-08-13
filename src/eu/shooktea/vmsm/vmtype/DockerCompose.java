@@ -46,7 +46,15 @@ public class DockerCompose extends VMType {
     @Override
     public Optional<MenuItem> getMenuItem(VirtualMachine vm) {
         return Optional.of(createMenuItem(vm));
+    }
 
+    public File getDockerComposeFile() {
+        File root = VM.getOrThrow().getMainPath();
+        File a = new File(root, "docker-compose.yml");
+        if (a.exists()) return a;
+        a = new File(root, "docker-compose.yaml");
+        if (a.exists()) return a;
+        return null;
     }
 
     private MenuItem createMenuItem(VirtualMachine vm) {
