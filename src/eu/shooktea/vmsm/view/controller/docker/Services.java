@@ -1,6 +1,5 @@
 package eu.shooktea.vmsm.view.controller.docker;
 
-import com.amihaiemil.camel.Yaml;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.dockercompose.ComposeFile;
@@ -12,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.reactfx.value.Val;
 
-import java.io.File;
 import java.io.IOException;
 
 public class Services {
@@ -31,9 +29,7 @@ public class Services {
         try {
             dockerCompose = DockerCompose.getModuleByName("Docker Compose");
             vm = VM.getOrThrow();
-
-            File input = ((eu.shooktea.vmsm.vmtype.DockerCompose)vm.getType()).getDockerComposeFile(vm);
-            composeFile = new ComposeFile(Yaml.createYamlInput(input).readYamlMapping());
+            composeFile = new ComposeFile();
 
             servicesListView.setItems(composeFile.getServices());
             servicesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -50,7 +46,11 @@ public class Services {
 
     @FXML
     private void saveServiceData() {
-
+        try {
+            composeFile.save();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void openDockerServicesWindow(Object... lambdaArgs) {
