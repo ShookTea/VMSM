@@ -36,12 +36,6 @@ public class ComposeFile {
         return ret.toArray(new String[0]);
     }
 
-    public void test() {
-        for (Service service : getServices()) {
-            System.out.println(service);
-        }
-    }
-
     private final YamlMapping mapping;
     private final List<Service> services;
 }
