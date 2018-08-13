@@ -7,6 +7,7 @@ import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.VMModule;
+import eu.shooktea.vmsm.view.controller.docker.Services;
 import eu.shooktea.vmsm.vmtype.VMType;
 import javafx.event.Event;
 import javafx.scene.control.MenuItem;
@@ -44,16 +45,6 @@ public class DockerCompose extends VMModule {
     }
 
     private void openDockerCompose(Event e) {
-        try {
-            VirtualMachine vm = VM.getOrThrow();
-            VMType type = vm.getType();
-            eu.shooktea.vmsm.vmtype.DockerCompose dockerType = (eu.shooktea.vmsm.vmtype.DockerCompose)type;
-            File file = dockerType.getDockerComposeFile(vm);
-            YamlMapping mapping = Yaml.createYamlInput(file).readYamlMapping();
-            ComposeFile compose = new ComposeFile(mapping);
-            compose.test();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+        Services.openDockerServicesWindow();
     }
 }
