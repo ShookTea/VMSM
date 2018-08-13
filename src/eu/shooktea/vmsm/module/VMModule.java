@@ -3,6 +3,7 @@ package eu.shooktea.vmsm.module;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.dockercompose.DockerCompose;
 import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.ssh.SSH;
@@ -137,6 +138,7 @@ public abstract class VMModule {
             case "MAGENTO": return (T)magento;
             case "SSH": return (T)ssh;
             case "MYSQL": return (T)mysql;
+            case "DOCKER COMPOSE": return (T)dockerCompose;
             default: return null;
         }
     }
@@ -144,6 +146,7 @@ public abstract class VMModule {
     private static final MySQL mysql = new MySQL();
     private static final Magento magento = new Magento();
     private static final SSH ssh = new SSH();
+    private static final DockerCompose dockerCompose = new DockerCompose();
 
     /**
      * Returns list of buttons to be displayed in quick menu.
