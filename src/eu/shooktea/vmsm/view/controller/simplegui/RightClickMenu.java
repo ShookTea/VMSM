@@ -82,6 +82,7 @@ public class RightClickMenu {
     private ToggleGroup vmToggleGroup() {
         ToggleGroup group = new ToggleGroup();
         group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) return;
             RadioMenuItem item = (RadioMenuItem)newValue;
             String name = item.getText();
             VirtualMachine chosenMachine = Storage.getVmList().stream()
