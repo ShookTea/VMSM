@@ -86,13 +86,13 @@ public class SimpleGuiController {
             mainButton.setText(currentMessage);
             mainButton.setBackground(createBackground(color));
             mainButton.setTextFill(calculateForeground(color));
-            FXToolkit.onPlatform(() -> {
+            FXToolkit.runOnFxThread(() -> {
                 currentMessage = null;
                 mainButton.textProperty().bind(titleStringProperty);
                 mainButton.setBackground(createBackground(View.defaultBackgroundColor));
                 mainButton.setTextFill(calculateForeground(View.defaultBackgroundColor));
                 updateMessage();
-            }).runAfter(5000);
+            }).after(5000);
         }
     }
 

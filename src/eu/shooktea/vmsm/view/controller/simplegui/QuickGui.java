@@ -73,12 +73,12 @@ class QuickGui {
 
     private void requestExit() {
         requestedExit = true;
-        FXToolkit.onPlatform(() -> {
+        FXToolkit.runOnFxThread(() -> {
             if (requestedExit) {
                 requestedExit = false;
                 closeGui();
             }
-        }).runAfter(5000);
+        }).after(5000);
     }
 
     private static List<Point2D> getPoints(int amountOfPoints) {

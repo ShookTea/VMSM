@@ -205,7 +205,7 @@ public class TabScreen implements StageController {
             e.printStackTrace();
         }
         if (stage != null) stage.close();
-        else FXToolkit.onPlatform(stage::close).runAfterTrying(() -> stage != null, 20);
+        else FXToolkit.runOnFxThread(stage::close).afterTrying(() -> stage != null, 20);
     }
 
     private Stage stage = null;

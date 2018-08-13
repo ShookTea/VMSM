@@ -13,7 +13,7 @@ public class PlatformThreadHandler {
         Platform.runLater(r);
     }
 
-    public void runAfter(long millis) {
+    public void after(long millis) {
         new Thread(() -> {
             try {
                 Thread.sleep(millis);
@@ -22,14 +22,14 @@ public class PlatformThreadHandler {
         }).start();
     }
 
-    public void runAfter(Runnable r) {
+    public void after(Runnable r) {
         new Thread(() -> {
             r.run();
             Platform.runLater(r);
         }).start();
     }
 
-    public void runAfterTrying(Supplier<Boolean> endCase, long breakMillis) {
+    public void afterTrying(Supplier<Boolean> endCase, long breakMillis) {
         new Thread(() -> {
             while (!endCase.get()) try {
                 Thread.sleep(breakMillis);
