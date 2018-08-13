@@ -82,8 +82,10 @@ Sample JSON object that will be stored in `VMs` array:
 ### Migration to YAML
 
 There are two primary reasons why there is a plan to replace JSON with YAML in configuration storage:
-* one library less
-* easier to read
+* **One dependence less**. `org.json:json` library is used only for reading configuration files; at the same time
+    `com.amihaiemil.web:camel` is used to read YAML files for Docker Compose. We obviously cannot change Docker Compose
+    config format, but we can change ours. After migration we will be able to simply remove JSON dependency.
+* **More human-readable format**. It forces to use whitespaces and reduce characters representing objects and tables.
 
 #### How will migration work
 (if .json exists, read from it; saving always to YAML and removing .json files)
