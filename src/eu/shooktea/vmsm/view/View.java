@@ -143,9 +143,8 @@ public class View {
             stage.setX(pos.getX());
             stage.setY(pos.getY());
             return controller;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
             return null;
         }
     }
