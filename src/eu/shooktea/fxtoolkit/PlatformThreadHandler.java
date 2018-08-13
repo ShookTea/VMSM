@@ -2,6 +2,8 @@ package eu.shooktea.fxtoolkit;
 
 import javafx.application.Platform;
 
+import java.util.function.Supplier;
+
 public class PlatformThreadHandler {
     PlatformThreadHandler(Runnable r) {
         this.r = r;
@@ -23,6 +25,15 @@ public class PlatformThreadHandler {
     public void runAfter(Runnable r) {
         new Thread(() -> {
             r.run();
+            Platform.runLater(r);
+        }).start();
+    }
+
+    public void runAfterTrying(Supplier<Boolean> endCase, long breakMillis) {
+        new Thread(() -> {
+            while (!endCase.get()) try {
+                Thread.sleep(breakMillis);
+            } catch (InterruptedException ignored) {}
             Platform.runLater(r);
         }).start();
     }
