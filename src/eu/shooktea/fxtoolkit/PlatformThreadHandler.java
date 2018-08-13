@@ -22,9 +22,9 @@ public class PlatformThreadHandler {
         }).start();
     }
 
-    public void after(Runnable r) {
+    public void after(Runnable before) {
         new Thread(() -> {
-            r.run();
+            before.run();
             Platform.runLater(r);
         }).start();
     }
