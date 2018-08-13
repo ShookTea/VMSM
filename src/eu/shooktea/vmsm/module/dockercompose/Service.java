@@ -8,6 +8,11 @@ public class Service {
         this.yaml = mapping;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     private final String name;
     private final YamlMapping yaml;
 }

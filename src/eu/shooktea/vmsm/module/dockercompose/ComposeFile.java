@@ -1,6 +1,8 @@
 package eu.shooktea.vmsm.module.dockercompose;
 
 import com.amihaiemil.camel.YamlMapping;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +10,11 @@ import java.util.List;
 public class ComposeFile {
     public ComposeFile(YamlMapping mapping) {
         this.mapping = mapping;
-        this.services = new ArrayList<>();
+        this.services = FXCollections.observableArrayList();
         parseYaml();
     }
 
-    public List<Service> getServices() {
+    public ObservableList<Service> getServices() {
         return services;
     }
 
@@ -37,5 +39,5 @@ public class ComposeFile {
     }
 
     private final YamlMapping mapping;
-    private final List<Service> services;
+    private final ObservableList<Service> services;
 }
