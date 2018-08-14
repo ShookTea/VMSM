@@ -7,14 +7,6 @@ import java.io.*;
 public class YAML {
     private YAML() {
         this.yaml = new Yaml();
-        try {
-            FileInputStream fis = new FileInputStream("/home/nkowalik/docker/Magento/docker-compose.yml");
-            Object ob = yaml.load(fis);
-            YamlValue value = YamlValue.fromObject(ob);
-            System.out.println(value);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     public YamlValue load(String s) {
@@ -27,6 +19,10 @@ public class YAML {
 
     public YamlValue load(Reader r) {
         return YamlValue.fromObject(yaml.load(r));
+    }
+
+    public YamlValue load(File f) throws FileNotFoundException {
+        return this.load(new FileInputStream(f));
     }
 
     public String toString(YamlValue val) {
