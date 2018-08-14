@@ -9,9 +9,11 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JsonFormat extends AbstractFormat {
     @Override
@@ -71,6 +73,25 @@ public class JsonFormat extends AbstractFormat {
 
     @Override
     public void save(File file) throws IOException {
+        file.delete();
+        file.createNewFile();
 
+        JSONObject root = new JSONObject();
+        List<JSONObject> list = Storage.getVmList().stream()
+                .map(VirtualMachine::toJSON)
+                .collect(Collectors.toList());
+        JSONArray vms = new JSONArray(list);
+        root.put("VMs", vms);
+        VM.ifNotNull(vm -> root.put("current_vm", vm.getName()));
+        List<String> ignoredVagrants = Storage.getIgnoredVagrantMachines();
+        if (ignoredVagrants != null && !ignoredVagrants.isEmpty()) {
+            JSONArray array = new JSONArray(ignoredVagrants);
+            root.put("ignored_vagrant_machines", array);
+        }
+        root.put("config", new JSONObject(Storage.config));
+
+        PrintWriter pw = new PrintWriter(file);
+        pw.println(root.toString());
+        pw.close();
     }
 }
