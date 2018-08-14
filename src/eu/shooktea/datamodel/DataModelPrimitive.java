@@ -1,14 +1,14 @@
 package eu.shooktea.datamodel;
 
-public class YamlPrimitive<T> extends YamlValue {
-    public YamlPrimitive(T object) {
-        super(YamlType.PRIMITIVE);
+public class DataModelPrimitive<T> extends DataModelValue {
+    public DataModelPrimitive(T object) {
+        super(DataModelType.PRIMITIVE);
         this.content = object;
     }
 
     @Override
     public String toString() {
-        return "YamlPrimitive{" + content.toString() + "}";
+        return "DataModelPrimitive{" + content.toString() + "}";
     }
 
     @Override

@@ -6,22 +6,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class YamlList extends YamlValue implements Iterable<YamlValue> {
-    public YamlList(List<Object> objectList) {
-        super(YamlType.LIST);
+public class DataModelList extends DataModelValue implements Iterable<DataModelValue> {
+    public DataModelList(List<Object> objectList) {
+        super(DataModelType.LIST);
         this.list = new ArrayList<>();
         for (Object ob : objectList) {
-            this.list.add(YamlValue.fromObject(ob));
+            this.list.add(DataModelValue.fromObject(ob));
         }
     }
 
-    public YamlList() {
+    public DataModelList() {
         this(new ArrayList<>());
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder().append("YamlList{");
+        StringBuilder builder = new StringBuilder().append("DataModelList{");
         for (int i = 0; i < list.size(); i++) {
             builder.append(i == 0 ? "" : ";").append(list.get(i));
         }
@@ -31,7 +31,7 @@ public class YamlList extends YamlValue implements Iterable<YamlValue> {
     @Override
     public Object toYamlObject() {
         return list.stream()
-                .map(YamlValue::toYamlObject)
+                .map(DataModelValue::toYamlObject)
                 .collect(Collectors.toList());
     }
 
@@ -39,15 +39,15 @@ public class YamlList extends YamlValue implements Iterable<YamlValue> {
         return list.size();
     }
 
-    public YamlValue get(int i) {
+    public DataModelValue get(int i) {
         return list.get(i);
     }
 
-    public void add(YamlValue val) {
+    public void add(DataModelValue val) {
         list.add(val);
     }
 
-    public void add(int index, YamlValue val) {
+    public void add(int index, DataModelValue val) {
         list.add(index, val);
     }
 
@@ -55,7 +55,7 @@ public class YamlList extends YamlValue implements Iterable<YamlValue> {
         list.remove(index);
     }
 
-    public void remove(YamlValue val) {
+    public void remove(DataModelValue val) {
         list.remove(val);
     }
 
@@ -63,14 +63,14 @@ public class YamlList extends YamlValue implements Iterable<YamlValue> {
         list.clear();
     }
 
-    public Stream<YamlValue> stream() {
+    public Stream<DataModelValue> stream() {
         return list.stream();
     }
 
     @Override
-    public Iterator<YamlValue> iterator() {
+    public Iterator<DataModelValue> iterator() {
         return list.iterator();
     }
 
-    private final List<YamlValue> list;
+    private final List<DataModelValue> list;
 }

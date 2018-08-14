@@ -1,5 +1,5 @@
 package eu.shooktea.datamodel;
 
-public enum YamlType {
+public enum DataModelType {
     MAP, LIST, PRIMITIVE;
 }

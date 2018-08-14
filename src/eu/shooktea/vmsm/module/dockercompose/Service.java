@@ -1,9 +1,9 @@
 package eu.shooktea.vmsm.module.dockercompose;
 
-import eu.shooktea.datamodel.YamlList;
-import eu.shooktea.datamodel.YamlMap;
-import eu.shooktea.datamodel.YamlPrimitive;
-import eu.shooktea.datamodel.YamlValue;
+import eu.shooktea.datamodel.DataModelList;
+import eu.shooktea.datamodel.DataModelMap;
+import eu.shooktea.datamodel.DataModelPrimitive;
+import eu.shooktea.datamodel.DataModelValue;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,7 +11,7 @@ import javafx.collections.ObservableList;
 import java.util.stream.Collectors;
 
 public class Service {
-    public Service(String name, YamlMap map, ComposeFile composeFile) {
+    public Service(String name, DataModelMap map, ComposeFile composeFile) {
         this.yaml = map;
         this.compose = composeFile;
         this.name = new SimpleStringProperty(name);
@@ -20,36 +20,36 @@ public class Service {
     }
 
     public Service(String name, ComposeFile composeFile) {
-        this.yaml = new YamlMap();
+        this.yaml = new DataModelMap();
         this.compose = composeFile;
         this.name = new SimpleStringProperty(name);
         this.sourceType = new SimpleObjectProperty<>();
         this.source = new SimpleStringProperty();
     }
 
-    public YamlMap toYamlMap() {
+    public DataModelMap toYamlMap() {
         yaml.removeKeys("image", "build", "depends_on", "links");
         if (getSourceType() == ServiceSource.BUILD) {
-            yaml.put("build", new YamlPrimitive<>(getSource()));
+            yaml.put("build", new DataModelPrimitive<>(getSource()));
         }
         else if (getSourceType() == ServiceSource.IMAGE){
-            yaml.put("image", new YamlPrimitive<>(getSource()));
+            yaml.put("image", new DataModelPrimitive<>(getSource()));
         }
         if (!getDependencies().isEmpty()) {
-            yaml.put("depends_on", new YamlList(
+            yaml.put("depends_on", new DataModelList(
                     getDependencies()
                     .stream()
                     .map(Service::getName)
-                    .map(YamlPrimitive::new)
+                    .map(DataModelPrimitive::new)
                     .collect(Collectors.toList())
             ));
         }
         if (!getLinks().isEmpty()) {
-            yaml.put("links", new YamlList(
+            yaml.put("links", new DataModelList(
                     getLinks()
                     .stream()
                     .map(Service::getName)
-                    .map(YamlPrimitive::new)
+                    .map(DataModelPrimitive::new)
                     .collect(Collectors.toList())
             ));
         }
@@ -128,16 +128,16 @@ public class Service {
     private final StringProperty source;
     private ListProperty<Service> links = null;
     private ListProperty<Service> dependencies = null;
-    private final YamlMap yaml;
+    private final DataModelMap yaml;
     private final ComposeFile compose;
 
-    private static SimpleListProperty<Service> createFromList(String key, YamlMap parent, ComposeFile compose) {
+    private static SimpleListProperty<Service> createFromList(String key, DataModelMap parent, ComposeFile compose) {
         return new SimpleListProperty<>(FXCollections.observableArrayList(
-                parent.getOrDefault(key, new YamlList())
+                parent.getOrDefault(key, new DataModelList())
                         .toList()
                         .stream()
-                        .map(YamlValue::toPrimitive)
-                        .map(YamlPrimitive::toYamlObject)
+                        .map(DataModelValue::toPrimitive)
+                        .map(DataModelPrimitive::toYamlObject)
                         .map(Object::toString)
                         .map(compose::byName)
                         .collect(Collectors.toList())
@@ -147,7 +147,7 @@ public class Service {
     public enum ServiceSource {
         BUILD, IMAGE;
 
-        public String source(YamlMap yaml) {
+        public String source(DataModelMap yaml) {
             switch(this) {
                 case BUILD: return yaml.get("build").toYamlObject().toString();
                 case IMAGE: return yaml.get("image").toYamlObject().toString();
@@ -164,7 +164,7 @@ public class Service {
             }
         }
 
-        public static ServiceSource fromYaml(YamlMap yaml) {
+        public static ServiceSource fromYaml(DataModelMap yaml) {
             if (yaml.containsKey("image")) return IMAGE;
             if (yaml.containsKey("build")) return BUILD;
             return null;

@@ -1,5 +1,7 @@
 package eu.shooktea.vmsm.module;
 
+import eu.shooktea.datamodel.DataModelMap;
+import eu.shooktea.datamodel.DataModelValue;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
@@ -7,8 +9,6 @@ import eu.shooktea.vmsm.module.dockercompose.DockerCompose;
 import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.ssh.SSH;
-import eu.shooktea.datamodel.YamlMap;
-import eu.shooktea.datamodel.YamlValue;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -73,8 +73,8 @@ public abstract class VMModule {
      * @param obj YAML object that will hold configuration of module
      * @param vm virtual machine that contains configuration of module
      */
-    public void storeInYAML(YamlMap obj, VirtualMachine vm) {
-        settings.getOrDefault(vm, new YamlMap()).forEach(obj::put);
+    public void storeInYAML(DataModelMap obj, VirtualMachine vm) {
+        settings.getOrDefault(vm, new DataModelMap()).forEach(obj::put);
     }
 
     /**
@@ -93,9 +93,9 @@ public abstract class VMModule {
      * @param obj YAML object that holds configuration of module
      * @param vm virtual machine that will contain configuration of module
      */
-    public void loadFromYAML(YamlMap obj, VirtualMachine vm) {
-        if (!settings.containsKey(vm)) settings.put(vm, new YamlMap());
-        YamlMap values = settings.getOrDefault(vm, new YamlMap());
+    public void loadFromYAML(DataModelMap obj, VirtualMachine vm) {
+        if (!settings.containsKey(vm)) settings.put(vm, new DataModelMap());
+        DataModelMap values = settings.getOrDefault(vm, new DataModelMap());
         obj.keySet().forEach(key -> values.put(key, obj.get(key)));
     }
 
@@ -208,8 +208,8 @@ public abstract class VMModule {
      */
     public void setSetting(VirtualMachine vm, String key, Object value) {
         if (!settings.containsKey(vm))
-            settings.put(vm, new YamlMap());
-        settings.getOrDefault(vm, new YamlMap()).put(key, value);
+            settings.put(vm, new DataModelMap());
+        settings.getOrDefault(vm, new DataModelMap()).put(key, value);
     }
 
     /**
@@ -233,7 +233,7 @@ public abstract class VMModule {
      * @see #getOldSettings(VirtualMachine, String)
      */
     public String getStringSetting(VirtualMachine vm, String key) {
-        YamlValue val = getSetting(vm, key);
+        DataModelValue val = getSetting(vm, key);
         if (val == null || !val.isPrimitive()) return null;
         else return val.toPrimitive().toYamlObject().toString();
     }
@@ -252,10 +252,10 @@ public abstract class VMModule {
      * Returns object from configuration.
      * @param vm virtual machine that contains configuration
      * @param key name of setting
-     * @return YamlValue of setting or {@code null} if virtual machine doesn't contain setting with given name
+     * @return DataModelValue of setting or {@code null} if virtual machine doesn't contain setting with given name
      */
-    public YamlValue getSetting(VirtualMachine vm, String key) {
-        return settings.getOrDefault(vm, new YamlMap()).getOrDefault(key, null);
+    public DataModelValue getSetting(VirtualMachine vm, String key) {
+        return settings.getOrDefault(vm, new DataModelMap()).getOrDefault(key, null);
     }
 
     /**
@@ -273,7 +273,7 @@ public abstract class VMModule {
      * @param key name of setting that should be removed
      */
     public void removeSetting(VirtualMachine vm, String key) {
-        settings.getOrDefault(vm, new YamlMap()).remove(key);
+        settings.getOrDefault(vm, new DataModelMap()).remove(key);
     }
 
     /**
@@ -287,5 +287,5 @@ public abstract class VMModule {
 
     private BooleanProperty isInstalled;
     private Map<VirtualMachine, Map<String, Object>> oldSettings = new HashMap<>();
-    private Map<VirtualMachine, YamlMap> settings = new HashMap<>();
+    private Map<VirtualMachine, DataModelMap> settings = new HashMap<>();
 }

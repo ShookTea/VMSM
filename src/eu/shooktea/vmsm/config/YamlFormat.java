@@ -1,6 +1,6 @@
 package eu.shooktea.vmsm.config;
 
-import eu.shooktea.datamodel.YamlMap;
+import eu.shooktea.datamodel.DataModelMap;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class YamlFormat extends AbstractFormat {
     /* always save in newest format version possible */
     @Override
     protected void save(File file) throws IOException {
-        YamlMap root = new YamlMap();
+        DataModelMap root = new DataModelMap();
         root.put("version", "1.0");
 
     }

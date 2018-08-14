@@ -30,7 +30,7 @@ public class ComposeFile {
 
     private void parseYaml() {
         services.setAll(
-                mapping.getOrDefault("services", new YamlMap())
+                mapping.getOrDefault("services", new DataModelMap())
                 .toMap()
                 .stream()
                 .map(e -> new Service(e.getKey(), e.getValue().toMap(), this))
@@ -43,7 +43,7 @@ public class ComposeFile {
     }
 
     public void save() throws IOException {
-        YamlMap newServices = new YamlMap();
+        DataModelMap newServices = new DataModelMap();
         for (Service service : services) {
             newServices.put(service.getName(), service.toYamlMap());
         }
@@ -52,7 +52,7 @@ public class ComposeFile {
         YAML.instance().toWriter(mapping, writer);
     }
 
-    private final YamlMap mapping;
+    private final DataModelMap mapping;
     private final File yamlFile;
     private final ObservableList<Service> services;
 }

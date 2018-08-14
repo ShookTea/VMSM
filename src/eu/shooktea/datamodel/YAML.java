@@ -12,27 +12,27 @@ public class YAML {
         this.yaml = new Yaml(options);
     }
 
-    public YamlValue load(String s) {
-        return YamlValue.fromObject(yaml.load(s));
+    public DataModelValue load(String s) {
+        return DataModelValue.fromObject(yaml.load(s));
     }
 
-    public YamlValue load(InputStream is) {
-        return YamlValue.fromObject(yaml.load(is));
+    public DataModelValue load(InputStream is) {
+        return DataModelValue.fromObject(yaml.load(is));
     }
 
-    public YamlValue load(Reader r) {
-        return YamlValue.fromObject(yaml.load(r));
+    public DataModelValue load(Reader r) {
+        return DataModelValue.fromObject(yaml.load(r));
     }
 
-    public YamlValue load(File f) throws FileNotFoundException {
+    public DataModelValue load(File f) throws FileNotFoundException {
         return this.load(new FileInputStream(f));
     }
 
-    public String toString(YamlValue val) {
+    public String toString(DataModelValue val) {
         return yaml.dump(val.toYamlObject());
     }
 
-    public void toWriter(YamlValue val, Writer writer) {
+    public void toWriter(DataModelValue val, Writer writer) {
         yaml.dump(val.toYamlObject(), writer);
     }
 
