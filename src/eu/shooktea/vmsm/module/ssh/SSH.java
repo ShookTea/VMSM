@@ -1,11 +1,12 @@
 package eu.shooktea.vmsm.module.ssh;
 
 import com.jcraft.jsch.*;
+import eu.shooktea.fxtoolkit.terminal.UserInfo;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.ssh.SshConfig;
-import eu.shooktea.vmsm.view.controller.ssh.Terminal;
+import eu.shooktea.vmsm.view.controller.Terminal;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
@@ -64,19 +65,24 @@ public class SSH extends VMModule {
     /**
      * Creates new connection to shell.
      * @param vm virtual machine
-     * @param ui user info
      * @return connection to shell via SSH
-     * @throws JSchException if anything wrong happens during connection
      */
-    public SshConnection createConnection(VirtualMachine vm, DefaultUserInfo ui) throws JSchException {
-        ChannelShell shell = (ChannelShell)openChannel(vm, ui, "shell");
-        return new SshConnection(shell);
+    public SshConnection createConnection(VirtualMachine vm) {
+        try {
+            UserInfo ui = new UserInfo(null);
+            ChannelShell shell = (ChannelShell)openChannel(vm, ui, "shell");
+            SshConnection conn = new SshConnection(shell);
+            ui.setConnection(conn);
+            return conn;
+        } catch (JSchException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
     public List<ImageView> getQuickGuiButtons() {
         ImageView openTerminal = Toolkit.createQuickGuiButton("terminal.png", "Open SSH terminal");
-        openTerminal.setOnMouseClicked(Terminal::openTerminal);
+        openTerminal.setOnMouseClicked(e -> Terminal.openTerminal("SSH terminal", this::createConnection));
         return Collections.singletonList(openTerminal);
     }
 
@@ -85,7 +91,7 @@ public class SSH extends VMModule {
         Menu root = new Menu("SSH", Toolkit.createMenuImage("terminal.png"));
 
         MenuItem openTerminal = new MenuItem("Open terminal...");
-        openTerminal.setOnAction(Terminal::openTerminal);
+        openTerminal.setOnAction(e -> Terminal.openTerminal("SSH terminal", this::createConnection));
 
         MenuItem config = new MenuItem("SSH configuration...", Toolkit.createMenuImage("run.png"));
         config.setOnAction(SshConfig::openSshConfigWindow);
