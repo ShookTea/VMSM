@@ -44,8 +44,8 @@ public class YamlMap extends YamlValue implements Iterable<Map.Entry<String, Yam
         return ret;
     }
 
-    public void put(String key, YamlValue val) {
-        map.put(key, val);
+    public void put(String key, Object val) {
+        map.put(key, YamlValue.fromObject(val));
     }
 
     public YamlValue get(String key) {

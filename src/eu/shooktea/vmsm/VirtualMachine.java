@@ -27,6 +27,8 @@ import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.ModuleConfig;
 import eu.shooktea.vmsm.view.controller.simplegui.QuickGuiMenu;
 import eu.shooktea.vmsm.vmtype.VMType;
+import eu.shooktea.yaml.YamlList;
+import eu.shooktea.yaml.YamlMap;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -80,6 +82,29 @@ public class VirtualMachine {
         for (VMModule module : getModules()) {
             JSONObject config = new JSONObject();
             module.storeInJSON(config, this);
+            modules.put(module.getName(), config);
+        }
+        obj.put("modules", modules);
+        return obj;
+    }
+
+    /**
+     * Converts virtual machine to YAML object. That YAML object is then stored in configuration file. During loading,
+     * virtual machine should be fully recoverable from that YAML.
+     * @return YAML representation of virtual machine
+     * @see #fromYAML(YamlMap)
+     */
+    public YamlMap toYAML() {
+        YamlMap obj = new YamlMap();
+        obj.put("name", name.get());
+        obj.put("path", mainPath.get().getAbsolutePath());
+        if (pageRoot.isNotNull().get()) obj.put("url", pageRoot.get().toString());
+        obj.put("type", type.get().getTypeName());
+
+        YamlMap modules = new YamlMap();
+        for (VMModule module : getModules()) {
+            YamlMap config = new YamlMap();
+            module.storeInYAML(config, this);
             modules.put(module.getName(), config);
         }
         obj.put("modules", modules);
@@ -259,5 +284,33 @@ public class VirtualMachine {
             vm.getModules().add(module);
         }
         return vm;
+    }
+
+    /**
+     * Loads virtual machine from its YAML representation.
+     * @param yaml YAML representation of virtual machine
+     * @return virtual machine loaded from YAML
+     * @throws MalformedURLException if YAML contains URL of virtual machine, but that URL is invalid
+     * @see #toYAML()
+     */
+    public static VirtualMachine fromYAML(YamlMap yaml) throws MalformedURLException {
+        String name = stringFromYaml(yaml, "name");
+        File path = new File(stringFromYaml(yaml, "path"));
+        URL url = yaml.containsKey("url") ? new URL(stringFromYaml(yaml, "url")) : null;
+        VMType type = VMType.getByName(stringFromYaml(yaml, "type"));
+        VirtualMachine vm = new VirtualMachine(name, path, url, type);
+
+        YamlMap modules = yaml.containsKey("modules") ? yaml.get("modules").toMap() : new YamlMap();
+        for (String moduleName : modules.keySet()) {
+            VMModule module = VMModule.getModuleByName(moduleName);
+            YamlMap moduleYaml = modules.get(module.getName()).toMap();
+            module.loadFromYAML(moduleYaml, vm);
+            vm.getModules().add(module);
+        }
+        return vm;
+    }
+
+    private static String stringFromYaml(YamlMap map, String key) {
+        return map.get(key).toPrimitive().toYamlObject().toString();
     }
 }

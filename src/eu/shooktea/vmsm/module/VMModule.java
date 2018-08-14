@@ -7,6 +7,7 @@ import eu.shooktea.vmsm.module.dockercompose.DockerCompose;
 import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.ssh.SSH;
+import eu.shooktea.yaml.YamlMap;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -67,6 +68,15 @@ public abstract class VMModule {
     }
 
     /**
+     * Stores configuration of module for VM in YAML.
+     * @param obj YAML object that will hold configuration of module
+     * @param vm virtual machine that contains configuration of module
+     */
+    public void storeInYAML(YamlMap obj, VirtualMachine vm) {
+        settings.getOrDefault(vm, new HashMap<>()).forEach(obj::put);
+    }
+
+    /**
      * Loads configuration of module for VM from JSON.
      * @param obj JSON object that holds configuration of module
      * @param vm virtual machine that will contain configuration of module
@@ -75,6 +85,17 @@ public abstract class VMModule {
         if (!settings.containsKey(vm)) settings.put(vm, new HashMap<>());
         Map<String, Object> values = settings.getOrDefault(vm, new HashMap<>());
         obj.keySet().forEach(key -> values.put(key, obj.get(key)));
+    }
+
+    /**
+     * Loads configuration of module for VM from YAML.
+     * @param obj YAML object that holds configuration of module
+     * @param vm virtual machine that will contain configuration of module
+     */
+    public void loadFromYAML(YamlMap obj, VirtualMachine vm) {
+        if (!settings.containsKey(vm)) settings.put(vm, new HashMap<>());
+        Map<String, Object> values = settings.getOrDefault(vm, new HashMap<>());
+        obj.keySet().forEach(key -> values.put(key, obj.get(key).toYamlObject()));
     }
 
     /**
