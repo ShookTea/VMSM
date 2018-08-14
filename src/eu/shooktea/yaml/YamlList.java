@@ -6,7 +6,10 @@ import java.util.List;
 public class YamlList extends YamlValue {
     public YamlList(List<Object> objectList) {
         super(YamlType.LIST);
-        this.list = objectList;
+        this.list = new ArrayList<>();
+        for (Object ob : objectList) {
+            this.list.add(YamlValue.fromObject(ob));
+        }
     }
 
     public YamlList() {
@@ -22,5 +25,5 @@ public class YamlList extends YamlValue {
         return builder.append("}").toString();
     }
 
-    private final List<Object> list;
+    private final List<YamlValue> list;
 }
