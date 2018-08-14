@@ -34,9 +34,9 @@ public abstract class DataModelValue {
         return type == DataModelType.PRIMITIVE;
     }
 
-    public DataModelPrimitive<?> toPrimitive() {
+    public <T> DataModelPrimitive<T> toPrimitive() {
         if (!isPrimitive() || !(this instanceof DataModelPrimitive)) throw new RuntimeException("Value " + this + " is not a primitive!");
-        return (DataModelPrimitive)this;
+        return (DataModelPrimitive<T>)this;
     }
 
     public abstract Object toStorageObject();

@@ -293,10 +293,10 @@ public class VirtualMachine {
      * @see #toYAML()
      */
     public static VirtualMachine fromYAML(DataModelMap yaml) throws MalformedURLException {
-        String name = stringFromYaml(yaml, "name");
-        File path = new File(stringFromYaml(yaml, "path"));
-        URL url = yaml.containsKey("url") ? new URL(stringFromYaml(yaml, "url")) : null;
-        VMType type = VMType.getByName(stringFromYaml(yaml, "type"));
+        String name = yaml.getString("name");
+        File path = new File(yaml.getString("path"));
+        URL url = yaml.containsKey("url") ? new URL(yaml.getString("url")) : null;
+        VMType type = VMType.getByName(yaml.getString("type"));
         VirtualMachine vm = new VirtualMachine(name, path, url, type);
 
         DataModelMap modules = yaml.containsKey("modules") ? yaml.get("modules").toMap() : new DataModelMap();
@@ -307,9 +307,5 @@ public class VirtualMachine {
             vm.getModules().add(module);
         }
         return vm;
-    }
-
-    private static String stringFromYaml(DataModelMap map, String key) {
-        return map.get(key).toPrimitive().toStorageObject().toString();
     }
 }

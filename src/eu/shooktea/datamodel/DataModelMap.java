@@ -56,6 +56,10 @@ public class DataModelMap extends DataModelValue implements Iterable<Map.Entry<S
         return map.get(key);
     }
 
+    public String getString(String key) {
+        return map.get(key).<String>toPrimitive().getContent();
+    }
+
     public DataModelValue getOrDefault(String key, DataModelValue val) {
         return map.getOrDefault(key, val);
     }

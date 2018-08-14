@@ -16,5 +16,9 @@ public class DataModelPrimitive<T> extends DataModelValue {
         return content;
     }
 
+    public T getContent() {
+        return content;
+    }
+
     private final T content;
 }
