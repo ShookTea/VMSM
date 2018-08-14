@@ -3,6 +3,7 @@ package eu.shooktea.vmsm.module.dockercompose;
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.docker.Services;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
@@ -30,8 +31,12 @@ public class DockerCompose extends VMModule {
 
     @Override
     public Optional<MenuItem> getMenuItem() {
-        MenuItem dockerCompose = new MenuItem("Docker Compose", Toolkit.createMenuImage("docker_logo.png"));
-        dockerCompose.setOnAction(Services::openDockerServicesWindow);
-        return Optional.of(dockerCompose);
+        Menu docker = new Menu("Docker Compose", Toolkit.createMenuImage("docker_logo.png"));
+
+        MenuItem composeFile = new MenuItem("Compose file");
+        composeFile.setOnAction(Services::openDockerServicesWindow);
+
+        docker.getItems().addAll(composeFile);
+        return Optional.of(docker);
     }
 }
