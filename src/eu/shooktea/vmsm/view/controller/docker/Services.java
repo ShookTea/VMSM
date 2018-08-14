@@ -6,14 +6,13 @@ import eu.shooktea.vmsm.module.dockercompose.ComposeFile;
 import eu.shooktea.vmsm.module.dockercompose.DockerCompose;
 import eu.shooktea.vmsm.module.dockercompose.Service;
 import eu.shooktea.vmsm.view.View;
-import eu.shooktea.yaml.YamlMap;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxListCell;
-import javafx.util.Callback;
 import org.reactfx.value.Val;
 
 import java.io.IOException;
