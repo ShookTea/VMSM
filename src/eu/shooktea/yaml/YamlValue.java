@@ -1,5 +1,8 @@
 package eu.shooktea.yaml;
 
+import java.util.List;
+import java.util.Map;
+
 public abstract class YamlValue {
     public YamlValue(YamlType type) {
         this.type = type;
@@ -37,4 +40,32 @@ public abstract class YamlValue {
     }
 
     private final YamlType type;
+
+    public static YamlValue fromObject(Object ob) {
+        if (ob instanceof YamlValue) {
+            return (YamlValue)ob;
+        }
+        if (ob instanceof Map) {
+            return new YamlMap((Map)ob);
+        }
+        if (ob instanceof List) {
+            return new YamlList((List)ob);
+        }
+        if (ob == null || ob instanceof Void) {
+            return new YamlPrimitive<Void>(null);
+        }
+        if (ob instanceof String) {
+            return new YamlPrimitive<>((String) ob);
+        }
+        if (ob instanceof Integer) {
+            return new YamlPrimitive<>((Integer) ob);
+        }
+        if (ob instanceof Float) {
+            return new YamlPrimitive<>((Float) ob);
+        }
+        if (ob instanceof Boolean) {
+            return new YamlPrimitive<>((Boolean) ob);
+        }
+        return new YamlPrimitive<Void>(null);
+    }
 }

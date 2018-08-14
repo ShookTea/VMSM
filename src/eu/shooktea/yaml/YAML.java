@@ -11,8 +11,9 @@ public class YAML {
         this.yaml = new Yaml();
         try {
             FileInputStream fis = new FileInputStream("/home/nkowalik/docker/Magento/docker-compose.yml");
-            Map<String, Object> ob = yaml.load(fis);
-            System.out.println(yaml.dump(ob));
+            Object ob = yaml.load(fis);
+            YamlValue value = YamlValue.fromObject(ob);
+            System.out.println(value);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
