@@ -52,6 +52,14 @@ public class YamlMap extends YamlValue implements Iterable<Map.Entry<String, Yam
         return map.keySet();
     }
 
+    public void remove(String key) {
+        map.remove(key);
+    }
+
+    public void clear() {
+        map.clear();
+    }
+
     public Set<Map.Entry<String, YamlValue>> entrySet() {
         return map.entrySet();
     }

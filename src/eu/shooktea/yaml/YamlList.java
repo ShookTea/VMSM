@@ -51,6 +51,18 @@ public class YamlList extends YamlValue implements Iterable<YamlValue> {
         list.add(index, val);
     }
 
+    public void remove(int index) {
+        list.remove(index);
+    }
+
+    public void remove(YamlValue val) {
+        list.remove(val);
+    }
+
+    public void clear() {
+        list.clear();
+    }
+
     public Stream<YamlValue> stream() {
         return list.stream();
     }
