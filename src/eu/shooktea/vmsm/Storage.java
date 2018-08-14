@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import eu.shooktea.vmsm.config.AbstractFormat;
 import eu.shooktea.vmsm.config.JsonFormat;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -91,9 +92,8 @@ public class Storage {
     }
 
     private static File getVmsmFile() {
-        String homePath = System.getProperty("user.home");
-        File home = new File(homePath);
-        File file = new File(home, ".vmsm" + File.separator + "config.json");
+        File home = AbstractFormat.getConfigRootDirectory();
+        File file = new File(home, "config.json");
         if (!file.exists()) {
             try {
                 file.getParentFile().mkdirs();
