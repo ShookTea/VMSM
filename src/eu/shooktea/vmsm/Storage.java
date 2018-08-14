@@ -133,7 +133,7 @@ public class Storage {
         return vmList;
     }
 
-    private static File vmsmFile = getVmsmFile();
+    private static File vmsmFile = AbstractFormat.getConfigFile();
     private static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
     private static List<String> ignoredVagrantMachines = new ArrayList<>();
 
