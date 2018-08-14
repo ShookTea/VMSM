@@ -23,6 +23,10 @@ public class Service {
         this(entry.getKey(), entry.getValue().toMap());
     }
 
+    public YamlMap toYamlMap() {
+        return this.yaml;
+    }
+
     @Override
     public String toString() {
         return getName();

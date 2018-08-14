@@ -35,6 +35,11 @@ public class ComposeFile {
     }
 
     public void save() throws IOException {
+        YamlMap newServices = new YamlMap();
+        for (Service service : services) {
+            newServices.put(service.getName(), service.toYamlMap());
+        }
+        mapping.put("services", newServices);
         PrintWriter writer = new PrintWriter(yamlFile);
         YAML.instance().toWriter(mapping, writer);
     }
