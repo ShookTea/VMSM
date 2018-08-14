@@ -13,5 +13,6 @@
     <orderEntry type="library" name="SqlFormatter" level="project" />
     <orderEntry type="library" name="com.amihaiemil.web:camel:1.0.2" level="project" />
     <orderEntry type="library" name="mysql:mysql-connector-java:8.0.12" level="project" />
+    <orderEntry type="library" name="org.yaml:snakeyaml:1.21" level="project" />
   </component>
 </module>
