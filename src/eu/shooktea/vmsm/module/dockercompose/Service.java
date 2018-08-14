@@ -27,6 +27,24 @@ public class Service {
         else if (getSourceType() == ServiceSource.IMAGE){
             yaml.put("image", new YamlPrimitive<>(getSource()));
         }
+        if (!getDependencies().isEmpty()) {
+            yaml.put("depends_on", new YamlList(
+                    getDependencies()
+                    .stream()
+                    .map(Service::getName)
+                    .map(YamlPrimitive::new)
+                    .collect(Collectors.toList())
+            ));
+        }
+        if (!getLinks().isEmpty()) {
+            yaml.put("links", new YamlList(
+                    getLinks()
+                    .stream()
+                    .map(Service::getName)
+                    .map(YamlPrimitive::new)
+                    .collect(Collectors.toList())
+            ));
+        }
         return yaml;
     }
 

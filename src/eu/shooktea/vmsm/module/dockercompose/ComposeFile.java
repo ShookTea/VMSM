@@ -25,7 +25,7 @@ public class ComposeFile {
     }
 
     public Service byName(String name) {
-        return getServices().stream().filter(s -> s.getName().equals(name)).findAny().orElseThrow(() -> new RuntimeException("Service '" + name + "' not found."));
+        return getServices().stream().filter(s -> s.getName().equals(name)).findAny().orElse(null);
     }
 
     private void parseYaml() {
@@ -36,6 +36,10 @@ public class ComposeFile {
                 .map(e -> new Service(e.getKey(), e.getValue().toMap(), this))
                 .collect(Collectors.toList())
         );
+        for (Service s : services) { //reload them!
+            s.getDependencies();
+            s.getLinks();
+        }
     }
 
     public void save() throws IOException {
