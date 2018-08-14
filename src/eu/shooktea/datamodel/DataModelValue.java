@@ -1,12 +1,13 @@
 package eu.shooktea.datamodel;
 
-import java.util.List;
-import java.util.Map;
+import java.util.function.Function;
 
 public abstract class DataModelValue {
-    public DataModelValue(DataModelType type) {
+    DataModelValue(DataModelType type) {
         this.type = type;
     }
+
+    public abstract Object toStorageObject();
 
     public DataModelType getType() {
         return type;
@@ -39,35 +40,15 @@ public abstract class DataModelValue {
         return (DataModelPrimitive<T>)this;
     }
 
-    public abstract Object toStorageObject();
-
     private final DataModelType type;
 
-    public static DataModelValue fromObject(Object ob) {
-        if (ob instanceof DataModelValue) {
-            return (DataModelValue)ob;
-        }
-        if (ob instanceof Map) {
-            return new DataModelMap((Map)ob);
-        }
-        if (ob instanceof List) {
-            return new DataModelList((List)ob);
-        }
-        if (ob == null || ob instanceof Void) {
-            return new DataModelPrimitive<Void>(null);
-        }
-        if (ob instanceof String) {
-            return new DataModelPrimitive<>((String) ob);
-        }
-        if (ob instanceof Integer) {
-            return new DataModelPrimitive<>((Integer) ob);
-        }
-        if (ob instanceof Float) {
-            return new DataModelPrimitive<>((Float) ob);
-        }
-        if (ob instanceof Boolean) {
-            return new DataModelPrimitive<>((Boolean) ob);
-        }
-        return new DataModelPrimitive<Void>(null);
+    public static void setConverter(Function<Object, DataModelValue> newConverter) {
+        converter = newConverter;
     }
+
+    public static DataModelValue fromObject(Object ob) {
+        return converter.apply(ob);
+    }
+
+    private static Function<Object, DataModelValue> converter = obj -> new DataModelPrimitive<Void>(null);
 }

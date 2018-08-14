@@ -32,30 +32,26 @@ public class Services {
 
     @FXML
     private void initialize() {
-        try {
-            dockerCompose = DockerCompose.getModuleByName("Docker Compose");
-            vm = VM.getOrThrow();
-            composeFile = new ComposeFile();
+        dockerCompose = DockerCompose.getModuleByName("Docker Compose");
+        vm = VM.getOrThrow();
+        composeFile = new ComposeFile();
 
-            servicesListView.setItems(composeFile.getServices());
-            servicesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-            linksList.setItems(composeFile.getServices());
-            linksList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-            dependenciesList.setItems(composeFile.getServices());
-            dependenciesList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        servicesListView.setItems(composeFile.getServices());
+        servicesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        linksList.setItems(composeFile.getServices());
+        linksList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        dependenciesList.setItems(composeFile.getServices());
+        dependenciesList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-            currentService.bind(servicesListView.getSelectionModel().selectedItemProperty());
-            serviceSourceType.setItems(Service.ServiceSource.listValues());
+        currentService.bind(servicesListView.getSelectionModel().selectedItemProperty());
+        serviceSourceType.setItems(Service.ServiceSource.listValues());
 
-            serviceName.textProperty().bindBidirectional(Val.selectVar(currentService, Service::nameProperty));
-            serviceSource.textProperty().bindBidirectional(Val.selectVar(currentService, Service::sourceProperty));
-            serviceSourceType.valueProperty().bindBidirectional(Val.selectVar(currentService, Service::sourceTypeProperty));
+        serviceName.textProperty().bindBidirectional(Val.selectVar(currentService, Service::nameProperty));
+        serviceSource.textProperty().bindBidirectional(Val.selectVar(currentService, Service::sourceProperty));
+        serviceSourceType.valueProperty().bindBidirectional(Val.selectVar(currentService, Service::sourceTypeProperty));
 
-            currentService.addListener((observable, oldValue, newValue) -> this.reload());
-            this.reload();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        currentService.addListener((observable, oldValue, newValue) -> this.reload());
+        this.reload();
     }
 
     private void reload() {

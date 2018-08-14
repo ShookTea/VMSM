@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 import java.util.stream.Collectors;
 
 public class ComposeFile {
-    public ComposeFile() throws IOException {
+    public ComposeFile() {
         VirtualMachine vm = VM.getOrThrow();
         this.yamlFile = ((eu.shooktea.vmsm.vmtype.DockerCompose)vm.getType()).getDockerComposeFile(vm);
         this.mapping = YAML.instance().load(yamlFile).toMap();
@@ -49,7 +49,7 @@ public class ComposeFile {
         }
         mapping.put("services", newServices);
         PrintWriter writer = new PrintWriter(yamlFile);
-        YAML.instance().toWriter(mapping, writer);
+        YAML.instance().store(mapping, writer);
     }
 
     private final DataModelMap mapping;
