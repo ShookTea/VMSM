@@ -39,6 +39,8 @@ public abstract class YamlValue {
         return (YamlPrimitive)this;
     }
 
+    public abstract Object toYamlObject();
+
     private final YamlType type;
 
     public static YamlValue fromObject(Object ob) {

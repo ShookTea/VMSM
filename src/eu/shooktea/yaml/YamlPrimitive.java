@@ -11,5 +11,10 @@ public class YamlPrimitive<T> extends YamlValue {
         return "YamlPrimitive{" + content.toString() + "}";
     }
 
+    @Override
+    public Object toYamlObject() {
+        return content;
+    }
+
     private final T content;
 }

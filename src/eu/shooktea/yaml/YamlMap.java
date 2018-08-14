@@ -28,5 +28,14 @@ public class YamlMap extends YamlValue {
         return builder.append("}").toString();
     }
 
+    @Override
+    public Object toYamlObject() {
+        Map<String, Object> ret = new LinkedHashMap<>();
+        for (String key : map.keySet()) {
+            ret.put(key, map.get(key).toYamlObject());
+        }
+        return ret;
+    }
+
     private final Map<String, YamlValue> map;
 }

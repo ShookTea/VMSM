@@ -2,6 +2,7 @@ package eu.shooktea.yaml;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class YamlList extends YamlValue {
     public YamlList(List<Object> objectList) {
@@ -23,6 +24,13 @@ public class YamlList extends YamlValue {
             builder.append(i == 0 ? "" : ";").append(list.get(i));
         }
         return builder.append("}").toString();
+    }
+
+    @Override
+    public Object toYamlObject() {
+        return list.stream()
+                .map(YamlValue::toYamlObject)
+                .collect(Collectors.toList());
     }
 
     private final List<YamlValue> list;

@@ -2,9 +2,7 @@ package eu.shooktea.yaml;
 
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Map;
+import java.io.*;
 
 public class YAML {
     private YAML() {
@@ -17,6 +15,26 @@ public class YAML {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public YamlValue load(String s) {
+        return YamlValue.fromObject(yaml.load(s));
+    }
+
+    public YamlValue load(InputStream is) {
+        return YamlValue.fromObject(yaml.load(is));
+    }
+
+    public YamlValue load(Reader r) {
+        return YamlValue.fromObject(yaml.load(r));
+    }
+
+    public String toString(YamlValue val) {
+        return yaml.dump(val.toYamlObject());
+    }
+
+    public void toWriter(YamlValue val, Writer writer) {
+        yaml.dump(val.toYamlObject(), writer);
     }
 
     private final Yaml yaml;
