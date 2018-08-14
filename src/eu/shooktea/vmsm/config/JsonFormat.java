@@ -94,4 +94,9 @@ public class JsonFormat extends AbstractFormat {
         pw.println(root.toString());
         pw.close();
     }
+
+    @Override
+    protected File createSaveFile(File directory) {
+        return new File(directory, "config.json");
+    }
 }

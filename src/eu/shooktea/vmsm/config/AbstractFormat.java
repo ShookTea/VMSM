@@ -7,6 +7,7 @@ import java.util.Arrays;
 abstract public class AbstractFormat {
     protected abstract void load(File file) throws IOException;
     protected abstract void save(File file) throws IOException;
+    protected abstract File createSaveFile(File directory);
 
     public static void load() throws IOException {
         File config = getConfigFile();
@@ -16,9 +17,9 @@ abstract public class AbstractFormat {
     }
 
     public static void save() throws IOException {
-        File config = getConfigFile();
-        AbstractFormat format = getFormatForFile(config);
-        if (format == null) throw new IOException("Unknown format for file " + config.toString());
+        AbstractFormat format = getNewestSaveFormat();
+        File config = format.createSaveFile(getConfigRootDirectory());
+        if (!config.exists()) config.createNewFile();
         format.save(config);
     }
 
@@ -53,6 +54,10 @@ abstract public class AbstractFormat {
         if (f.getName().endsWith(".json"))
             return new JsonFormat();
         return null;
+    }
+
+    private static AbstractFormat getNewestSaveFormat() {
+        return new JsonFormat();
     }
 
     private static File getConfigRootDirectory() {
