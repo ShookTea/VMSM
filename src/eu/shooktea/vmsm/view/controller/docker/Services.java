@@ -69,6 +69,14 @@ public class Services {
     }
 
     @FXML
+    private void removeService() {
+        if (currentService.isNull().get()) return;
+        composeFile.getServices().remove(currentService.get());
+        servicesListView.getSelectionModel().clearSelection();
+        servicesListView.refresh();
+    }
+
+    @FXML
     private void addNewService() {
         servicesListView.getSelectionModel().clearSelection();
     }

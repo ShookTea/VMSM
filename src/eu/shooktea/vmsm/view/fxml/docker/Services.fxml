@@ -78,6 +78,7 @@
                   <Separator opacity="0.0" orientation="VERTICAL" VBox.vgrow="ALWAYS" />
                   <HBox>
                      <children>
+                        <Button mnemonicParsing="false" onAction="#removeService" text="Remove service"/>
                         <Separator opacity="0.0" HBox.hgrow="ALWAYS" />
                         <Button mnemonicParsing="false" onAction="#saveServiceData" defaultButton="true" text="Save compose file" />
                      </children>
