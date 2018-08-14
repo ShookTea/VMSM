@@ -61,28 +61,20 @@ public class Storage {
 
     public static void saveAll() {
         try {
-            trySaveAll();
+            new JsonFormat().save();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
-    }
-
-    private static void trySaveAll() throws IOException {
-        new JsonFormat().save();
     }
 
     static void loadAll() {
         try {
-            tryLoadAll();
+            new JsonFormat().load();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
-    }
-
-    private static void tryLoadAll() throws IOException {
-        new JsonFormat().load();
     }
 
     /**
