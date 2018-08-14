@@ -23,7 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
-import eu.shooktea.vmsm.config.JsonFormat;
+import eu.shooktea.vmsm.config.AbstractFormat;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.JSONArray;
@@ -61,7 +61,7 @@ public class Storage {
 
     public static void saveAll() {
         try {
-            new JsonFormat().save();
+            AbstractFormat.save();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -70,7 +70,7 @@ public class Storage {
 
     static void loadAll() {
         try {
-            new JsonFormat().load();
+            AbstractFormat.load();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);

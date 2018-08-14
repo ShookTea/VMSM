@@ -5,20 +5,24 @@ import java.io.IOException;
 import java.util.Arrays;
 
 abstract public class AbstractFormat {
-    public abstract void load(File file) throws IOException;
-    public abstract void save(File file) throws IOException;
+    protected abstract void load(File file) throws IOException;
+    protected abstract void save(File file) throws IOException;
 
-    public void load() throws IOException
-    {
-        this.load(getConfigFile());
+    public static void load() throws IOException {
+        File config = getConfigFile();
+        AbstractFormat format = getFormatForFile(config);
+        if (format == null) throw new IOException("Unknown format for file " + config.toString());
+        format.load(config);
     }
 
-    public void save() throws IOException
-    {
-        this.save(getConfigFile());
+    public static void save() throws IOException {
+        File config = getConfigFile();
+        AbstractFormat format = getFormatForFile(config);
+        if (format == null) throw new IOException("Unknown format for file " + config.toString());
+        format.save(config);
     }
 
-    public static File getConfigFile() throws IOException {
+    private static File getConfigFile() throws IOException {
         File configDir = getConfigRootDirectory();
         File returnFile = null;
 
@@ -45,7 +49,13 @@ abstract public class AbstractFormat {
         return returnFile;
     }
 
-    public static File getConfigRootDirectory() {
+    private static AbstractFormat getFormatForFile(File f) {
+        if (f.getName().endsWith(".json"))
+            return new JsonFormat();
+        return null;
+    }
+
+    private static File getConfigRootDirectory() {
         String homePath = System.getProperty("user.home");
         File home = new File(homePath);
         File root = new File(home, ".vmsm");
