@@ -16,6 +16,10 @@ public class YamlMap extends YamlValue implements Iterable<Map.Entry<String, Yam
         }
     }
 
+    public YamlMap(YamlMap m) {
+        this(m.map);
+    }
+
     public YamlMap() {
         this(new LinkedHashMap<>());
     }

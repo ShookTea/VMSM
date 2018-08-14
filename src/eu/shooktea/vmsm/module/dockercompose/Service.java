@@ -1,6 +1,7 @@
 package eu.shooktea.vmsm.module.dockercompose;
 
 import eu.shooktea.yaml.YamlMap;
+import eu.shooktea.yaml.YamlPrimitive;
 import eu.shooktea.yaml.YamlValue;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -24,7 +25,15 @@ public class Service {
     }
 
     public YamlMap toYamlMap() {
-        return this.yaml;
+        if (getSourceType() == ServiceSource.BUILD) {
+            yaml.remove("image");
+            yaml.put("build", new YamlPrimitive<>(getSource()));
+        }
+        else if (getSourceType() == ServiceSource.IMAGE){
+            yaml.remove("build");
+            yaml.put("image", new YamlPrimitive<>(getSource()));
+        }
+        return yaml;
     }
 
     @Override
@@ -61,7 +70,7 @@ public class Service {
     }
 
     public String getSource() {
-        return sourceProperty().toString();
+        return sourceProperty().get();
     }
 
     public void setSource(String newSource) {
