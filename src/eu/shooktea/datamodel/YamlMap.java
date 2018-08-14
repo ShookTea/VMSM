@@ -1,4 +1,4 @@
-package eu.shooktea.yaml;
+package eu.shooktea.datamodel;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

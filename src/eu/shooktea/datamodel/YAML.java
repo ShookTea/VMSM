@@ -1,4 +1,4 @@
-package eu.shooktea.yaml;
+package eu.shooktea.datamodel;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;

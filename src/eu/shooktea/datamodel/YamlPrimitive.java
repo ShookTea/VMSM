@@ -1,4 +1,4 @@
-package eu.shooktea.yaml;
+package eu.shooktea.datamodel;
 
 public class YamlPrimitive<T> extends YamlValue {
     public YamlPrimitive(T object) {

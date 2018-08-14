@@ -27,7 +27,7 @@ import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.ModuleConfig;
 import eu.shooktea.vmsm.view.controller.simplegui.QuickGuiMenu;
 import eu.shooktea.vmsm.vmtype.VMType;
-import eu.shooktea.yaml.YamlMap;
+import eu.shooktea.datamodel.YamlMap;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

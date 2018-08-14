@@ -7,15 +7,14 @@ import eu.shooktea.vmsm.module.dockercompose.DockerCompose;
 import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.ssh.SSH;
-import eu.shooktea.yaml.YamlMap;
-import eu.shooktea.yaml.YamlValue;
+import eu.shooktea.datamodel.YamlMap;
+import eu.shooktea.datamodel.YamlValue;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import org.json.JSONObject;
-import org.yaml.snakeyaml.Yaml;
 
 import java.util.*;
 

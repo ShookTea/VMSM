@@ -1,4 +1,4 @@
-package eu.shooktea.yaml;
+package eu.shooktea.datamodel;
 
 public enum YamlType {
     MAP, LIST, PRIMITIVE;

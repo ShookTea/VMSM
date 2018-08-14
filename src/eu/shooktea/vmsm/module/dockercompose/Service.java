@@ -1,9 +1,9 @@
 package eu.shooktea.vmsm.module.dockercompose;
 
-import eu.shooktea.yaml.YamlList;
-import eu.shooktea.yaml.YamlMap;
-import eu.shooktea.yaml.YamlPrimitive;
-import eu.shooktea.yaml.YamlValue;
+import eu.shooktea.datamodel.YamlList;
+import eu.shooktea.datamodel.YamlMap;
+import eu.shooktea.datamodel.YamlPrimitive;
+import eu.shooktea.datamodel.YamlValue;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

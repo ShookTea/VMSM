@@ -1,6 +1,6 @@
 package eu.shooktea.vmsm.config;
 
-import eu.shooktea.yaml.YamlMap;
+import eu.shooktea.datamodel.YamlMap;
 
 import java.io.File;
 import java.io.IOException;

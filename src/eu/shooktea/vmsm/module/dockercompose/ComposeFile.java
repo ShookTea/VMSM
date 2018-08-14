@@ -1,6 +1,6 @@
 package eu.shooktea.vmsm.module.dockercompose;
 
-import eu.shooktea.yaml.*;
+import eu.shooktea.datamodel.*;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import javafx.collections.FXCollections;
