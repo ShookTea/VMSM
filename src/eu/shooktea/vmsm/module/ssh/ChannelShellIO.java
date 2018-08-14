@@ -35,6 +35,7 @@ public class ChannelShellIO implements TerminalIO {
         }
     }
 
+    @Override
     public void setInputStream(OutputStream stream) {
         this.os = stream;
     }

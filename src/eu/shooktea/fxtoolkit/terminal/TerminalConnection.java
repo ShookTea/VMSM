@@ -95,6 +95,10 @@ public abstract class TerminalConnection {
         this.onTerminalUpdate = runnable;
     }
 
+    public Runnable getOnTerminalUpdate() {
+        return this.onTerminalUpdate;
+    }
+
     private OutputStream pout;
     private PrintStream stream;
     private String consoleDisplay = "";
@@ -104,12 +108,19 @@ public abstract class TerminalConnection {
     private List<String> commandLineHistory = new ArrayList<>();
     private int currentHistoryPos = -1;
 
-    private class Console extends OutputStream {
+    protected static class Console extends OutputStream {
+
+        public Console(TerminalConnection connection) {
+            this.terminalConnection = connection;
+        }
+
         public void write(int i) {
             Platform.runLater(() -> {
-                print(String.valueOf((char)i));
-                onTerminalUpdate.run();
+                terminalConnection.print(String.valueOf((char)i));
+                terminalConnection.getOnTerminalUpdate().run();
             });
         }
+
+        private final TerminalConnection terminalConnection;
     }
 }
