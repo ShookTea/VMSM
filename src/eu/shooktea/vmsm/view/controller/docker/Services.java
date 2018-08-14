@@ -54,6 +54,11 @@ public class Services {
         }
     }
 
+    @FXML
+    private void addNewService() {
+        servicesListView.getSelectionModel().clearSelection();
+    }
+
     public static void openDockerServicesWindow(Object... lambdaArgs) {
         View.createNewWindow("/eu/shooktea/vmsm/view/fxml/docker/Services.fxml", "Docker Compose services");
     }

@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.2" prefHeight="327.0" prefWidth="607.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.docker.Services">
+<SplitPane dividerPositions="0.2" prefHeight="471.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.docker.Services">
    <items>
       <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <graphic>
@@ -23,7 +23,7 @@
                <children>
                   <Label maxHeight="1.7976931348623157E308" text="Services" />
                   <Separator maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" prefHeight="0.0" prefWidth="0.0" text="+" />
+                  <Button mnemonicParsing="false" onAction="#addNewService" prefHeight="0.0" prefWidth="0.0" text="+" />
                </children>
             </HBox>
          </graphic>
