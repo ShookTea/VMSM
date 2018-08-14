@@ -25,7 +25,7 @@ public class ComposeFile {
     }
 
     public Service byName(String name) {
-        return getServices().stream().filter(s -> s.getName().equals(name)).findAny().get();
+        return getServices().stream().filter(s -> s.getName().equals(name)).findAny().orElseThrow(() -> new RuntimeException("Service '" + name + "' not found."));
     }
 
     private void parseYaml() {

@@ -17,21 +17,6 @@ public class Service {
         this.name = new SimpleStringProperty(name);
         this.sourceType = new SimpleObjectProperty<>(ServiceSource.fromYaml(yaml));
         this.source = new SimpleStringProperty(getSourceType().source(yaml));
-        this.links = createFromList("links", yaml, compose);
-        this.dependencies = createFromList("depends_on", yaml, compose);
-    }
-
-    private static SimpleListProperty<Service> createFromList(String key, YamlMap parent, ComposeFile compose) {
-        return new SimpleListProperty<>(FXCollections.observableArrayList(
-                parent.getOrDefault(key, new YamlList())
-                .toList()
-                .stream()
-                .map(YamlValue::toPrimitive)
-                .map(YamlPrimitive::toYamlObject)
-                .map(Object::toString)
-                .map(compose::byName)
-                .collect(Collectors.toList())
-        ));
     }
 
     public YamlMap toYamlMap() {
@@ -87,13 +72,52 @@ public class Service {
         sourceProperty().set(newSource);
     }
 
+    public ListProperty<Service> linksProperty() {
+        if (links == null) links = createFromList("links", yaml, compose);
+        return links;
+    }
+
+    public ObservableList<Service> getLinks() {
+        return linksProperty().get();
+    }
+
+    public void setLinks(ObservableList<Service> services) {
+        linksProperty().set(services);
+    }
+
+    public ListProperty<Service> dependenciesProperty() {
+        if (dependencies == null) dependencies = createFromList("depends_on", yaml, compose);
+        return dependencies;
+    }
+
+    public ObservableList<Service> getDependencies() {
+        return dependenciesProperty().get();
+    }
+
+    public void setDependencies(ObservableList<Service> services) {
+        dependenciesProperty().set(services);
+    }
+
     private final StringProperty name;
     private final ObjectProperty<ServiceSource> sourceType;
-    private final ListProperty<Service> links;
-    private final ListProperty<Service> dependencies;
     private final StringProperty source;
+    private ListProperty<Service> links = null;
+    private ListProperty<Service> dependencies = null;
     private final YamlMap yaml;
     private final ComposeFile compose;
+
+    private static SimpleListProperty<Service> createFromList(String key, YamlMap parent, ComposeFile compose) {
+        return new SimpleListProperty<>(FXCollections.observableArrayList(
+                parent.getOrDefault(key, new YamlList())
+                        .toList()
+                        .stream()
+                        .map(YamlValue::toPrimitive)
+                        .map(YamlPrimitive::toYamlObject)
+                        .map(Object::toString)
+                        .map(compose::byName)
+                        .collect(Collectors.toList())
+        ));
+    }
 
     public enum ServiceSource {
         BUILD, IMAGE;
