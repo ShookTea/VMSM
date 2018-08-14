@@ -12,7 +12,6 @@
     * `org.reactfx:reactfx:2.0-M5` - small improvements for working with JavaFX bindings
     * `com.jcraft:jsch:0.1.54` - support for SSH protocol
     * `mysql:mysql-connector-java:8.0.12` - MySQL connection
-    * `com.amihaiemil.web:camel:1.0.2` - parsing and saving YAML configuration files
     * `org.yaml:snakeyaml:1.21` - parsing and saving YAML configuration files
 1. Download newest release of [SqlFormatter.jar](https://github.com/ShookTea/SqlFormatter/releases) and add it as external library
 1. Compile and run
