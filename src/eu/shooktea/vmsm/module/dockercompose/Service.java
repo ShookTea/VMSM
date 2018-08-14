@@ -20,12 +20,11 @@ public class Service {
     }
 
     public YamlMap toYamlMap() {
+        yaml.removeKeys("image", "build");
         if (getSourceType() == ServiceSource.BUILD) {
-            yaml.remove("image");
             yaml.put("build", new YamlPrimitive<>(getSource()));
         }
         else if (getSourceType() == ServiceSource.IMAGE){
-            yaml.remove("build");
             yaml.put("image", new YamlPrimitive<>(getSource()));
         }
         return yaml;
