@@ -16,6 +16,8 @@ import java.io.IOException;
 
 public class Services {
     @FXML private ListView<Service> servicesListView;
+    @FXML private ListView<Service> linksList;
+    @FXML private ListView<Service> dependenciesList;
     @FXML private TextField serviceName;
     @FXML private TextField serviceSource;
     @FXML private ChoiceBox<Service.ServiceSource> serviceSourceType;
@@ -34,6 +36,12 @@ public class Services {
 
             servicesListView.setItems(composeFile.getServices());
             servicesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            linksList.setItems(composeFile.getServices());
+            linksList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            dependenciesList.setItems(composeFile.getServices());
+            dependenciesList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+
             currentService.bind(servicesListView.getSelectionModel().selectedItemProperty());
             serviceSourceType.setItems(Service.ServiceSource.listValues());
 
@@ -43,6 +51,12 @@ public class Services {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void reload() {
+        servicesListView.refresh();
+        linksList.refresh();
+        dependenciesList.refresh();
     }
 
     @FXML
@@ -57,12 +71,12 @@ public class Services {
                     service.setSource(source);
                     service.setSourceType(sourceType);
                     composeFile.getServices().addAll(service);
-                    servicesListView.refresh();
+                    reload();
                     servicesListView.getSelectionModel().select(service);
                 }
             }
             composeFile.save();
-            servicesListView.refresh();
+            reload();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,7 +87,7 @@ public class Services {
         if (currentService.isNull().get()) return;
         composeFile.getServices().remove(currentService.get());
         servicesListView.getSelectionModel().clearSelection();
-        servicesListView.refresh();
+        reload();
     }
 
     @FXML

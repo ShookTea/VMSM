@@ -75,12 +75,28 @@
                         <ChoiceBox fx:id="serviceSourceType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
+                  <GridPane prefHeight="237.0" prefWidth="553.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                    </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Links" />
+                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Dependencies" GridPane.columnIndex="1" />
+                        <ListView fx:id="linksList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <ListView fx:id="dependenciesList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
                   <Separator opacity="0.0" orientation="VERTICAL" VBox.vgrow="ALWAYS" />
                   <HBox>
                      <children>
-                        <Button mnemonicParsing="false" onAction="#removeService" text="Remove service"/>
+                        <Button mnemonicParsing="false" onAction="#removeService" text="Remove service" />
                         <Separator opacity="0.0" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#saveServiceData" defaultButton="true" text="Save compose file" />
+                        <Button defaultButton="true" mnemonicParsing="false" onAction="#saveServiceData" text="Save compose file" />
                      </children>
                   </HBox>
                </children>
