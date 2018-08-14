@@ -35,7 +35,7 @@ public abstract class YamlValue {
     }
 
     public YamlPrimitive<?> toPrimitive() {
-        if (!isList() || !(this instanceof YamlPrimitive)) throw new RuntimeException("Value " + this + " is not a primitive!");
+        if (!isPrimitive() || !(this instanceof YamlPrimitive)) throw new RuntimeException("Value " + this + " is not a primitive!");
         return (YamlPrimitive)this;
     }
 
