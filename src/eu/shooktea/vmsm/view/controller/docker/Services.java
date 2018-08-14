@@ -75,6 +75,19 @@ public class Services {
             });
             return observable;
         }));
+
+        dependenciesList.setCellFactory(CheckBoxListCell.forListView(param -> {
+            BooleanProperty observable = new SimpleBooleanProperty();
+            observable.setValue(currentService.get() != null && currentService.get().getDependencies().contains(param));
+            observable.addListener((obs, wasSelected, isSelected) -> {
+                if (currentService.get() != null && currentService.get() != param) {
+                    ListProperty<Service> dependencies = currentService.get().dependenciesProperty();
+                    if (isSelected) dependencies.add(param);
+                    else dependencies.remove(param);
+                }
+            });
+            return observable;
+        }));
     }
 
     @FXML
