@@ -6,6 +6,7 @@ import eu.shooktea.vmsm.module.dockercompose.ComposeFile;
 import eu.shooktea.vmsm.module.dockercompose.DockerCompose;
 import eu.shooktea.vmsm.module.dockercompose.Service;
 import eu.shooktea.vmsm.view.View;
+import eu.shooktea.yaml.YamlMap;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -47,6 +48,19 @@ public class Services {
     @FXML
     private void saveServiceData() {
         try {
+            if (currentService.isNull().get()) {
+                String name = serviceName.getText().trim();
+                String source = serviceSource.getText().trim();
+                Service.ServiceSource sourceType = serviceSourceType.getValue();
+                if (!name.isEmpty() && !source.isEmpty()) {
+                    Service service = new Service(name, composeFile);
+                    service.setSource(source);
+                    service.setSourceType(sourceType);
+                    composeFile.getServices().addAll(service);
+                    servicesListView.refresh();
+                    servicesListView.getSelectionModel().select(service);
+                }
+            }
             composeFile.save();
             servicesListView.refresh();
         } catch (IOException e) {

@@ -19,6 +19,14 @@ public class Service {
         this.source = new SimpleStringProperty(getSourceType().source(yaml));
     }
 
+    public Service(String name, ComposeFile composeFile) {
+        this.yaml = new YamlMap();
+        this.compose = composeFile;
+        this.name = new SimpleStringProperty(name);
+        this.sourceType = new SimpleObjectProperty<>();
+        this.source = new SimpleStringProperty();
+    }
+
     public YamlMap toYamlMap() {
         yaml.removeKeys("image", "build");
         if (getSourceType() == ServiceSource.BUILD) {
