@@ -10,11 +10,9 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 public class DockerCompose extends VMModule {
     @Override
@@ -41,22 +39,7 @@ public class DockerCompose extends VMModule {
         MenuItem composeFile = new MenuItem("Compose file...");
         composeFile.setOnAction(Services::openDockerServicesWindow);
 
-        Menu openBash = new Menu("Connect to bash");
-        try {
-            for (Service service : new ComposeFile().getServices()) {
-                MenuItem item = new MenuItem(service.getName());
-                item.setOnAction(e -> openBash(service));
-                openBash.getItems().add(item);
-            }
-        } catch (IOException ignored) {}
-
-        docker.getItems().addAll(composeFile, openBash);
+        docker.getItems().addAll(composeFile);
         return Optional.of(docker);
-    }
-
-    private void openBash(Service service) {
-        String title = "Bash terminal (" + service.getName() + ")";
-        Function<VirtualMachine, TerminalConnection> function = vm -> new BashConnection(service, vm);
-        Terminal.openTerminal(title, function);
     }
 }
