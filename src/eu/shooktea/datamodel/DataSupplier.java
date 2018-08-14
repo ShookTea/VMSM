@@ -2,10 +2,12 @@ package eu.shooktea.datamodel;
 
 import java.io.*;
 import java.util.Scanner;
+import java.util.function.Function;
 
 public interface DataSupplier {
     DataModelMap load(String s);
     String store(DataModelMap dmm);
+    Function<Object, Object> converter();
 
     default DataModelMap load(InputStream is) {
         StringBuilder sb = new StringBuilder();
