@@ -79,7 +79,7 @@
                   <HBox>
                      <children>
                         <Separator opacity="0.0" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#saveServiceData" text="Save" />
+                        <Button mnemonicParsing="false" onAction="#saveServiceData" defaultButton="true" text="Save compose file" />
                      </children>
                   </HBox>
                </children>
