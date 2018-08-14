@@ -8,8 +8,12 @@ import eu.shooktea.vmsm.module.dockercompose.Service;
 import eu.shooktea.vmsm.view.View;
 import eu.shooktea.yaml.YamlMap;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.util.Callback;
 import org.reactfx.value.Val;
 
 import java.io.IOException;
@@ -41,13 +45,15 @@ public class Services {
             dependenciesList.setItems(composeFile.getServices());
             dependenciesList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-
             currentService.bind(servicesListView.getSelectionModel().selectedItemProperty());
             serviceSourceType.setItems(Service.ServiceSource.listValues());
 
             serviceName.textProperty().bindBidirectional(Val.selectVar(currentService, Service::nameProperty));
             serviceSource.textProperty().bindBidirectional(Val.selectVar(currentService, Service::sourceProperty));
             serviceSourceType.valueProperty().bindBidirectional(Val.selectVar(currentService, Service::sourceTypeProperty));
+
+            currentService.addListener((observable, oldValue, newValue) -> this.reload());
+            this.reload();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,6 +63,19 @@ public class Services {
         servicesListView.refresh();
         linksList.refresh();
         dependenciesList.refresh();
+
+        linksList.setCellFactory(CheckBoxListCell.forListView(param -> {
+            BooleanProperty observable = new SimpleBooleanProperty();
+            observable.setValue(currentService.get() != null && currentService.get().getLinks().contains(param));
+            observable.addListener((obs, wasSelected, isSelected) -> {
+                if (currentService.get() != null && currentService.get() != param) {
+                    ListProperty<Service> links = currentService.get().linksProperty();
+                    if (isSelected) links.add(param);
+                    else links.remove(param);
+                }
+            });
+            return observable;
+        }));
     }
 
     @FXML
