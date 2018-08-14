@@ -18,8 +18,17 @@ abstract public class AbstractFormat {
 
     public static void save() throws IOException {
         AbstractFormat format = getNewestSaveFormat();
-        File config = format.createSaveFile(getConfigRootDirectory());
+        File dir = getConfigRootDirectory();
+        File config = format.createSaveFile(dir);
         if (!config.exists()) config.createNewFile();
+
+        final String configName = config.getName();
+        File[] files = dir.listFiles();
+        if (files == null) files = new File[0];
+        Arrays.stream(files)
+                .filter(File::isFile)
+                .filter(f -> !f.getName().equals(configName))
+                .forEach(File::delete);
         format.save(config);
     }
 
@@ -43,6 +52,7 @@ abstract public class AbstractFormat {
         File[] files = configDir.listFiles();
         if (files == null) files = new File[0];
         Arrays.stream(files)
+                .filter(File::isFile)
                 .filter(f -> !f.getName().equals(returnFileName))
                 .forEach(File::delete);
 
