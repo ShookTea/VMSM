@@ -2,11 +2,7 @@ package eu.shooktea.vmsm.module.dockercompose;
 
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.module.VMModule;
-import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.docker.Services;
-import javafx.event.ActionEvent;
-import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
