@@ -1,13 +1,14 @@
 package eu.shooktea.vmsm.module.dockercompose;
 
+import eu.shooktea.yaml.YamlList;
 import eu.shooktea.yaml.YamlMap;
 import eu.shooktea.yaml.YamlPrimitive;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import eu.shooktea.yaml.YamlValue;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.stream.Collectors;
 
 public class Service {
     public Service(String name, YamlMap map, ComposeFile composeFile) {
@@ -16,6 +17,21 @@ public class Service {
         this.name = new SimpleStringProperty(name);
         this.sourceType = new SimpleObjectProperty<>(ServiceSource.fromYaml(yaml));
         this.source = new SimpleStringProperty(getSourceType().source(yaml));
+        this.links = createFromList("links", yaml, compose);
+        this.dependencies = createFromList("depends_on", yaml, compose);
+    }
+
+    private static SimpleListProperty<Service> createFromList(String key, YamlMap parent, ComposeFile compose) {
+        return new SimpleListProperty<>(FXCollections.observableArrayList(
+                parent.getOrDefault(key, new YamlList())
+                .toList()
+                .stream()
+                .map(YamlValue::toPrimitive)
+                .map(YamlPrimitive::toYamlObject)
+                .map(Object::toString)
+                .map(compose::byName)
+                .collect(Collectors.toList())
+        ));
     }
 
     public YamlMap toYamlMap() {
@@ -73,6 +89,8 @@ public class Service {
 
     private final StringProperty name;
     private final ObjectProperty<ServiceSource> sourceType;
+    private final ListProperty<Service> links;
+    private final ListProperty<Service> dependencies;
     private final StringProperty source;
     private final YamlMap yaml;
     private final ComposeFile compose;

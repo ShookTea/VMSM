@@ -24,6 +24,10 @@ public class ComposeFile {
         return services;
     }
 
+    public Service byName(String name) {
+        return getServices().stream().filter(s -> s.getName().equals(name)).findAny().get();
+    }
+
     private void parseYaml() {
         services.setAll(
                 mapping.getOrDefault("services", new YamlMap())
