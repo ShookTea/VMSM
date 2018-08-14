@@ -91,21 +91,6 @@ public class Storage {
         }
     }
 
-    private static File getVmsmFile() {
-        File home = AbstractFormat.getConfigRootDirectory();
-        File file = new File(home, "config.json");
-        if (!file.exists()) {
-            try {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(1);
-            }
-        }
-        return file;
-    }
-
     /**
      * Returns list of ignored Vagrant machines. These machines were added to that list during scan for existing
      * VMs that weren't manually added to VMSM by user. If user doesn't want to see notifications about VM every
