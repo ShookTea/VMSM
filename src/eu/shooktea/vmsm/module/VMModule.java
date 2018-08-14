@@ -8,12 +8,14 @@ import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.ssh.SSH;
 import eu.shooktea.yaml.YamlMap;
+import eu.shooktea.yaml.YamlValue;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import org.json.JSONObject;
+import org.yaml.snakeyaml.Yaml;
 
 import java.util.*;
 
@@ -64,7 +66,7 @@ public abstract class VMModule {
      * @param vm virtual machine that contains configuration of module
      */
     public void storeInJSON(JSONObject obj, VirtualMachine vm) {
-        settings.getOrDefault(vm, new HashMap<>()).forEach(obj::put);
+        oldSettings.getOrDefault(vm, new HashMap<>()).forEach(obj::put);
     }
 
     /**
@@ -73,7 +75,7 @@ public abstract class VMModule {
      * @param vm virtual machine that contains configuration of module
      */
     public void storeInYAML(YamlMap obj, VirtualMachine vm) {
-        settings.getOrDefault(vm, new HashMap<>()).forEach(obj::put);
+        settings.getOrDefault(vm, new YamlMap()).forEach(obj::put);
     }
 
     /**
@@ -82,8 +84,8 @@ public abstract class VMModule {
      * @param vm virtual machine that will contain configuration of module
      */
     public void loadFromJSON(JSONObject obj, VirtualMachine vm) {
-        if (!settings.containsKey(vm)) settings.put(vm, new HashMap<>());
-        Map<String, Object> values = settings.getOrDefault(vm, new HashMap<>());
+        if (!oldSettings.containsKey(vm)) oldSettings.put(vm, new HashMap<>());
+        Map<String, Object> values = oldSettings.getOrDefault(vm, new HashMap<>());
         obj.keySet().forEach(key -> values.put(key, obj.get(key)));
     }
 
@@ -93,9 +95,9 @@ public abstract class VMModule {
      * @param vm virtual machine that will contain configuration of module
      */
     public void loadFromYAML(YamlMap obj, VirtualMachine vm) {
-        if (!settings.containsKey(vm)) settings.put(vm, new HashMap<>());
-        Map<String, Object> values = settings.getOrDefault(vm, new HashMap<>());
-        obj.keySet().forEach(key -> values.put(key, obj.get(key).toYamlObject()));
+        if (!settings.containsKey(vm)) settings.put(vm, new YamlMap());
+        YamlMap values = settings.getOrDefault(vm, new YamlMap());
+        obj.keySet().forEach(key -> values.put(key, obj.get(key)));
     }
 
     /**
@@ -192,11 +194,23 @@ public abstract class VMModule {
      * @param key name of setting
      * @param value value of setting
      */
-    public void setSetting(VirtualMachine vm, String key, Object value) {
-        if (!settings.containsKey(vm)) {
-            settings.put(vm, new HashMap<>());
+    public void setOldSetting(VirtualMachine vm, String key, Object value) {
+        if (!oldSettings.containsKey(vm)) {
+            oldSettings.put(vm, new HashMap<>());
         }
-        settings.getOrDefault(vm, new HashMap<>()).put(key, value);
+        oldSettings.getOrDefault(vm, new HashMap<>()).put(key, value);
+    }
+
+    /**
+     * Sets object to be stored in configuration of virtual machine. It can be any correct YAML value.
+     * @param vm virtual machine that contains configuration
+     * @param key name of setting
+     * @param value value of setting
+     */
+    public void setSetting(VirtualMachine vm, String key, Object value) {
+        if (!settings.containsKey(vm))
+            settings.put(vm, new YamlMap());
+        settings.getOrDefault(vm, new YamlMap()).put(key, value);
     }
 
     /**
@@ -204,12 +218,25 @@ public abstract class VMModule {
      * @param vm virtual machine that contains configuration
      * @param key name of setting
      * @return value of setting or {@code null} if virtual machine doesn't contain setting with given name
-     * @see #getSetting(VirtualMachine, String)
+     * @see #getOldSettings(VirtualMachine, String)
      */
-    public String getStringSetting(VirtualMachine vm, String key) {
-        Object ob = getSetting(vm, key);
+    public String getOldStringSetting(VirtualMachine vm, String key) {
+        Object ob = getOldSettings(vm, key);
         if (ob == null) return null;
         else return ob.toString();
+    }
+
+    /**
+     * Returns string from configuration.
+     * @param vm virtual machine that contains configuration
+     * @param key name of setting
+     * @return value of setting or {@code null} if virtual machine doesn't contain setting with given name
+     * @see #getOldSettings(VirtualMachine, String)
+     */
+    public String getStringSetting(VirtualMachine vm, String key) {
+        YamlValue val = getSetting(vm, key);
+        if (val == null || !val.isPrimitive()) return null;
+        else return val.toPrimitive().toYamlObject().toString();
     }
 
     /**
@@ -218,8 +245,27 @@ public abstract class VMModule {
      * @param key name of setting
      * @return value/JSON object of setting or {@code null} if virtual machine doesn't contain setting with given name
      */
-    public Object getSetting(VirtualMachine vm, String key) {
-        return settings.getOrDefault(vm, new HashMap<>()).getOrDefault(key, null);
+    public Object getOldSettings(VirtualMachine vm, String key) {
+        return oldSettings.getOrDefault(vm, new HashMap<>()).getOrDefault(key, null);
+    }
+
+    /**
+     * Returns object from configuration.
+     * @param vm virtual machine that contains configuration
+     * @param key name of setting
+     * @return YamlValue of setting or {@code null} if virtual machine doesn't contain setting with given name
+     */
+    public YamlValue getSetting(VirtualMachine vm, String key) {
+        return settings.getOrDefault(vm, new YamlMap()).getOrDefault(key, null);
+    }
+
+    /**
+     * Removes object from configuration
+     * @param vm virtual machine that contains configuration
+     * @param key name of setting that should be removed
+     */
+    public void removeOldSetting(VirtualMachine vm, String key) {
+        oldSettings.getOrDefault(vm, new HashMap<>()).remove(key);
     }
 
     /**
@@ -228,7 +274,7 @@ public abstract class VMModule {
      * @param key name of setting that should be removed
      */
     public void removeSetting(VirtualMachine vm, String key) {
-        settings.getOrDefault(vm, new HashMap<>()).remove(key);
+        settings.getOrDefault(vm, new YamlMap()).remove(key);
     }
 
     /**
@@ -241,5 +287,6 @@ public abstract class VMModule {
     }
 
     private BooleanProperty isInstalled;
-    private Map<VirtualMachine, Map<String, Object>> settings = new HashMap<>();
+    private Map<VirtualMachine, Map<String, Object>> oldSettings = new HashMap<>();
+    private Map<VirtualMachine, YamlMap> settings = new HashMap<>();
 }

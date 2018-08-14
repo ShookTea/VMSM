@@ -36,7 +36,7 @@ public class MagentoConfig implements StageController {
 
         holdReports.setItems(Report.HoldTime.createList());
         Long holdValue = null;
-        Object readHoldValue = magento.getSetting(vm, "report_keep_time");
+        Object readHoldValue = magento.getOldSettings(vm, "report_keep_time");
         if (readHoldValue instanceof Long) {
             holdValue = (Long)readHoldValue;
         }
@@ -52,7 +52,7 @@ public class MagentoConfig implements StageController {
     }
 
     private void loadSetting(VMModule module, VirtualMachine vm, TextField field, String name) {
-        String value = module.getStringSetting(vm, name);
+        String value = module.getOldStringSetting(vm, name);
         if (value != null) {
             field.setText(value);
         }
@@ -84,7 +84,7 @@ public class MagentoConfig implements StageController {
     private void saveSettings() {
         File file = new File(magentoPath.getText().trim());
         if (!checkFile(file)) {
-            magento.removeSetting(vm, "path");
+            magento.removeOldSetting(vm, "path");
         }
         else {
             saveConf(magentoPath, "path", magento, vm);
@@ -92,7 +92,7 @@ public class MagentoConfig implements StageController {
 
         saveConf(adminLogin, "adm_login", magento, vm);
 
-        magento.setSetting(vm, "report_keep_time", holdReports.getValue().timeMillis);
+        magento.setOldSetting(vm, "report_keep_time", holdReports.getValue().timeMillis);
 
         Storage.saveAll();
         stage.close();
@@ -101,10 +101,10 @@ public class MagentoConfig implements StageController {
     private void saveConf(TextField textField, String name, VMModule module, VirtualMachine vm) {
         String trim = textField.getText().trim();
         if (trim.isEmpty()) {
-            module.removeSetting(vm, name);
+            module.removeOldSetting(vm, name);
         }
         else {
-            module.setSetting(vm, name, trim);
+            module.setOldSetting(vm, name, trim);
         }
     }
 

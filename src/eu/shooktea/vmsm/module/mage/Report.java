@@ -88,7 +88,7 @@ public class Report {
             notifyReports.clear();
         }
         if (MAX_TIME_DIFFERENCE == -1) {
-            Object v = module.getSetting(vm, "report_keep_time");
+            Object v = module.getOldSettings(vm, "report_keep_time");
             Long value = null;
             if (v instanceof Long) {
                 value = (Long)v;
@@ -149,12 +149,12 @@ public class Report {
             obj.put("text", report.getText());
             array.put(obj);
         }
-        module.setSetting(vm, "reports", array);
+        module.setOldSetting(vm, "reports", array);
         if (CHANGES) Storage.saveAll();
     }
 
     private static ObservableList<Report> getReportsFromConfig(Magento module, VirtualMachine vm, File reportsDir) {
-        Object reportsObj = module.getSetting(vm, "reports");
+        Object reportsObj = module.getOldSettings(vm, "reports");
         if (reportsObj == null) reportsObj = new JSONArray();
         if (!(reportsObj instanceof JSONArray)) throw new RuntimeException("Magento reports are not array; reports.toString = \"" + reportsObj.toString() + "\"");
         JSONArray reports = (JSONArray)reportsObj;

@@ -31,14 +31,14 @@ public class SqlConnection {
     public SqlConnection(MySQL sql, VirtualMachine vm) {
         SSH ssh = SSH.getModuleByName("SSH");
 
-        sshEnabled = Boolean.TRUE.equals(sql.getSetting(vm, "ssh_enabled"));
-        JSONObject obj = (JSONObject)sql.getSetting(vm, "ssh");
+        sshEnabled = Boolean.TRUE.equals(sql.getOldSettings(vm, "ssh_enabled"));
+        JSONObject obj = (JSONObject)sql.getOldSettings(vm, "ssh");
         if (sshEnabled && obj != null) {
             String temp;
             if (obj.has("host")) {
                 sshHost = obj.getString("host");
             }
-            else if (ssh.isInstalled(vm) && (temp = ssh.getStringSetting(vm, "host")) != null) {
+            else if (ssh.isInstalled(vm) && (temp = ssh.getOldStringSetting(vm, "host")) != null) {
                 sshHost = temp;
             }
             else {
@@ -48,7 +48,7 @@ public class SqlConnection {
             if (obj.has("username")) {
                 sshUsername = obj.getString("username");
             }
-            else if (ssh.isInstalled(vm) && (temp = ssh.getStringSetting(vm, "user")) != null) {
+            else if (ssh.isInstalled(vm) && (temp = ssh.getOldStringSetting(vm, "user")) != null) {
                 sshUsername = temp;
             }
             else {
@@ -58,7 +58,7 @@ public class SqlConnection {
             if (obj.has("password")) {
                 sshPassword = obj.getString("password");
             }
-            else if (ssh.isInstalled(vm) && (temp = ssh.getStringSetting(vm, "password")) != null) {
+            else if (ssh.isInstalled(vm) && (temp = ssh.getOldStringSetting(vm, "password")) != null) {
                 sshPassword = temp;
             }
             else {
@@ -87,11 +87,11 @@ public class SqlConnection {
             localPort = 0;
         }
 
-        String host = sql.getStringSetting(vm, "host");
-        String db = sql.getStringSetting(vm, "database");
-        String usr = sql.getStringSetting(vm, "username");
-        String passwd = sql.getStringSetting(vm, "password");
-        String port = sql.getStringSetting(vm, "port");
+        String host = sql.getOldStringSetting(vm, "host");
+        String db = sql.getOldStringSetting(vm, "database");
+        String usr = sql.getOldStringSetting(vm, "username");
+        String passwd = sql.getOldStringSetting(vm, "password");
+        String port = sql.getOldStringSetting(vm, "port");
 
         sqlHost = host == null ? "127.0.0.1" : host;
         sqlDb = db == null ? "" : db;

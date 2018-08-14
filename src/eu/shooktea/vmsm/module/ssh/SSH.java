@@ -43,9 +43,9 @@ public class SSH extends VMModule {
      * @throws JSchException if anything wrong happens during connection
      */
     public Channel openChannel(VirtualMachine vm, DefaultUserInfo ui, String type) throws JSchException {
-        String user = getStringSetting(vm, "user");
-        String passwd = getStringSetting(vm, "password");
-        String host = getStringSetting(vm, "host");
+        String user = getOldStringSetting(vm, "user");
+        String passwd = getOldStringSetting(vm, "password");
+        String host = getOldStringSetting(vm, "host");
         if (user == null || passwd == null || host == null) return null;
 
         JSch jsch = new JSch();

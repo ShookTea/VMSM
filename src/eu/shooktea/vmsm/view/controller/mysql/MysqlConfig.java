@@ -45,7 +45,7 @@ public class MysqlConfig implements StageController {
         ssh = SSH.getModuleByName("SSH");
         bindSsh();
         loadMysqlSettings();
-        Boolean sshEnabled = (Boolean)mysql.getSetting(vm, "ssh_enabled");
+        Boolean sshEnabled = (Boolean)mysql.getOldSettings(vm, "ssh_enabled");
         if (sshEnabled == null) sshEnabled = false;
         enableSsh.setSelected(sshEnabled);
         loadSshSettings();
@@ -61,11 +61,11 @@ public class MysqlConfig implements StageController {
     }
 
     private void loadMysqlSettings() {
-        String database = mysql.getStringSetting(vm, "database");
-        String username = mysql.getStringSetting(vm, "username");
-        String password = mysql.getStringSetting(vm, "password");
-        String host = mysql.getStringSetting(vm, "host");
-        String port = mysql.getStringSetting(vm, "port");
+        String database = mysql.getOldStringSetting(vm, "database");
+        String username = mysql.getOldStringSetting(vm, "username");
+        String password = mysql.getOldStringSetting(vm, "password");
+        String host = mysql.getOldStringSetting(vm, "host");
+        String port = mysql.getOldStringSetting(vm, "port");
 
         this.database.setText(database == null ? "" : database);
         this.username.setText(username == null ? "" : username);
@@ -75,7 +75,7 @@ public class MysqlConfig implements StageController {
     }
 
     private void loadSshSettings() {
-        JSONObject sshConfig = (JSONObject)mysql.getSetting(vm, "ssh");
+        JSONObject sshConfig = (JSONObject)mysql.getOldSettings(vm, "ssh");
         if (sshConfig == null) sshConfig = new JSONObject();
         Map<String, String> defaults = new HashMap<>();
         defaults.put("host", vm.getPageRoot().getHost());
@@ -83,13 +83,13 @@ public class MysqlConfig implements StageController {
         defaults.put("local_port", "3307");
 
         if (ssh.isInstalled(vm)) {
-            String defHost = ssh.getStringSetting(vm, "host");
+            String defHost = ssh.getOldStringSetting(vm, "host");
             if (defHost != null && !defHost.trim().isEmpty()) defaults.put("host", defHost);
 
-            String user = ssh.getStringSetting(vm, "user");
+            String user = ssh.getOldStringSetting(vm, "user");
             if (user != null && !user.trim().isEmpty()) defaults.put("username", user);
 
-            String pass = ssh.getStringSetting(vm, "password");
+            String pass = ssh.getOldStringSetting(vm, "password");
             if (pass != null && !pass.trim().isEmpty()) defaults.put("password", pass);
         }
 
@@ -109,19 +109,19 @@ public class MysqlConfig implements StageController {
 
     @FXML
     private void save() {
-        mysql.setSetting(vm, "database", database.getText());
-        mysql.setSetting(vm, "username", username.getText());
-        mysql.setSetting(vm, "password", password.getText());
-        mysql.setSetting(vm, "host", host.getText());
-        mysql.setSetting(vm, "port", port.getText());
-        mysql.setSetting(vm, "ssh_enabled", enableSsh.isSelected());
+        mysql.setOldSetting(vm, "database", database.getText());
+        mysql.setOldSetting(vm, "username", username.getText());
+        mysql.setOldSetting(vm, "password", password.getText());
+        mysql.setOldSetting(vm, "host", host.getText());
+        mysql.setOldSetting(vm, "port", port.getText());
+        mysql.setOldSetting(vm, "ssh_enabled", enableSsh.isSelected());
         JSONObject ssh = new JSONObject();
         ssh.put("host", sshHost.getText());
         ssh.put("port", sshPort.getText());
         ssh.put("username", sshUsername.getText());
         ssh.put("password", sshPassword.getText());
         ssh.put("local_port", localPort.getText());
-        mysql.setSetting(vm, "ssh", ssh);
+        mysql.setOldSetting(vm, "ssh", ssh);
         Storage.saveAll();
         stage.close();
     }
