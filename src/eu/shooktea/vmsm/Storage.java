@@ -23,17 +23,13 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
-import eu.shooktea.vmsm.config.AbstractFormat;
 import eu.shooktea.vmsm.config.JsonFormat;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +69,7 @@ public class Storage {
     }
 
     private static void trySaveAll() throws IOException {
-        new JsonFormat().save(vmsmFile);
+        new JsonFormat().save();
     }
 
     static void loadAll() {
@@ -86,9 +82,7 @@ public class Storage {
     }
 
     private static void tryLoadAll() throws IOException {
-        if (vmsmFile.exists()) {
-            new JsonFormat().load(vmsmFile);
-        }
+        new JsonFormat().load();
     }
 
     /**
@@ -118,7 +112,6 @@ public class Storage {
         return vmList;
     }
 
-    private static File vmsmFile = AbstractFormat.getConfigFile();
     private static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
     private static List<String> ignoredVagrantMachines = new ArrayList<>();
 
@@ -127,15 +120,4 @@ public class Storage {
      * correct JSON type, including {@link JSONObject} and {@link JSONArray}.
      */
     public static Map<String, Object> config = new HashMap<>();
-
-    static void checkVmsmFiles() {
-        try {
-            if (!vmsmFile.getParentFile().exists()) vmsmFile.getParentFile().mkdirs();
-            if (!vmsmFile.exists())
-                Files.write(vmsmFile.toPath(), "{}".getBytes(), StandardOpenOption.CREATE);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        }
-    }
 }

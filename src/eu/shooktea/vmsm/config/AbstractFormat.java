@@ -8,7 +8,17 @@ abstract public class AbstractFormat {
     public abstract void load(File file) throws IOException;
     public abstract void save(File file) throws IOException;
 
-    public static File getConfigFile() {
+    public void load() throws IOException
+    {
+        this.load(getConfigFile());
+    }
+
+    public void save() throws IOException
+    {
+        this.save(getConfigFile());
+    }
+
+    public static File getConfigFile() throws IOException {
         File configDir = getConfigRootDirectory();
         File returnFile = null;
 
@@ -31,6 +41,7 @@ abstract public class AbstractFormat {
                 .filter(f -> !f.getName().equals(returnFileName))
                 .forEach(File::delete);
 
+        if (!returnFile.exists()) returnFile.createNewFile();
         return returnFile;
     }
 
