@@ -44,7 +44,7 @@ public class DockerCompose extends VMModule {
                 item.setOnAction(e -> openBash(service));
                 openBash.getItems().add(item);
             }
-        } catch (IOException e) {}
+        } catch (IOException ignored) {}
 
         docker.getItems().addAll(composeFile, openBash);
         return Optional.of(docker);
