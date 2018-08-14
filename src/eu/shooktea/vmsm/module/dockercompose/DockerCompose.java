@@ -1,7 +1,10 @@
 package eu.shooktea.vmsm.module.dockercompose;
 
+import eu.shooktea.fxtoolkit.terminal.TerminalConnection;
 import eu.shooktea.vmsm.Toolkit;
+import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.VMModule;
+import eu.shooktea.vmsm.view.controller.Terminal;
 import eu.shooktea.vmsm.view.controller.docker.Services;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -11,6 +14,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class DockerCompose extends VMModule {
     @Override
@@ -51,6 +55,8 @@ public class DockerCompose extends VMModule {
     }
 
     private void openBash(Service service) {
-        System.out.println(service.getName());
+        String title = "Bash terminal (" + service.getName() + ")";
+        Function<VirtualMachine, TerminalConnection> function = vm -> new BashConnection(service, vm);
+        Terminal.openTerminal(title, function);
     }
 }
