@@ -12,7 +12,7 @@ public class DataModelPrimitive<T> extends DataModelValue {
     }
 
     @Override
-    public Object toYamlObject() {
+    public Object toStorageObject() {
         return content;
     }
 

@@ -29,11 +29,11 @@ public class YAML {
     }
 
     public String toString(DataModelValue val) {
-        return yaml.dump(val.toYamlObject());
+        return yaml.dump(val.toStorageObject());
     }
 
     public void toWriter(DataModelValue val, Writer writer) {
-        yaml.dump(val.toYamlObject(), writer);
+        yaml.dump(val.toStorageObject(), writer);
     }
 
     private final Yaml yaml;

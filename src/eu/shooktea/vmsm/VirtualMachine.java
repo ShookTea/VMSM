@@ -310,6 +310,6 @@ public class VirtualMachine {
     }
 
     private static String stringFromYaml(DataModelMap map, String key) {
-        return map.get(key).toPrimitive().toYamlObject().toString();
+        return map.get(key).toPrimitive().toStorageObject().toString();
     }
 }

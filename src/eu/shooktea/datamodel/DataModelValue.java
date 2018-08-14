@@ -39,7 +39,7 @@ public abstract class DataModelValue {
         return (DataModelPrimitive)this;
     }
 
-    public abstract Object toYamlObject();
+    public abstract Object toStorageObject();
 
     private final DataModelType type;
 

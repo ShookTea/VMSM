@@ -137,7 +137,7 @@ public class Service {
                         .toList()
                         .stream()
                         .map(DataModelValue::toPrimitive)
-                        .map(DataModelPrimitive::toYamlObject)
+                        .map(DataModelPrimitive::toStorageObject)
                         .map(Object::toString)
                         .map(compose::byName)
                         .collect(Collectors.toList())
@@ -149,8 +149,8 @@ public class Service {
 
         public String source(DataModelMap yaml) {
             switch(this) {
-                case BUILD: return yaml.get("build").toYamlObject().toString();
-                case IMAGE: return yaml.get("image").toYamlObject().toString();
+                case BUILD: return yaml.get("build").toStorageObject().toString();
+                case IMAGE: return yaml.get("image").toStorageObject().toString();
                 default: return null;
             }
         }

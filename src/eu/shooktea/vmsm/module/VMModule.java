@@ -235,7 +235,7 @@ public abstract class VMModule {
     public String getStringSetting(VirtualMachine vm, String key) {
         DataModelValue val = getSetting(vm, key);
         if (val == null || !val.isPrimitive()) return null;
-        else return val.toPrimitive().toYamlObject().toString();
+        else return val.toPrimitive().toStorageObject().toString();
     }
 
     /**

@@ -29,9 +29,9 @@ public class DataModelList extends DataModelValue implements Iterable<DataModelV
     }
 
     @Override
-    public Object toYamlObject() {
+    public Object toStorageObject() {
         return list.stream()
-                .map(DataModelValue::toYamlObject)
+                .map(DataModelValue::toStorageObject)
                 .collect(Collectors.toList());
     }
 

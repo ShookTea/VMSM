@@ -36,10 +36,10 @@ public class DataModelMap extends DataModelValue implements Iterable<Map.Entry<S
     }
 
     @Override
-    public Object toYamlObject() {
+    public Object toStorageObject() {
         Map<String, Object> ret = new LinkedHashMap<>();
         for (String key : map.keySet()) {
-            ret.put(key, map.get(key).toYamlObject());
+            ret.put(key, map.get(key).toStorageObject());
         }
         return ret;
     }
