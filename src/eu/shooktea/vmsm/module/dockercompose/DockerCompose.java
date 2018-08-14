@@ -2,11 +2,16 @@ package eu.shooktea.vmsm.module.dockercompose;
 
 import eu.shooktea.vmsm.Toolkit;
 import eu.shooktea.vmsm.module.VMModule;
+import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.controller.docker.Services;
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +38,23 @@ public class DockerCompose extends VMModule {
     public Optional<MenuItem> getMenuItem() {
         Menu docker = new Menu("Docker Compose", Toolkit.createMenuImage("docker_logo.png"));
 
-        MenuItem composeFile = new MenuItem("Compose file");
+        MenuItem composeFile = new MenuItem("Compose file...");
         composeFile.setOnAction(Services::openDockerServicesWindow);
 
-        docker.getItems().addAll(composeFile);
+        Menu openBash = new Menu("Connect to bash");
+        try {
+            for (Service service : new ComposeFile().getServices()) {
+                MenuItem item = new MenuItem(service.getName());
+                item.setOnAction(e -> openBash(service));
+                openBash.getItems().add(item);
+            }
+        } catch (IOException e) {}
+
+        docker.getItems().addAll(composeFile, openBash);
         return Optional.of(docker);
+    }
+
+    private void openBash(Service service) {
+        System.out.println(service.getName());
     }
 }
