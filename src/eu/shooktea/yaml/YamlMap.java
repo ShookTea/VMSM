@@ -1,9 +1,12 @@
 package eu.shooktea.yaml;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
-public class YamlMap extends YamlValue {
+public class YamlMap extends YamlValue implements Iterable<Map.Entry<String, YamlValue>> {
 
     public YamlMap(Map map) {
         super(YamlType.MAP);
@@ -35,6 +38,31 @@ public class YamlMap extends YamlValue {
             ret.put(key, map.get(key).toYamlObject());
         }
         return ret;
+    }
+
+    public void put(String key, YamlValue val) {
+        map.put(key, val);
+    }
+
+    public YamlValue get(String key) {
+        return map.get(key);
+    }
+
+    public Set<String> keySet() {
+        return map.keySet();
+    }
+
+    public Set<Map.Entry<String, YamlValue>> entrySet() {
+        return map.entrySet();
+    }
+
+    @Override
+    public Iterator<Map.Entry<String, YamlValue>> iterator() {
+        return entrySet().iterator();
+    }
+
+    public Stream<Map.Entry<String, YamlValue>> stream() {
+        return entrySet().stream();
     }
 
     private final Map<String, YamlValue> map;

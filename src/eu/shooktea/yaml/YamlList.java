@@ -1,10 +1,12 @@
 package eu.shooktea.yaml;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class YamlList extends YamlValue {
+public class YamlList extends YamlValue implements Iterable<YamlValue> {
     public YamlList(List<Object> objectList) {
         super(YamlType.LIST);
         this.list = new ArrayList<>();
@@ -31,6 +33,31 @@ public class YamlList extends YamlValue {
         return list.stream()
                 .map(YamlValue::toYamlObject)
                 .collect(Collectors.toList());
+    }
+
+    public int size() {
+        return list.size();
+    }
+
+    public YamlValue get(int i) {
+        return list.get(i);
+    }
+
+    public void add(YamlValue val) {
+        list.add(val);
+    }
+
+    public void add(int index, YamlValue val) {
+        list.add(index, val);
+    }
+
+    public Stream<YamlValue> stream() {
+        return list.stream();
+    }
+
+    @Override
+    public Iterator<YamlValue> iterator() {
+        return list.iterator();
     }
 
     private final List<YamlValue> list;
