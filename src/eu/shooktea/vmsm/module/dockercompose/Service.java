@@ -28,7 +28,7 @@ public class Service {
     }
 
     public YamlMap toYamlMap() {
-        yaml.removeKeys("image", "build");
+        yaml.removeKeys("image", "build", "depends_on", "links");
         if (getSourceType() == ServiceSource.BUILD) {
             yaml.put("build", new YamlPrimitive<>(getSource()));
         }
