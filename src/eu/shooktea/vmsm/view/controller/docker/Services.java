@@ -48,7 +48,7 @@ public class Services {
     @FXML
     private void saveServiceData() {
         try {
-            if (currentService.isNull().get()) {
+            if (currentService.isNull().get() && serviceName.getText() != null && serviceSource.getText() != null && serviceSourceType.getValue() != null) {
                 String name = serviceName.getText().trim();
                 String source = serviceSource.getText().trim();
                 Service.ServiceSource sourceType = serviceSourceType.getValue();
