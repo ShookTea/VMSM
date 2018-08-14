@@ -1,6 +1,5 @@
 package eu.shooktea.fxtoolkit.terminal;
 
-import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -104,23 +103,7 @@ public abstract class TerminalConnection {
     private String consoleDisplay = "";
     private String input = "";
     private boolean executingCommand = false;
-    protected Runnable onTerminalUpdate = () -> {};
+    private Runnable onTerminalUpdate = () -> {};
     private List<String> commandLineHistory = new ArrayList<>();
     private int currentHistoryPos = -1;
-
-    protected static class Console extends OutputStream {
-
-        public Console(TerminalConnection connection) {
-            this.terminalConnection = connection;
-        }
-
-        public void write(int i) {
-            Platform.runLater(() -> {
-                terminalConnection.print(String.valueOf((char)i));
-                terminalConnection.getOnTerminalUpdate().run();
-            });
-        }
-
-        private final TerminalConnection terminalConnection;
-    }
 }

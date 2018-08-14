@@ -1,6 +1,7 @@
 package eu.shooktea.vmsm.module.ssh;
 
 import com.jcraft.jsch.ChannelShell;
+import eu.shooktea.fxtoolkit.terminal.Console;
 import eu.shooktea.fxtoolkit.terminal.TerminalConnection;
 import eu.shooktea.fxtoolkit.terminal.TerminalIO;
 
