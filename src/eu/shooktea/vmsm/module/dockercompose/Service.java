@@ -1,9 +1,7 @@
 package eu.shooktea.vmsm.module.dockercompose;
 
-import com.amihaiemil.camel.Yaml;
-import com.amihaiemil.camel.YamlMapping;
-import com.amihaiemil.camel.YamlMappingBuilder;
-import com.sun.org.apache.xpath.internal.SourceTree;
+import eu.shooktea.yaml.YamlMap;
+import eu.shooktea.yaml.YamlValue;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,31 +9,18 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 public class Service {
-    public Service(String name, YamlMapping mapping) {
-        this.yaml = mapping;
+    public Service(String name, YamlMap map) {
+        this.yaml = map;
         this.name = new SimpleStringProperty(name);
         this.sourceType = new SimpleObjectProperty<>(ServiceSource.fromYaml(yaml));
         this.source = new SimpleStringProperty(getSourceType().source(yaml));
     }
 
-    public YamlMapping toYaml() {
-        YamlMappingBuilder builder = Yaml.createYamlMappingBuilder();
-        for (String key : getPossibleKeys()) {
-            if (key.equals("build") || key.equals("image")) continue;
-            if (yaml.string(key) != null) builder.add(key, yaml.string(key));
-            else if (yaml.yamlSequence(key) != null) builder.add(key, yaml.yamlSequence(key));
-            else if (yaml.yamlMapping(key) != null) builder.add(key, yaml.yamlMapping(key));
-        }
-        if (getSourceType() == ServiceSource.IMAGE)
-            builder.add("image", getSource());
-        else if (getSourceType() == ServiceSource.BUILD)
-            builder.add("build", getSource());
-
-        return builder.build();
+    public Service(Map.Entry<String, YamlValue> entry) {
+        this(entry.getKey(), entry.getValue().toMap());
     }
 
     @Override
@@ -79,29 +64,18 @@ public class Service {
         sourceProperty().set(newSource);
     }
 
-    private String[] getPossibleKeys() {
-        List<String> ret = new ArrayList<>();
-        String[] text = yaml.toString().split("\n");
-        for (String line : text) {
-            line = line.trim();
-            if (line.endsWith(":")) ret.add(line.substring(0, line.length() - 1));
-            else if (line.contains(":")) ret.add(line.split(":")[0].trim());
-        }
-        return ret.toArray(new String[0]);
-    }
-
     private final StringProperty name;
     private final ObjectProperty<ServiceSource> sourceType;
     private final StringProperty source;
-    private final YamlMapping yaml;
+    private final YamlMap yaml;
 
     public enum ServiceSource {
         BUILD, IMAGE;
 
-        public String source(YamlMapping yaml) {
-            switch (this) {
-                case BUILD: return yaml.string("build");
-                case IMAGE: return yaml.string("image");
+        public String source(YamlMap yaml) {
+            switch(this) {
+                case BUILD: return yaml.get("build").toYamlObject().toString();
+                case IMAGE: return yaml.get("image").toYamlObject().toString();
                 default: return null;
             }
         }
@@ -115,9 +89,9 @@ public class Service {
             }
         }
 
-        public static ServiceSource fromYaml(YamlMapping yaml) {
-            if (yaml.string("image") != null) return IMAGE;
-            if (yaml.string("build") != null) return BUILD;
+        public static ServiceSource fromYaml(YamlMap yaml) {
+            if (yaml.containsKey("image")) return IMAGE;
+            if (yaml.containsKey("build")) return BUILD;
             return null;
         }
 

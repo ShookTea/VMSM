@@ -1,12 +1,15 @@
 package eu.shooktea.yaml;
 
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 
 public class YAML {
     private YAML() {
-        this.yaml = new Yaml();
+        DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        this.yaml = new Yaml(options);
     }
 
     public YamlValue load(String s) {

@@ -48,6 +48,10 @@ public class YamlMap extends YamlValue implements Iterable<Map.Entry<String, Yam
         return map.get(key);
     }
 
+    public YamlValue getOrDefault(String key, YamlValue val) {
+        return map.getOrDefault(key, val);
+    }
+
     public Set<String> keySet() {
         return map.keySet();
     }
@@ -58,6 +62,14 @@ public class YamlMap extends YamlValue implements Iterable<Map.Entry<String, Yam
 
     public void clear() {
         map.clear();
+    }
+
+    public boolean containsKey(String key) {
+        return map.containsKey(key);
+    }
+
+    public boolean containsValue(YamlValue value) {
+        return map.containsValue(value);
     }
 
     public Set<Map.Entry<String, YamlValue>> entrySet() {
