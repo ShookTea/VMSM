@@ -48,6 +48,7 @@ public class Services {
     private void saveServiceData() {
         try {
             composeFile.save();
+            servicesListView.refresh();
         } catch (IOException e) {
             e.printStackTrace();
         }
