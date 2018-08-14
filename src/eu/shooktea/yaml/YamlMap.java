@@ -5,9 +5,12 @@ import java.util.Map;
 
 public class YamlMap extends YamlValue {
 
-    public YamlMap(Map<String, Object> map) {
+    public YamlMap(Map map) {
         super(YamlType.MAP);
-        this.map = map;
+        this.map = new LinkedHashMap<>();
+        for (Object key : map.keySet()) {
+            this.map.put(key.toString(), YamlValue.fromObject(map.get(key)));
+        }
     }
 
     public YamlMap() {
@@ -25,5 +28,5 @@ public class YamlMap extends YamlValue {
         return builder.append("}").toString();
     }
 
-    private final Map<String, Object> map;
+    private final Map<String, YamlValue> map;
 }
