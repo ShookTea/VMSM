@@ -29,7 +29,7 @@ public class ComposeFile {
                 mapping.getOrDefault("services", new YamlMap())
                 .toMap()
                 .stream()
-                .map(Service::new)
+                .map(e -> new Service(e.getKey(), e.getValue().toMap(), this))
                 .collect(Collectors.toList())
         );
     }

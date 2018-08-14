@@ -2,7 +2,6 @@ package eu.shooktea.vmsm.module.dockercompose;
 
 import eu.shooktea.yaml.YamlMap;
 import eu.shooktea.yaml.YamlPrimitive;
-import eu.shooktea.yaml.YamlValue;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,18 +9,13 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.Map;
-
 public class Service {
-    public Service(String name, YamlMap map) {
+    public Service(String name, YamlMap map, ComposeFile composeFile) {
         this.yaml = map;
+        this.compose = composeFile;
         this.name = new SimpleStringProperty(name);
         this.sourceType = new SimpleObjectProperty<>(ServiceSource.fromYaml(yaml));
         this.source = new SimpleStringProperty(getSourceType().source(yaml));
-    }
-
-    public Service(Map.Entry<String, YamlValue> entry) {
-        this(entry.getKey(), entry.getValue().toMap());
     }
 
     public YamlMap toYamlMap() {
@@ -81,6 +75,7 @@ public class Service {
     private final ObjectProperty<ServiceSource> sourceType;
     private final StringProperty source;
     private final YamlMap yaml;
+    private final ComposeFile compose;
 
     public enum ServiceSource {
         BUILD, IMAGE;
