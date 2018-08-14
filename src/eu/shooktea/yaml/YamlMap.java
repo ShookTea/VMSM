@@ -16,9 +16,13 @@ public class YamlMap extends YamlValue {
 
     @Override
     public String toString() {
-        return "YamlMap{" +
-                "map=" + map +
-                '}';
+        StringBuilder builder = new StringBuilder().append("YamlMap{");
+        boolean start = true;
+        for (String key : map.keySet()) {
+            builder.append(start ? "" : ";").append(key).append("=").append(map.get(key).toString());
+            start = false;
+        }
+        return builder.append("}").toString();
     }
 
     private final Map<String, Object> map;

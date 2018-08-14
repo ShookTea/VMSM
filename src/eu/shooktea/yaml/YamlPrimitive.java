@@ -8,9 +8,7 @@ public class YamlPrimitive<T> extends YamlValue {
 
     @Override
     public String toString() {
-        return "YamlPrimitive{" +
-                "content=" + content +
-                '}';
+        return "YamlPrimitive{" + content.toString() + "}";
     }
 
     private final T content;

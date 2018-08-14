@@ -15,9 +15,11 @@ public class YamlList extends YamlValue {
 
     @Override
     public String toString() {
-        return "YamlList{" +
-                "list=" + list +
-                '}';
+        StringBuilder builder = new StringBuilder().append("YamlList{");
+        for (int i = 0; i < list.size(); i++) {
+            builder.append(i == 0 ? "" : ";").append(list.get(i));
+        }
+        return builder.append("}").toString();
     }
 
     private final List<Object> list;
