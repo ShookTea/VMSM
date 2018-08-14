@@ -159,7 +159,7 @@ public class Service {
         public String toString() {
             switch (this) {
                 case BUILD: return "Dockerfile";
-                case IMAGE: return "Image";
+                case IMAGE: return "Docker Hub";
                 default: return null;
             }
         }
