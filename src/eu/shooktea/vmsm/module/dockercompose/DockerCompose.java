@@ -1,10 +1,7 @@
 package eu.shooktea.vmsm.module.dockercompose;
 
-import eu.shooktea.fxtoolkit.terminal.TerminalConnection;
 import eu.shooktea.vmsm.Toolkit;
-import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.VMModule;
-import eu.shooktea.vmsm.view.controller.Terminal;
 import eu.shooktea.vmsm.view.controller.docker.Services;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
