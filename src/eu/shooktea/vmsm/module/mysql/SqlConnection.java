@@ -3,7 +3,6 @@ package eu.shooktea.vmsm.module.mysql;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import eu.shooktea.datamodel.DataModelMap;
 import eu.shooktea.datamodel.DataModelPrimitive;
 import eu.shooktea.vmsm.VirtualMachine;
