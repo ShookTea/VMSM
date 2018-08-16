@@ -69,11 +69,11 @@ public abstract class VMModule {
     }
 
     /**
-     * Stores configuration of module for VM in YAML.
-     * @param obj YAML object that will hold configuration of module
+     * Stores configuration of module for VM in map.
+     * @param obj map that will hold configuration of module
      * @param vm virtual machine that contains configuration of module
      */
-    public void storeInYAML(DataModelMap obj, VirtualMachine vm) {
+    public void storeInMap(DataModelMap obj, VirtualMachine vm) {
         settings.getOrDefault(vm, new DataModelMap()).forEach(obj::put);
     }
 
@@ -89,11 +89,11 @@ public abstract class VMModule {
     }
 
     /**
-     * Loads configuration of module for VM from YAML.
-     * @param obj YAML object that holds configuration of module
+     * Loads configuration of module for VM from map.
+     * @param obj map that holds configuration of module
      * @param vm virtual machine that will contain configuration of module
      */
-    public void loadFromYAML(DataModelMap obj, VirtualMachine vm) {
+    public void loadFromMap(DataModelMap obj, VirtualMachine vm) {
         if (!settings.containsKey(vm)) settings.put(vm, new DataModelMap());
         DataModelMap values = settings.getOrDefault(vm, new DataModelMap());
         obj.keySet().forEach(key -> values.put(key, obj.get(key)));
