@@ -2,7 +2,6 @@ package eu.shooktea.datamodel;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DataModelList extends AbstractList<DataModelValue> implements DataModelValue, List<DataModelValue> {
     public DataModelList(List<?> objectList) {
