@@ -9,6 +9,22 @@ public interface DataSupplier {
     String store(DataModelMap dmm);
     Function<Object, DataModelValue> converter();
 
+    Function<Object, DataModelValue> genericConverter = ob -> {
+        if (ob instanceof String) {
+            return new DataModelPrimitive<>((String) ob);
+        }
+        if (ob instanceof Integer) {
+            return new DataModelPrimitive<>((Integer) ob);
+        }
+        if (ob instanceof Float) {
+            return new DataModelPrimitive<>((Float) ob);
+        }
+        if (ob instanceof Boolean) {
+            return new DataModelPrimitive<>((Boolean) ob);
+        }
+        return new DataModelPrimitive<Void>(null);
+    };
+
     default DataModelMap load(InputStream is) {
         StringBuilder sb = new StringBuilder();
         Scanner sc = new Scanner(is);

@@ -44,31 +44,13 @@ public class YAML implements DataSupplier {
     @Override
     public Function<Object, DataModelValue> converter() {
         return ob -> {
-            if (ob instanceof DataModelValue) {
+            if (ob instanceof DataModelValue)
                 return (DataModelValue)ob;
-            }
-            if (ob instanceof Map) {
+            if (ob instanceof Map)
                 return new DataModelMap((Map)ob);
-            }
-            if (ob instanceof List) {
+            if (ob instanceof List)
                 return new DataModelList((List)ob);
-            }
-            if (ob == null || ob instanceof Void) {
-                return new DataModelPrimitive<Void>(null);
-            }
-            if (ob instanceof String) {
-                return new DataModelPrimitive<>((String) ob);
-            }
-            if (ob instanceof Integer) {
-                return new DataModelPrimitive<>((Integer) ob);
-            }
-            if (ob instanceof Float) {
-                return new DataModelPrimitive<>((Float) ob);
-            }
-            if (ob instanceof Boolean) {
-                return new DataModelPrimitive<>((Boolean) ob);
-            }
-            return new DataModelPrimitive<Void>(null);
+            return genericConverter.apply(ob);
         };
     }
 
