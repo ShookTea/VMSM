@@ -1,13 +1,12 @@
 package eu.shooktea.vmsm.view.controller.ssh;
 
 import eu.shooktea.datamodel.DataModelPrimitive;
-import eu.shooktea.datamodel.DataModelValue;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.ssh.SSH;
-import eu.shooktea.vmsm.view.View;
 import eu.shooktea.vmsm.view.StageController;
+import eu.shooktea.vmsm.view.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
