@@ -3,7 +3,9 @@ package eu.shooktea.vmsm.module.mysql;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import eu.shooktea.datamodel.DataModelMap;
+import eu.shooktea.datamodel.DataModelPrimitive;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.ssh.SSH;
 
@@ -31,9 +33,9 @@ public class SqlConnection {
     public SqlConnection(MySQL sql, VirtualMachine vm) {
         SSH ssh = SSH.getModuleByName("SSH");
 
-        sshEnabled = Boolean.TRUE.equals(sql.getSetting(vm, "ssh_enabled"));
-        DataModelMap obj = (DataModelMap)sql.getSetting(vm, "ssh");
-        if (sshEnabled && obj != null) {
+        sshEnabled = sql.getSetting(vm, "ssh_enabled", new DataModelPrimitive<>(false)).<Boolean>toPrimitive().getContent();
+        DataModelMap obj = (DataModelMap)sql.getSetting(vm, "ssh", new DataModelMap());
+        if (sshEnabled) {
             String temp;
             if (obj.containsKey("host")) {
                 sshHost = obj.getString("host");
@@ -119,6 +121,7 @@ public class SqlConnection {
             isOpen = true;
         } catch (SQLException ex) {
             if (session != null) session.disconnect();
+            System.err.println("URL = " + dbUrl);
             throw new SQLException(ex);
         }
 
