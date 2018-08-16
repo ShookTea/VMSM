@@ -17,27 +17,27 @@ public class YAML implements DataSupplier {
 
     @Override
     public DataModelMap load(String s) {
-        return yaml.load(s);
+        return (DataModelMap)converter().apply(yaml.load(s));
     }
 
     @Override
     public DataModelMap load(InputStream is) {
-        return yaml.load(is);
+        return (DataModelMap)converter().apply(yaml.load(is));
     }
 
     @Override
     public DataModelMap load(Reader r) {
-        return yaml.load(r);
+        return (DataModelMap)converter().apply(yaml.load(r));
     }
 
     @Override
     public String store(DataModelMap dmm) {
-        return yaml.dump(dmm);
+        return yaml.dump(dmm.toStorageObject());
     }
 
     @Override
     public String store(DataModelMap dmm, Writer w) {
-        yaml.dump(dmm, w);
+        yaml.dump(dmm.toStorageObject(), w);
         return store(dmm);
     }
 

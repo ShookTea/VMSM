@@ -8,7 +8,7 @@ public class DataModelPrimitive<T> extends DataModelValue {
 
     @Override
     public String toString() {
-        return "DataModelPrimitive{" + content.toString() + "}";
+        return "DataModelPrimitive{" + (content == null ? "null" : content.toString()) + "}";
     }
 
     @Override

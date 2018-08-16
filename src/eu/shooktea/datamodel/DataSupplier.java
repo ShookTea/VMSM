@@ -1,6 +1,8 @@
 package eu.shooktea.datamodel;
 
 import java.io.*;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -10,18 +12,18 @@ public interface DataSupplier {
     Function<Object, DataModelValue> converter();
 
     Function<Object, DataModelValue> genericConverter = ob -> {
-        if (ob instanceof String) {
+        if (ob instanceof List)
+            return new DataModelList((List) ob);
+        if (ob instanceof Map)
+            return new DataModelMap((Map) ob);
+        if (ob instanceof String)
             return new DataModelPrimitive<>((String) ob);
-        }
-        if (ob instanceof Integer) {
+        if (ob instanceof Integer)
             return new DataModelPrimitive<>((Integer) ob);
-        }
-        if (ob instanceof Float) {
+        if (ob instanceof Float)
             return new DataModelPrimitive<>((Float) ob);
-        }
-        if (ob instanceof Boolean) {
+        if (ob instanceof Boolean)
             return new DataModelPrimitive<>((Boolean) ob);
-        }
         return new DataModelPrimitive<Void>(null);
     };
 
