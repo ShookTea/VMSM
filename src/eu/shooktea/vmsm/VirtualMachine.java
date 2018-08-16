@@ -88,12 +88,12 @@ public class VirtualMachine {
     }
 
     /**
-     * Converts virtual machine to YAML object. That YAML object is then stored in configuration file. During loading,
-     * virtual machine should be fully recoverable from that YAML.
-     * @return YAML representation of virtual machine
-     * @see #fromYAML(DataModelMap)
+     * Converts virtual machine to map. That map is then stored in configuration file. During loading,
+     * virtual machine should be fully recoverable from that map.
+     * @return map representation of virtual machine
+     * @see #fromMap(DataModelMap)
      */
-    public DataModelMap toYAML() {
+    public DataModelMap toMap() {
         DataModelMap obj = new DataModelMap();
         obj.put("name", name.get());
         obj.put("path", mainPath.get().getAbsolutePath());
@@ -103,7 +103,7 @@ public class VirtualMachine {
         DataModelMap modules = new DataModelMap();
         for (VMModule module : getModules()) {
             DataModelMap config = new DataModelMap();
-            module.storeInYAML(config, this);
+            module.storeInMap(config, this);
             modules.put(module.getName(), config);
         }
         obj.put("modules", modules);
@@ -286,24 +286,24 @@ public class VirtualMachine {
     }
 
     /**
-     * Loads virtual machine from its YAML representation.
-     * @param yaml YAML representation of virtual machine
+     * Loads virtual machine from its map representation.
+     * @param map map representation of virtual machine
      * @return virtual machine loaded from YAML
-     * @throws MalformedURLException if YAML contains URL of virtual machine, but that URL is invalid
-     * @see #toYAML()
+     * @throws MalformedURLException if map contains URL of virtual machine, but that URL is invalid
+     * @see #toMap()
      */
-    public static VirtualMachine fromYAML(DataModelMap yaml) throws MalformedURLException {
-        String name = yaml.getString("name");
-        File path = new File(yaml.getString("path"));
-        URL url = yaml.containsKey("url") ? new URL(yaml.getString("url")) : null;
-        VMType type = VMType.getByName(yaml.getString("type"));
+    public static VirtualMachine fromMap(DataModelMap map) throws MalformedURLException {
+        String name = map.getString("name");
+        File path = new File(map.getString("path"));
+        URL url = map.containsKey("url") ? new URL(map.getString("url")) : null;
+        VMType type = VMType.getByName(map.getString("type"));
         VirtualMachine vm = new VirtualMachine(name, path, url, type);
 
-        DataModelMap modules = yaml.containsKey("modules") ? yaml.get("modules").toMap() : new DataModelMap();
+        DataModelMap modules = map.containsKey("modules") ? map.get("modules").toMap() : new DataModelMap();
         for (String moduleName : modules.keySet()) {
             VMModule module = VMModule.getModuleByName(moduleName);
             DataModelMap moduleYaml = modules.get(module.getName()).toMap();
-            module.loadFromYAML(moduleYaml, vm);
+            module.loadFromMap(moduleYaml, vm);
             vm.getModules().add(module);
         }
         return vm;
