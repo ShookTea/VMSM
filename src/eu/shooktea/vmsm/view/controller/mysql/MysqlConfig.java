@@ -1,6 +1,7 @@
 package eu.shooktea.vmsm.view.controller.mysql;
 
 import eu.shooktea.datamodel.DataModelMap;
+import eu.shooktea.datamodel.DataModelPrimitive;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
@@ -45,7 +46,8 @@ public class MysqlConfig implements StageController {
         ssh = SSH.getModuleByName("SSH");
         bindSsh();
         loadMysqlSettings();
-        Boolean sshEnabled = mysql.getSetting(vm, "ssh_enabled").<Boolean>toPrimitive().getContent();
+        Boolean sshEnabled = mysql.getSetting(vm, "ssh_enabled", new DataModelPrimitive<>(false))
+                .<Boolean>toPrimitive().getContent();
         if (sshEnabled == null) sshEnabled = false;
         enableSsh.setSelected(sshEnabled);
         loadSshSettings();

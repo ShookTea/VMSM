@@ -205,7 +205,12 @@ public class TabScreen implements StageController {
             e.printStackTrace();
         }
         if (stage != null) stage.close();
-        else FXToolkit.runOnFxThread(stage::close).afterTrying(() -> stage != null, 20);
+        else new Thread(() -> {
+            while (stage == null) try {
+                Thread.sleep(20);
+            } catch (InterruptedException ignored) {}
+            Platform.runLater(stage::close);
+        }).start();
     }
 
     private Stage stage = null;
