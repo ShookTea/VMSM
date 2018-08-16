@@ -5,7 +5,6 @@ import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import javafx.collections.ObservableList;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,7 +84,6 @@ public class JsonFormat extends AbstractFormat {
         VM.ifNotNull(vm -> root.put("current_vm", vm.getName()));
         root.put("ignored_vagrant_machines", Storage.getIgnoredVagrantMachines());
         root.put("config", Storage.config);
-        System.out.println(new JSONObject(root).toString());
         JSON.instance().store(root, file);
     }
 
