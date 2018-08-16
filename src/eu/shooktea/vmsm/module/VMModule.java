@@ -195,10 +195,21 @@ public abstract class VMModule {
      * Returns object from configuration.
      * @param vm virtual machine that contains configuration
      * @param key name of setting
+     * @param defaultValue default value
+     * @return DataModelValue of setting or default value if virtual machine doesn't contain setting with given name
+     */
+    public DataModelValue getSetting(VirtualMachine vm, String key, DataModelValue defaultValue) {
+        return settings.getOrDefault(vm, new DataModelMap()).getOrDefault(key, defaultValue);
+    }
+
+    /**
+     * Returns object from configuration.
+     * @param vm virtual machine that contains configuration
+     * @param key name of setting
      * @return DataModelValue of setting or {@code null} if virtual machine doesn't contain setting with given name
      */
     public DataModelValue getSetting(VirtualMachine vm, String key) {
-        return settings.getOrDefault(vm, new DataModelMap()).getOrDefault(key, null);
+        return getSetting(vm, key, null);
     }
 
     /**
