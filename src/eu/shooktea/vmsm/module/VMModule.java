@@ -250,15 +250,6 @@ public abstract class VMModule {
      * @param vm virtual machine that contains configuration
      * @param key name of setting that should be removed
      */
-    public void removeOldSetting(VirtualMachine vm, String key) {
-        oldSettings.getOrDefault(vm, new HashMap<>()).remove(key);
-    }
-
-    /**
-     * Removes object from configuration
-     * @param vm virtual machine that contains configuration
-     * @param key name of setting that should be removed
-     */
     public void removeSetting(VirtualMachine vm, String key) {
         settings.getOrDefault(vm, new DataModelMap()).remove(key);
     }

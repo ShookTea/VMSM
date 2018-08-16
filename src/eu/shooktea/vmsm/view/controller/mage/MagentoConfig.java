@@ -84,7 +84,7 @@ public class MagentoConfig implements StageController {
     private void saveSettings() {
         File file = new File(magentoPath.getText().trim());
         if (!checkFile(file)) {
-            magento.removeOldSetting(vm, "path");
+            magento.removeSetting(vm, "path");
         }
         else {
             saveConf(magentoPath, "path", magento, vm);
@@ -101,7 +101,7 @@ public class MagentoConfig implements StageController {
     private void saveConf(TextField textField, String name, VMModule module, VirtualMachine vm) {
         String trim = textField.getText().trim();
         if (trim.isEmpty()) {
-            module.removeOldSetting(vm, name);
+            module.removeSetting(vm, name);
         }
         else {
             module.setOldSetting(vm, name, trim);
