@@ -19,12 +19,11 @@ public class JSON implements DataSupplier {
     @Override
     public Function<Object, DataModelValue> converter() {
         return ob -> {
-            if (ob instanceof JSONObject) {
+            if (ob instanceof JSONObject)
                 return new DataModelMap(((JSONObject) ob).toMap());
-            }
-            if (ob instanceof JSONArray) {
+            if (ob instanceof JSONArray)
                 return new DataModelList(((JSONArray) ob).toList());
-            }
+            return genericConverter.apply(ob);
         };
     }
 
