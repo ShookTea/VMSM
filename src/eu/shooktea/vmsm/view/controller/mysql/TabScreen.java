@@ -1,6 +1,7 @@
 package eu.shooktea.vmsm.view.controller.mysql;
 
 import com.jcraft.jsch.JSchException;
+import eu.shooktea.fxtoolkit.FXToolkit;
 import eu.shooktea.sqlformatter.SqlFormatter;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.module.mysql.*;
@@ -55,8 +56,8 @@ public class TabScreen implements StageController {
             setTablesListContent(new TableContent(connection.query(query)));
         } catch (JSchException | SQLException e) {
             e.printStackTrace();
-            requestStageClose();
             showError("There is a problem with connection to database; check if you have correctly configured MySQL module and your VM is online. (" + e.getMessage() + ")");
+            requestStageClose();
             return;
         }
 
@@ -199,20 +200,12 @@ public class TabScreen implements StageController {
 
     private void requestStageClose() {
         try {
-            if (connection.isOpen())  connection.close();
+            if (connection.isOpen()) connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         if (stage != null) stage.close();
-        else new Thread(() -> {
-            while (stage == null)  try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            Platform.runLater(stage::close);
-        }).start();
+        else FXToolkit.runOnFxThread(stage::close).afterTrying(() -> stage != null, 20);
     }
 
     private Stage stage = null;

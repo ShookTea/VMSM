@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import eu.shooktea.datamodel.DataModelMap;
 import eu.shooktea.vmsm.module.VMModule;
 import eu.shooktea.vmsm.view.controller.ModuleConfig;
 import eu.shooktea.vmsm.view.controller.simplegui.QuickGuiMenu;
@@ -34,7 +35,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.ImageView;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -64,22 +64,22 @@ public class VirtualMachine {
     }
 
     /**
-     * Converts virtual machine to JSON object. That JSON object is then stored in configuration file. During loading,
-     * virtual machine should be fully recoverable from that JSON.
-     * @return JSON representation of virtual machine
-     * @see #fromJSON(JSONObject)
+     * Converts virtual machine to map. That map is then stored in configuration file. During loading,
+     * virtual machine should be fully recoverable from that map.
+     * @return map representation of virtual machine
+     * @see #fromMap(DataModelMap)
      */
-    public JSONObject toJSON() {
-        JSONObject obj = new JSONObject();
+    public DataModelMap toMap() {
+        DataModelMap obj = new DataModelMap();
         obj.put("name", name.get());
         obj.put("path", mainPath.get().getAbsolutePath());
         if (pageRoot.isNotNull().get()) obj.put("url", pageRoot.get().toString());
         obj.put("type", type.get().getTypeName());
 
-        JSONObject modules = new JSONObject();
+        DataModelMap modules = new DataModelMap();
         for (VMModule module : getModules()) {
-            JSONObject config = new JSONObject();
-            module.storeInJSON(config, this);
+            DataModelMap config = new DataModelMap();
+            module.storeInMap(config, this);
             modules.put(module.getName(), config);
         }
         obj.put("modules", modules);
@@ -239,23 +239,29 @@ public class VirtualMachine {
     private ObjectProperty<Status> status = new SimpleObjectProperty<>(Status.UNDEFINED);
 
     /**
-     * Loads virtual machine from its JSON representation.
-     * @param json JSON representation of virtual machine
-     * @return virtual machine loaded from JSON
-     * @throws MalformedURLException if JSON contains URL of virtual machine, but that URL is invalid
-     * @see #toJSON()
+     * Loads virtual machine from its map representation.
+     * @param map map representation of virtual machine
+     * @return virtual machine loaded from YAML
+     * @see #toMap()
      */
-    public static VirtualMachine fromJSON(JSONObject json) throws MalformedURLException {
-        String name = json.getString("name");
-        File path = new File(json.getString("path"));
-        URL url = json.has("url") ? new URL(json.getString("url")) : null;
-        VMType type = VMType.getByName(json.getString("type"));
+    public static VirtualMachine fromMap(DataModelMap map) {
+        String name = map.getString("name");
+        File path = new File(map.getString("path"));
+        URL url = null;
+        try {
+            url = map.containsKey("url") ? new URL(map.getString("url")) : null;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        VMType type = VMType.getByName(map.getString("type"));
         VirtualMachine vm = new VirtualMachine(name, path, url, type);
 
-        JSONObject modules = json.has("modules") ? json.getJSONObject("modules") : new JSONObject();
+        DataModelMap modules = map.containsKey("modules") ? map.get("modules").toMap() : new DataModelMap();
         for (String moduleName : modules.keySet()) {
             VMModule module = VMModule.getModuleByName(moduleName);
-            module.loadFromJSON(modules.getJSONObject(module.getName()), vm);
+            DataModelMap moduleYaml = modules.get(module.getName()).toMap();
+            module.loadFromMap(moduleYaml, vm);
             vm.getModules().add(module);
         }
         return vm;

@@ -23,22 +23,15 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import eu.shooktea.vmsm.config.AbstractFormat;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Storage class manages configuration file.
@@ -64,139 +57,22 @@ public class Storage {
         saveAll();
     }
 
-    /**
-     * Tries to save configuration data.
-     * If configuration file already exists, first thing method does is creating backup. With backup already existing,
-     * method removes original configuration file and creates a new one.
-     * <p>
-     * This method should be called every time some change in configuration has been introduced, to save it for future load.
-     */
     public static void saveAll() {
         try {
-            Files.copy(vmsmFile.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            AbstractFormat.save();
         } catch (IOException e) {
-            System.err.println("Failed to created backup");
             e.printStackTrace();
             System.exit(1);
         }
-        try {
-            trySaveAll();
-        } catch (IOException e) {
-            System.err.println("Failed to save; try for restoring backup");
-            e.printStackTrace();
-            try {
-                Files.copy(backupFile.toPath(), vmsmFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                System.err.println("Backup restored.");
-            } catch (IOException e1) {
-                System.err.println("Failed restoring backup.");
-                e1.printStackTrace();
-            }
-            System.exit(1);
-        }
-    }
-
-    private static void trySaveAll() throws IOException {
-        vmsmFile.delete();
-        vmsmFile.createNewFile();
-        JSONObject root = new JSONObject();
-
-        List<JSONObject> list = vmList.stream()
-                .map(VirtualMachine::toJSON)
-                .collect(Collectors.toList());
-        JSONArray vms = new JSONArray(list);
-        root.put("VMs", vms);
-        VM.ifNotNull(vm -> root.put("current_vm", vm.getName()));
-        if (ignoredVagrantMachines != null && !ignoredVagrantMachines.isEmpty()) {
-            JSONArray array = new JSONArray(ignoredVagrantMachines);
-            root.put("ignored_vagrant_machines", array);
-        }
-        root.put("config", new JSONObject(Storage.config));
-
-        PrintWriter pw = new PrintWriter(vmsmFile);
-        pw.println(root.toString());
-        pw.close();
     }
 
     static void loadAll() {
         try {
-            tryLoadAll();
+            AbstractFormat.load();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
-    }
-
-    private static void tryLoadAll() throws IOException {
-        String config = new String(Files.readAllBytes(vmsmFile.toPath())).trim();
-        String backupConfig = new String(Files.readAllBytes(backupFile.toPath())).trim();
-
-        if (config.isEmpty() && backupConfig.isEmpty()) return;
-        if (config.isEmpty()) config = backupConfig;
-
-        JSONObject obj = new JSONObject(config);
-
-        vmList.clear();
-        if (obj.has("VMs")) {
-            for (Object o : obj.getJSONArray("VMs")) {
-                JSONObject json = (JSONObject) o;
-                VirtualMachine vm = VirtualMachine.fromJSON(json);
-                vmList.add(vm);
-            }
-        }
-        if (obj.has("current_vm")) {
-            String currentVmName = obj.getString("current_vm");
-            List<VirtualMachine> filtered = Storage.vmList.filtered(vm -> vm.getName().equals(currentVmName));
-            if (filtered.size() == 1) {
-                VM.set(filtered.get(0));
-            }
-            else if (vmList.size() > 0) {
-                VM.set(vmList.get(0));
-            }
-        }
-        else if (vmList.size() > 0) {
-            VM.set(vmList.get(0));
-        }
-
-        ignoredVagrantMachines = new ArrayList<>();
-        if (obj.has("ignored_vagrant_machines")) {
-            JSONArray array = obj.getJSONArray("ignored_vagrant_machines");
-            array.iterator().forEachRemaining(entry -> ignoredVagrantMachines.add(entry.toString()));
-        }
-
-        Storage.config.clear();
-        if (obj.has("config")) {
-            Storage.config.putAll(obj.getJSONObject("config").toMap());
-        }
-    }
-
-    private static File getVmsmFile() {
-        String homePath = System.getProperty("user.home");
-        File home = new File(homePath);
-        File file = new File(home, ".vmsm" + File.separator + "config.json");
-        if (!file.exists()) {
-            try {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(1);
-            }
-        }
-        return file;
-    }
-
-    private static File getBackupFile(File originalFile) {
-        File file = new File(originalFile.getParentFile(), originalFile.getName() + ".backup");
-        if (!file.exists()) {
-            try {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(1);
-            }
-        }
-        return file;
     }
 
     /**
@@ -226,27 +102,12 @@ public class Storage {
         return vmList;
     }
 
-    private static File vmsmFile = getVmsmFile();
-    private static File backupFile = getBackupFile(vmsmFile);
     private static final ObservableList<VirtualMachine> vmList = FXCollections.observableArrayList();
     private static List<String> ignoredVagrantMachines = new ArrayList<>();
 
     /**
-     *Map used as configuration of VMSM. Values are stored in JSON under "config" label. These values can be of any
-     * correct JSON type, including {@link JSONObject} and {@link JSONArray}.
+     *Map used as configuration of VMSM. Values are stored in config fileunder "config" label. These values can be of any
+     * correct DataModel type.
      */
     public static Map<String, Object> config = new HashMap<>();
-
-    static void checkVmsmFiles() {
-        try {
-            if (!vmsmFile.getParentFile().exists()) vmsmFile.getParentFile().mkdirs();
-            if (!vmsmFile.exists())
-                Files.write(vmsmFile.toPath(), "{}".getBytes(), StandardOpenOption.CREATE);
-            if (!backupFile.exists())
-                Files.write(backupFile.toPath(), "{}".getBytes(), StandardOpenOption.CREATE);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        }
-    }
 }

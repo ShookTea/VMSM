@@ -8,10 +8,11 @@
     ```
 1. Import project to IDE, i.e. IntelliJ
 1. Solve dependencies from Maven:
-    * `org.json:json:20180130`
-    * `org.reactfx:reactfx:2.0-M5`
-    * `com.jcraft:jsch:0.1.54`
-    * `mysql:mysql-connector-java:8.0.11`
+    * `org.json:json:20180130` - parsing and saving JSON configuration files
+    * `org.reactfx:reactfx:2.0-M5` - small improvements for working with JavaFX bindings
+    * `com.jcraft:jsch:0.1.54` - support for SSH protocol
+    * `mysql:mysql-connector-java:8.0.12` - MySQL connection
+    * `org.yaml:snakeyaml:1.21` - parsing and saving YAML configuration files
 1. Download newest release of [SqlFormatter.jar](https://github.com/ShookTea/SqlFormatter/releases) and add it as external library
 1. Compile and run
 

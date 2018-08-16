@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.view.controller.simplegui;
 
+import eu.shooktea.fxtoolkit.FXToolkit;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.View;
@@ -85,18 +86,13 @@ public class SimpleGuiController {
             mainButton.setText(currentMessage);
             mainButton.setBackground(createBackground(color));
             mainButton.setTextFill(calculateForeground(color));
-            new Thread(() -> {
-                try {
-                    Thread.sleep(5000);
-                    Platform.runLater(() -> {
-                        currentMessage = null;
-                        mainButton.textProperty().bind(titleStringProperty);
-                        mainButton.setBackground(createBackground(View.defaultBackgroundColor));
-                        mainButton.setTextFill(calculateForeground(View.defaultBackgroundColor));
-                        updateMessage();
-                    });
-                } catch (InterruptedException ignored) {}
-            }).start();
+            FXToolkit.runOnFxThread(() -> {
+                currentMessage = null;
+                mainButton.textProperty().bind(titleStringProperty);
+                mainButton.setBackground(createBackground(View.defaultBackgroundColor));
+                mainButton.setTextFill(calculateForeground(View.defaultBackgroundColor));
+                updateMessage();
+            }).after(5000);
         }
     }
 

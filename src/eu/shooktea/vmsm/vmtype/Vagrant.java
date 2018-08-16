@@ -57,12 +57,10 @@ public class Vagrant extends VMType {
 
     @Override
     protected String checkRootFile(File file) {
-        if (!file.exists()) {
-            return "Path does not exist.";
-        }
-        if (!file.isDirectory()) {
-            return "Path is not a directory.";
-        }
+        if (file == null) return "You haven't selected a file";
+        if (!file.exists()) return "Path does not exist.";
+        if (!file.isDirectory()) return "Path is not a directory.";
+
         String notCorrect = "Path is not a correct Vagrant root directory.";
         if (file.listFiles(f -> f.getName().equals(".vagrant")).length == 0) {
             return notCorrect;
@@ -198,6 +196,7 @@ public class Vagrant extends VMType {
      * Searches for all Vagrant virtual machines that have not yet been added to VMSM.
      */
     public static void searchUnregisteredVms() {
+        if (doNotCheck) return;
         try {
             ProcessBuilder builder = new ProcessBuilder("vagrant", "global-status");
             Process process = builder.start();
@@ -226,14 +225,16 @@ public class Vagrant extends VMType {
                     Platform.runLater(() -> checkGlobalVagrantMachines(entries));
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    System.exit(1);
+                    doNotCheck = true;
                 }
             }).start();
         } catch (IOException e) {
             e.printStackTrace();
-            System.exit(1);
+            doNotCheck = true;
         }
     }
+
+    private static boolean doNotCheck = false;
 
     private static void checkGlobalVagrantMachines(List<String> directories) {
         List<String> vms = Storage.getVmList()

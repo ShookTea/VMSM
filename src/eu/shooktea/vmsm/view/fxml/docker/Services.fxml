@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<SplitPane dividerPositions="0.2" prefHeight="471.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.shooktea.vmsm.view.controller.docker.Services">
+   <items>
+      <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+         <graphic>
+            <HBox maxWidth="1.7976931348623157E308" prefHeight="0.0">
+               <children>
+                  <Label maxHeight="1.7976931348623157E308" text="Services" />
+                  <Separator maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#addNewService" prefHeight="0.0" prefWidth="0.0" text="+" />
+               </children>
+            </HBox>
+         </graphic>
+         <content>
+            <ListView fx:id="servicesListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+         </content>
+      </TitledPane>
+      <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Service info">
+        <content>
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <children>
+                  <GridPane maxWidth="1.7976931348623157E308">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" />
+                      <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Name">
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </Label>
+                        <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Source type" GridPane.rowIndex="1">
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </Label>
+                        <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Source" GridPane.rowIndex="2">
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </Label>
+                        <TextField fx:id="serviceName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
+                        <TextField fx:id="serviceSource" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <ChoiceBox fx:id="serviceSourceType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
+                  <GridPane prefHeight="237.0" prefWidth="553.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                    </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Links" />
+                        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Dependencies" GridPane.columnIndex="1" />
+                        <ListView fx:id="linksList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <ListView fx:id="dependenciesList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
+                  <Separator opacity="0.0" orientation="VERTICAL" VBox.vgrow="ALWAYS" />
+                  <HBox>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#removeService" text="Remove service" />
+                        <Separator opacity="0.0" HBox.hgrow="ALWAYS" />
+                        <Button defaultButton="true" mnemonicParsing="false" onAction="#saveServiceData" text="Save compose file" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+        </content>
+      </TitledPane>
+   </items>
+</SplitPane>

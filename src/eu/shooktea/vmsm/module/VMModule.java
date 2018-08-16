@@ -1,8 +1,11 @@
 package eu.shooktea.vmsm.module;
 
+import eu.shooktea.datamodel.DataModelMap;
+import eu.shooktea.datamodel.DataModelValue;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
+import eu.shooktea.vmsm.module.dockercompose.DockerCompose;
 import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.module.mysql.MySQL;
 import eu.shooktea.vmsm.module.ssh.SSH;
@@ -11,7 +14,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
-import org.json.JSONObject;
 
 import java.util.*;
 
@@ -57,22 +59,22 @@ public abstract class VMModule {
     }
 
     /**
-     * Stores configuration of module for VM in JSON.
-     * @param obj JSON object that will hold configuration of module
+     * Stores configuration of module for VM in map.
+     * @param obj map that will hold configuration of module
      * @param vm virtual machine that contains configuration of module
      */
-    public void storeInJSON(JSONObject obj, VirtualMachine vm) {
-        settings.getOrDefault(vm, new HashMap<>()).forEach(obj::put);
+    public void storeInMap(DataModelMap obj, VirtualMachine vm) {
+        settings.getOrDefault(vm, new DataModelMap()).forEach(obj::put);
     }
 
     /**
-     * Loads configuration of module for VM from JSON.
-     * @param obj JSON object that holds configuration of module
+     * Loads configuration of module for VM from map.
+     * @param obj map that holds configuration of module
      * @param vm virtual machine that will contain configuration of module
      */
-    public void loadFromJSON(JSONObject obj, VirtualMachine vm) {
-        if (!settings.containsKey(vm)) settings.put(vm, new HashMap<>());
-        Map<String, Object> values = settings.getOrDefault(vm, new HashMap<>());
+    public void loadFromMap(DataModelMap obj, VirtualMachine vm) {
+        if (!settings.containsKey(vm)) settings.put(vm, new DataModelMap());
+        DataModelMap values = settings.getOrDefault(vm, new DataModelMap());
         obj.keySet().forEach(key -> values.put(key, obj.get(key)));
     }
 
@@ -137,6 +139,7 @@ public abstract class VMModule {
             case "MAGENTO": return (T)magento;
             case "SSH": return (T)ssh;
             case "MYSQL": return (T)mysql;
+            case "DOCKER COMPOSE": return (T)dockerCompose;
             default: return null;
         }
     }
@@ -144,6 +147,7 @@ public abstract class VMModule {
     private static final MySQL mysql = new MySQL();
     private static final Magento magento = new Magento();
     private static final SSH ssh = new SSH();
+    private static final DockerCompose dockerCompose = new DockerCompose();
 
     /**
      * Returns list of buttons to be displayed in quick menu.
@@ -163,16 +167,15 @@ public abstract class VMModule {
     }
 
     /**
-     * Sets object to be stored in configuration of virtual machine. It can be any correct JSON value.
+     * Sets object to be stored in configuration of virtual machine. It can be any correct YAML value.
      * @param vm virtual machine that contains configuration
      * @param key name of setting
      * @param value value of setting
      */
     public void setSetting(VirtualMachine vm, String key, Object value) {
-        if (!settings.containsKey(vm)) {
-            settings.put(vm, new HashMap<>());
-        }
-        settings.getOrDefault(vm, new HashMap<>()).put(key, value);
+        if (!settings.containsKey(vm))
+            settings.put(vm, new DataModelMap());
+        settings.getOrDefault(vm, new DataModelMap()).put(key, value);
     }
 
     /**
@@ -183,19 +186,19 @@ public abstract class VMModule {
      * @see #getSetting(VirtualMachine, String)
      */
     public String getStringSetting(VirtualMachine vm, String key) {
-        Object ob = getSetting(vm, key);
-        if (ob == null) return null;
-        else return ob.toString();
+        DataModelValue val = getSetting(vm, key);
+        if (val == null || !val.isPrimitive()) return null;
+        else return val.<String>toPrimitive().getContent();
     }
 
     /**
      * Returns object from configuration.
      * @param vm virtual machine that contains configuration
      * @param key name of setting
-     * @return value/JSON object of setting or {@code null} if virtual machine doesn't contain setting with given name
+     * @return DataModelValue of setting or {@code null} if virtual machine doesn't contain setting with given name
      */
-    public Object getSetting(VirtualMachine vm, String key) {
-        return settings.getOrDefault(vm, new HashMap<>()).getOrDefault(key, null);
+    public DataModelValue getSetting(VirtualMachine vm, String key) {
+        return settings.getOrDefault(vm, new DataModelMap()).getOrDefault(key, null);
     }
 
     /**
@@ -204,7 +207,7 @@ public abstract class VMModule {
      * @param key name of setting that should be removed
      */
     public void removeSetting(VirtualMachine vm, String key) {
-        settings.getOrDefault(vm, new HashMap<>()).remove(key);
+        settings.getOrDefault(vm, new DataModelMap()).remove(key);
     }
 
     /**
@@ -217,5 +220,6 @@ public abstract class VMModule {
     }
 
     private BooleanProperty isInstalled;
-    private Map<VirtualMachine, Map<String, Object>> settings = new HashMap<>();
+    private Map<VirtualMachine, Map<String, Object>> oldSettings = new HashMap<>();
+    private Map<VirtualMachine, DataModelMap> settings = new HashMap<>();
 }

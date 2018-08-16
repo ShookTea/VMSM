@@ -30,7 +30,6 @@ import eu.shooktea.vmsm.view.controller.NewVM;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
@@ -48,14 +47,13 @@ public abstract class VMType {
     VMType() {
         typeName = new SimpleStringProperty("typeName");
         creationInfo = new SimpleStringProperty("");
-        toolBarElements = new SimpleListProperty<>();
     }
 
     /**
      * Returns name of type that will be displayed on list of types during creation of virtual machine.
      * @return name of type
      */
-    public String getTypeName() {
+    public final String getTypeName() {
         return typeName.getValue();
     }
 
@@ -64,7 +62,7 @@ public abstract class VMType {
      * machine with selected type.
      * @return creation error
      */
-    public String getCreationError() {
+    public final String getCreationError() {
         return creationError.getValue();
     }
 
@@ -179,7 +177,6 @@ public abstract class VMType {
 
     ReadOnlyStringProperty typeName;
     ReadOnlyStringProperty creationInfo;
-    private ListProperty<Node> toolBarElements;
     private final StringProperty creationError = new SimpleStringProperty("");
 
     /**
@@ -198,6 +195,7 @@ public abstract class VMType {
      */
     public static final ObservableList<VMType> types = FXCollections.observableArrayList(
             new Vagrant(),
+            new DockerCompose(),
             new None()
     );
 

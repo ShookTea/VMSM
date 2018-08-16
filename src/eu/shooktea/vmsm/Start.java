@@ -52,7 +52,7 @@ public class Start extends Application {
 
     /**
      * Main method for VMSM, called during start of application. You shouldn't call it by your own.
-     * That method turns off checking SSL certificates, allows for using restricted HTTP headers, loads configuration
+     * That method turns off checking SSL certificates, allows usage of restricted HTTP headers, loads configuration
      * and displays VMSM window.
      * @param args command line arguments
      */
@@ -60,7 +60,6 @@ public class Start extends Application {
         if (isMainCalled) return;
         isMainCalled = true;
 
-        Storage.checkVmsmFiles();
         Toolkit.turnOffSSL();
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
         Storage.loadAll();

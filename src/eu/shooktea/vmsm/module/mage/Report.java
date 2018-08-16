@@ -1,19 +1,21 @@
 package eu.shooktea.vmsm.module.mage;
 
+import eu.shooktea.datamodel.DataModelList;
+import eu.shooktea.datamodel.DataModelMap;
+import eu.shooktea.datamodel.DataModelValue;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VirtualMachine;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
@@ -71,6 +73,18 @@ public class Report {
         return getText().replaceFirst("^.:\\d+:\\{.:\\d+;.:\\d*:\"([^\"]*)\"[\\s\\S]*$", "$1");
     }
 
+    /**
+     * Saves report in fully recoverable storage model
+     * @return model
+     */
+    public DataModelValue toStorageModel() {
+        DataModelMap obj = new DataModelMap();
+        obj.put("name", getName());
+        obj.put("timestamp", getTimestamp());
+        obj.put("text", getText());
+        return obj;
+    }
+
     private final ReadOnlyStringProperty name;
     private final ReadOnlyLongProperty timestamp;
     private final ReadOnlyStringProperty text;
@@ -88,13 +102,13 @@ public class Report {
             notifyReports.clear();
         }
         if (MAX_TIME_DIFFERENCE == -1) {
-            Object v = module.getSetting(vm, "report_keep_time");
+            DataModelValue dmp = module.getSetting(vm, "report_keep_time");
             Long value = null;
-            if (v instanceof Long) {
-                value = (Long)v;
+            if (dmp.isPrimitive() && dmp.toPrimitive().getContent() instanceof Long) {
+                value = dmp.<Long>toPrimitive().getContent();
             }
-            else if (v instanceof Integer) {
-                value = ((Integer)v).longValue();
+            else if (dmp.isPrimitive() && dmp.toPrimitive().getContent() instanceof Integer) {
+                value = dmp.<Integer>toPrimitive().getContent().longValue();
             }
             //30 days
             long MAX_TIME_DIFFERENCE_DEFAULT = 1000L * 60 * 60 * 24 * 30;
@@ -141,36 +155,35 @@ public class Report {
     }
 
     private static void storeReportsInConfig(Magento module, VirtualMachine vm, List<Report> reports) {
-        JSONArray array = new JSONArray();
-        for (Report report : reports) {
-            JSONObject obj = new JSONObject();
-            obj.put("name", report.getName());
-            obj.put("timestamp", report.getTimestamp());
-            obj.put("text", report.getText());
-            array.put(obj);
-        }
-        module.setSetting(vm, "reports", array);
+        DataModelList list = reports.stream()
+                .map(Report::toStorageModel)
+                .collect(Collectors.toCollection(DataModelList::new));
+        module.setSetting(vm, "reports", list);
         if (CHANGES) Storage.saveAll();
+    }
+
+    private static Report loadFromDataModel(DataModelMap map) {
+        String name = map.getString("name");
+        long timestamp = map.getLong("timestamp");
+        String text = map.getString("text");
+        return new Report(name, timestamp, text);
     }
 
     private static ObservableList<Report> getReportsFromConfig(Magento module, VirtualMachine vm, File reportsDir) {
         Object reportsObj = module.getSetting(vm, "reports");
-        if (reportsObj == null) reportsObj = new JSONArray();
-        if (!(reportsObj instanceof JSONArray)) throw new RuntimeException("Magento reports are not array; reports.toString = \"" + reportsObj.toString() + "\"");
-        JSONArray reports = (JSONArray)reportsObj;
+        if (reportsObj == null) reportsObj = new ArrayList<>();
+        if (!(reportsObj instanceof List)) throw new RuntimeException("Magento reports are not array; reports.toString = \"" + reportsObj.toString() + "\"");
+        List<DataModelMap> reports = (List)reportsObj;
         ObservableList<Report> reportsFromConfig = FXCollections.observableArrayList();
         long currentTimestamp = System.currentTimeMillis();
-        reports.iterator().forEachRemaining(obj -> {
-            JSONObject json = (JSONObject)obj;
-            String name = json.getString("name");
-            long timestamp = json.getLong("timestamp");
-            String text = json.getString("text");
+        reports.forEach(obj -> {
+            Report report = loadFromDataModel(obj);
 
             boolean keep = true;
-            if (currentTimestamp - timestamp > MAX_TIME_DIFFERENCE) {
-                keep = new File(reportsDir, name).exists();
+            if (currentTimestamp - report.getTimestamp() > MAX_TIME_DIFFERENCE) {
+                keep = new File(reportsDir, report.getName()).exists();
             }
-            if (keep) reportsFromConfig.add(new Report(name, timestamp, text));
+            if (keep) reportsFromConfig.add(report);
             if (!keep) CHANGES = true;
         });
         return reportsFromConfig;

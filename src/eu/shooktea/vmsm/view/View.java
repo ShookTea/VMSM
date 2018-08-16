@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.view;
 
+import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.view.controller.simplegui.SimpleGuiController;
@@ -39,6 +40,7 @@ public class View {
         if (isInitialized) return;
         isInitialized = true;
         primaryStage = stage;
+        stage.setOnCloseRequest(e -> Storage.saveAll());
         initializeSimpleGui();
         initializeApplicationLoop();
     }
@@ -143,9 +145,8 @@ public class View {
             stage.setX(pos.getX());
             stage.setY(pos.getY());
             return controller;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
             return null;
         }
     }
