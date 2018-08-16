@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.view.controller.mysql;
 
+import eu.shooktea.datamodel.DataModelMap;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
@@ -45,7 +46,7 @@ public class MysqlConfig implements StageController {
         ssh = SSH.getModuleByName("SSH");
         bindSsh();
         loadMysqlSettings();
-        Boolean sshEnabled = (Boolean)mysql.getOldSettings(vm, "ssh_enabled");
+        Boolean sshEnabled = mysql.getSetting(vm, "ssh_enabled").<Boolean>toPrimitive().getContent();
         if (sshEnabled == null) sshEnabled = false;
         enableSsh.setSelected(sshEnabled);
         loadSshSettings();
@@ -75,8 +76,8 @@ public class MysqlConfig implements StageController {
     }
 
     private void loadSshSettings() {
-        JSONObject sshConfig = (JSONObject)mysql.getOldSettings(vm, "ssh");
-        if (sshConfig == null) sshConfig = new JSONObject();
+        DataModelMap sshConfig = (DataModelMap)mysql.getSetting(vm, "ssh");
+        if (sshConfig == null) sshConfig = new DataModelMap();
         Map<String, String> defaults = new HashMap<>();
         defaults.put("host", vm.getPageRoot().getHost());
         defaults.put("port", "22");
@@ -101,27 +102,29 @@ public class MysqlConfig implements StageController {
 
     }
 
-    private String load(JSONObject obj, String key, Map<String, String> def) {
-        String base = obj.has(key) ? obj.getString(key).trim() : "";
+    private String load(DataModelMap obj, String key, Map<String, String> def) {
+        String base = obj.containsKey(key) ? obj.getString(key).trim() : "";
         if (base.isEmpty()) base = def.getOrDefault(key, "");
         return base;
     }
 
     @FXML
     private void save() {
-        mysql.setOldSetting(vm, "database", database.getText());
-        mysql.setOldSetting(vm, "username", username.getText());
-        mysql.setOldSetting(vm, "password", password.getText());
-        mysql.setOldSetting(vm, "host", host.getText());
-        mysql.setOldSetting(vm, "port", port.getText());
-        mysql.setOldSetting(vm, "ssh_enabled", enableSsh.isSelected());
-        JSONObject ssh = new JSONObject();
+        mysql.setSetting(vm, "database", database.getText());
+        mysql.setSetting(vm, "username", username.getText());
+        mysql.setSetting(vm, "password", password.getText());
+        mysql.setSetting(vm, "host", host.getText());
+        mysql.setSetting(vm, "port", port.getText());
+        mysql.setSetting(vm, "ssh_enabled", enableSsh.isSelected());
+
+        DataModelMap ssh = new DataModelMap();
         ssh.put("host", sshHost.getText());
         ssh.put("port", sshPort.getText());
         ssh.put("username", sshUsername.getText());
         ssh.put("password", sshPassword.getText());
         ssh.put("local_port", localPort.getText());
-        mysql.setOldSetting(vm, "ssh", ssh);
+        mysql.setSetting(vm, "ssh", ssh);
+
         Storage.saveAll();
         stage.close();
     }

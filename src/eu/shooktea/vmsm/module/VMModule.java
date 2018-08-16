@@ -188,19 +188,6 @@ public abstract class VMModule {
     }
 
     /**
-     * Sets object to be stored in configuration of virtual machine. It can be any correct JSON value.
-     * @param vm virtual machine that contains configuration
-     * @param key name of setting
-     * @param value value of setting
-     */
-    public void setOldSetting(VirtualMachine vm, String key, Object value) {
-        if (!oldSettings.containsKey(vm)) {
-            oldSettings.put(vm, new HashMap<>());
-        }
-        oldSettings.getOrDefault(vm, new HashMap<>()).put(key, value);
-    }
-
-    /**
      * Sets object to be stored in configuration of virtual machine. It can be any correct YAML value.
      * @param vm virtual machine that contains configuration
      * @param key name of setting
@@ -217,22 +204,12 @@ public abstract class VMModule {
      * @param vm virtual machine that contains configuration
      * @param key name of setting
      * @return value of setting or {@code null} if virtual machine doesn't contain setting with given name
-     * @see #getOldSettings(VirtualMachine, String)
+     * @see #getSetting(VirtualMachine, String)
      */
     public String getStringSetting(VirtualMachine vm, String key) {
         DataModelValue val = getSetting(vm, key);
         if (val == null || !val.isPrimitive()) return null;
         else return val.<String>toPrimitive().getContent();
-    }
-
-    /**
-     * Returns object from configuration.
-     * @param vm virtual machine that contains configuration
-     * @param key name of setting
-     * @return value/JSON object of setting or {@code null} if virtual machine doesn't contain setting with given name
-     */
-    public Object getOldSettings(VirtualMachine vm, String key) {
-        return oldSettings.getOrDefault(vm, new HashMap<>()).getOrDefault(key, null);
     }
 
     /**

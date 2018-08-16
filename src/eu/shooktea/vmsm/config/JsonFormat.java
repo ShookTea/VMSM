@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.config;
 
+import eu.shooktea.datamodel.*;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
@@ -17,32 +18,30 @@ import java.util.stream.Collectors;
 
 public class JsonFormat extends AbstractFormat {
     @Override
-    public void load(File file) throws IOException {
+    public void load(File file) {
         if (!file.exists() || !file.isFile()) return;
-        String config = new String(Files.readAllBytes(file.toPath())).trim();
-        if (config.isEmpty()) return;
-
-        JSONObject object = new JSONObject(config);
-        loadVMs(object);
-        loadCurrentVM(object);
-        loadIgnoredVagrantMachines(object);
-        loadVmsmConfig(object);
+        DataModelMap map = JSON.instance().load(file);
+        loadVMs(map);
+        loadCurrentVM(map);
+        loadIgnoredVagrantMachines(map);
+        loadVmsmConfig(map);
     }
 
-    private void loadVMs(JSONObject obj) throws MalformedURLException {
-        Storage.getVmList().clear();
-        if (!obj.has("VMs")) return;
-        for (Object ob : obj.getJSONArray("VMs")) {
-            JSONObject json = (JSONObject)ob;
-            VirtualMachine vm = VirtualMachine.fromJSON(json);
-            Storage.getVmList().add(vm);
-        }
+    private void loadVMs(DataModelMap map) {
+        Storage.getVmList().setAll(
+                map.getOrDefault("VMs", new DataModelList())
+                .toList()
+                .stream()
+                .map(DataModelValue::toMap)
+                .map(VirtualMachine::fromMap)
+                .collect(Collectors.toList())
+        );
     }
 
-    private void loadCurrentVM(JSONObject obj) {
+    private void loadCurrentVM(DataModelMap map) {
         ObservableList<VirtualMachine> vmList = Storage.getVmList();
-        if (obj.has("current_vm")) {
-            String currentVmName = obj.getString("current_vm");
+        if (map.containsKey("current_vm")) {
+            String currentVmName = map.getString("current_vm");
             List<VirtualMachine> filtered = vmList.filtered(vm -> vm.getName().equals(currentVmName));
             if (filtered.size() == 1) {
                 VM.set(filtered.get(0));
@@ -56,19 +55,23 @@ public class JsonFormat extends AbstractFormat {
         }
     }
 
-    private void loadIgnoredVagrantMachines(JSONObject obj) {
+    private void loadIgnoredVagrantMachines(DataModelMap map) {
         Storage.getIgnoredVagrantMachines().clear();
-        if (obj.has("ignored_vagrant_machines")) {
-            JSONArray array = obj.getJSONArray("ignored_vagrant_machines");
-            array.iterator().forEachRemaining(entry -> Storage.getIgnoredVagrantMachines().add(entry.toString()));
-        }
+        Storage.getIgnoredVagrantMachines().addAll(
+                map.getOrDefault("ignored_vagrant_machines", new DataModelList())
+                .toList()
+                .stream()
+                .map(DataModelValue::<String>toPrimitive)
+                .map(DataModelPrimitive::getContent)
+                .collect(Collectors.toList())
+        );
     }
 
-    private void loadVmsmConfig(JSONObject obj) {
+    private void loadVmsmConfig(DataModelMap map) {
         Storage.config.clear();
-        if (obj.has("config")) {
-            Storage.config.putAll(obj.getJSONObject("config").toMap());
-        }
+        Storage.config.putAll(
+                map.getOrDefault("config", new DataModelMap()).toMap()
+        );
     }
 
     @Override
@@ -76,23 +79,18 @@ public class JsonFormat extends AbstractFormat {
         file.delete();
         file.createNewFile();
 
-        JSONObject root = new JSONObject();
-        List<JSONObject> list = Storage.getVmList().stream()
-                .map(VirtualMachine::toJSON)
-                .collect(Collectors.toList());
-        JSONArray vms = new JSONArray(list);
-        root.put("VMs", vms);
+        DataModelMap root = new DataModelMap();
+        root.put("VMs",
+                Storage.getVmList()
+                .stream()
+                .map(VirtualMachine::toMap)
+                .collect(Collectors.toCollection(DataModelList::new))
+        );
         VM.ifNotNull(vm -> root.put("current_vm", vm.getName()));
-        List<String> ignoredVagrants = Storage.getIgnoredVagrantMachines();
-        if (ignoredVagrants != null && !ignoredVagrants.isEmpty()) {
-            JSONArray array = new JSONArray(ignoredVagrants);
-            root.put("ignored_vagrant_machines", array);
-        }
-        root.put("config", new JSONObject(Storage.config));
-
-        PrintWriter pw = new PrintWriter(file);
-        pw.println(root.toString());
-        pw.close();
+        root.put("ignored_vagrant_machines", Storage.getIgnoredVagrantMachines());
+        root.put("config", Storage.config);
+        System.out.println(new JSONObject(root).toString());
+        JSON.instance().store(root, file);
     }
 
     @Override

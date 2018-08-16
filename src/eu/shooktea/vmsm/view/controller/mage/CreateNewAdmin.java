@@ -75,7 +75,7 @@ public class CreateNewAdmin implements StageController {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == yes) {
                 Magento magento = Magento.getModuleByName("Magento");
-                magento.setOldSetting(vm, "adm_login", login);
+                magento.setSetting(vm, "adm_login", login);
                 Storage.saveAll();
             }
             stage.close();

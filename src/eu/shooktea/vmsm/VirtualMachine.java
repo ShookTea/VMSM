@@ -289,13 +289,18 @@ public class VirtualMachine {
      * Loads virtual machine from its map representation.
      * @param map map representation of virtual machine
      * @return virtual machine loaded from YAML
-     * @throws MalformedURLException if map contains URL of virtual machine, but that URL is invalid
      * @see #toMap()
      */
-    public static VirtualMachine fromMap(DataModelMap map) throws MalformedURLException {
+    public static VirtualMachine fromMap(DataModelMap map) {
         String name = map.getString("name");
         File path = new File(map.getString("path"));
-        URL url = map.containsKey("url") ? new URL(map.getString("url")) : null;
+        URL url = null;
+        try {
+            url = map.containsKey("url") ? new URL(map.getString("url")) : null;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
         VMType type = VMType.getByName(map.getString("type"));
         VirtualMachine vm = new VirtualMachine(name, path, url, type);
 

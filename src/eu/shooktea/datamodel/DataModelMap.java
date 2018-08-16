@@ -40,6 +40,10 @@ public class DataModelMap extends AbstractMap<String, DataModelValue> implements
         return get(key).<String>toPrimitive().getContent();
     }
 
+    public Long getLong(String key) {
+        return get(key).<Long>toPrimitive().getContent();
+    }
+
     @Override
     public Object toStorageObject() {
         Map<String, Object> ret = new LinkedHashMap<>();
@@ -50,7 +54,7 @@ public class DataModelMap extends AbstractMap<String, DataModelValue> implements
     }
 
     public DataModelValue put(String key, Object ob) {
-        return put(key, DataModelConverter.convert(ob));
+        return map.put(key, DataModelConverter.convert(ob));
     }
 
     public Stream<Entry<String, DataModelValue>> stream() {

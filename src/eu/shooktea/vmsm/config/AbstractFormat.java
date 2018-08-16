@@ -45,7 +45,7 @@ abstract public class AbstractFormat {
             returnFile = new File(configDir, yamlFiles[0]);
         }
         else {
-            returnFile = new File("config.yml");
+            returnFile = new File("config.json");
         }
         final String returnFileName = returnFile.getName();
 

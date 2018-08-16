@@ -1,5 +1,7 @@
 package eu.shooktea.vmsm.view.controller.mage;
 
+import eu.shooktea.datamodel.DataModelPrimitive;
+import eu.shooktea.datamodel.DataModelValue;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
@@ -36,12 +38,13 @@ public class MagentoConfig implements StageController {
 
         holdReports.setItems(Report.HoldTime.createList());
         Long holdValue = null;
-        Object readHoldValue = magento.getOldSettings(vm, "report_keep_time");
-        if (readHoldValue instanceof Long) {
-            holdValue = (Long)readHoldValue;
+        DataModelValue readHoldValue = magento.getSetting(vm, "report_keep_time");
+        if (readHoldValue == null) readHoldValue = new DataModelPrimitive<Void>(null);
+        if (readHoldValue.isPrimitive() && readHoldValue.toPrimitive().getContent() instanceof Long) {
+            holdValue = readHoldValue.<Long>toPrimitive().getContent();
         }
-        if (readHoldValue instanceof Integer) {
-            holdValue = ((Integer)readHoldValue).longValue();
+        else if (readHoldValue.isPrimitive() && readHoldValue.toPrimitive().getContent() instanceof Integer) {
+            holdValue = readHoldValue.<Long>toPrimitive().getContent();
         }
 
         if (holdValue == null) holdReports.setValue(Report.HoldTime.MONTH);
@@ -92,7 +95,7 @@ public class MagentoConfig implements StageController {
 
         saveConf(adminLogin, "adm_login", magento, vm);
 
-        magento.setOldSetting(vm, "report_keep_time", holdReports.getValue().timeMillis);
+        magento.setSetting(vm, "report_keep_time", holdReports.getValue().timeMillis);
 
         Storage.saveAll();
         stage.close();
@@ -104,7 +107,7 @@ public class MagentoConfig implements StageController {
             module.removeSetting(vm, name);
         }
         else {
-            module.setOldSetting(vm, name, trim);
+            module.setSetting(vm, name, trim);
         }
     }
 

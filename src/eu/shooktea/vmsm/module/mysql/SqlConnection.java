@@ -3,6 +3,7 @@ package eu.shooktea.vmsm.module.mysql;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import eu.shooktea.datamodel.DataModelMap;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.ssh.SSH;
 import org.json.JSONObject;
@@ -31,11 +32,11 @@ public class SqlConnection {
     public SqlConnection(MySQL sql, VirtualMachine vm) {
         SSH ssh = SSH.getModuleByName("SSH");
 
-        sshEnabled = Boolean.TRUE.equals(sql.getOldSettings(vm, "ssh_enabled"));
-        JSONObject obj = (JSONObject)sql.getOldSettings(vm, "ssh");
+        sshEnabled = Boolean.TRUE.equals(sql.getSetting(vm, "ssh_enabled"));
+        DataModelMap obj = (DataModelMap)sql.getSetting(vm, "ssh");
         if (sshEnabled && obj != null) {
             String temp;
-            if (obj.has("host")) {
+            if (obj.containsKey("host")) {
                 sshHost = obj.getString("host");
             }
             else if (ssh.isInstalled(vm) && (temp = ssh.getStringSetting(vm, "host")) != null) {
@@ -45,7 +46,7 @@ public class SqlConnection {
                 sshHost = vm.getPageRoot().getHost();
             }
 
-            if (obj.has("username")) {
+            if (obj.containsKey("username")) {
                 sshUsername = obj.getString("username");
             }
             else if (ssh.isInstalled(vm) && (temp = ssh.getStringSetting(vm, "user")) != null) {
@@ -55,7 +56,7 @@ public class SqlConnection {
                 sshUsername = "";
             }
 
-            if (obj.has("password")) {
+            if (obj.containsKey("password")) {
                 sshPassword = obj.getString("password");
             }
             else if (ssh.isInstalled(vm) && (temp = ssh.getStringSetting(vm, "password")) != null) {
@@ -65,14 +66,14 @@ public class SqlConnection {
                 sshPassword = "";
             }
 
-            if (obj.has("port")) {
+            if (obj.containsKey("port")) {
                 sshPort = Integer.parseInt(obj.getString("port"));
             }
             else {
                 sshPort = 22;
             }
 
-            if (obj.has("local_port")) {
+            if (obj.containsKey("local_port")) {
                 localPort = Integer.parseInt(obj.getString("local_port"));
             }
             else {

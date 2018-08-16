@@ -28,7 +28,7 @@ public class SshConfig implements StageController {
         String hostAddress = ssh.getStringSetting(vm, "host");
         String userName = ssh.getStringSetting(vm, "user");
         String password = ssh.getStringSetting(vm, "password");
-        Boolean fingerprints = (Boolean)ssh.getOldSettings(vm, "auto_fingerprints");
+        Boolean fingerprints = ssh.getSetting(vm, "auto_fingerprints").<Boolean>toPrimitive().getContent();
         if (hostAddress == null) hostAddress = vm.getPageRoot().getHost();
 
         this.host.setText(hostAddress);
@@ -39,10 +39,10 @@ public class SshConfig implements StageController {
 
     @FXML
     private void save() {
-        ssh.setOldSetting(vm, "host", host.getText());
-        ssh.setOldSetting(vm, "user", username.getText());
-        ssh.setOldSetting(vm, "password", password.getText());
-        ssh.setOldSetting(vm, "auto_fingerprints", fingerprints.isSelected());
+        ssh.setSetting(vm, "host", host.getText());
+        ssh.setSetting(vm, "user", username.getText());
+        ssh.setSetting(vm, "password", password.getText());
+        ssh.setSetting(vm, "auto_fingerprints", fingerprints.isSelected());
         Storage.saveAll();
         stage.close();
     }
