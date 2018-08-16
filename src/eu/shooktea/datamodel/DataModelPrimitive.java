@@ -1,9 +1,13 @@
 package eu.shooktea.datamodel;
 
-public class DataModelPrimitive<T> extends DataModelValue {
+public class DataModelPrimitive<T> implements DataModelValue {
     public DataModelPrimitive(T object) {
-        super(DataModelType.PRIMITIVE);
         this.content = object;
+    }
+
+    @Override
+    public DataModelType getType() {
+        return DataModelType.PRIMITIVE;
     }
 
     @Override

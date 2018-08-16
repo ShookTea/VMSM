@@ -4,9 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DataModelList extends DataModelValue implements List<DataModelValue> {
+public class DataModelList implements DataModelValue, List<DataModelValue> {
     public DataModelList(List<?> objectList) {
-        super(DataModelType.LIST);
         this.list = new ArrayList<>();
         for (Object ob : objectList) {
             this.list.add(DataModelValue.fromObject(ob));
@@ -15,6 +14,11 @@ public class DataModelList extends DataModelValue implements List<DataModelValue
 
     public DataModelList() {
         this(new ArrayList<>());
+    }
+
+    @Override
+    public DataModelType getType() {
+        return DataModelType.LIST;
     }
 
     @Override

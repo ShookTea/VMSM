@@ -1,54 +1,38 @@
 package eu.shooktea.datamodel;
 
-import java.util.function.Function;
+public interface DataModelValue {
 
-public abstract class DataModelValue {
-    DataModelValue(DataModelType type) {
-        this.type = type;
+    Object toStorageObject();
+    DataModelType getType();
+
+    default boolean isMap() {
+        return getType() == DataModelType.MAP;
     }
 
-    public abstract Object toStorageObject();
-
-    public DataModelType getType() {
-        return type;
-    }
-
-    public boolean isMap() {
-        return type == DataModelType.MAP;
-    }
-
-    public DataModelMap toMap() {
+    default DataModelMap toMap() {
         if (!isMap() || !(this instanceof DataModelMap)) throw new RuntimeException("Value " + this + " is not a map!");
         return (DataModelMap)this;
     }
 
-    public boolean isList() {
-        return type == DataModelType.LIST;
+    default boolean isList() {
+        return getType() == DataModelType.LIST;
     }
 
-    public DataModelList toList() {
+    default DataModelList toList() {
         if (!isList() || !(this instanceof DataModelList)) throw new RuntimeException("Value " + this + " is not a primitive!");
         return (DataModelList)this;
     }
 
-    public boolean isPrimitive() {
-        return type == DataModelType.PRIMITIVE;
+    default boolean isPrimitive() {
+        return getType() == DataModelType.PRIMITIVE;
     }
 
-    public <T> DataModelPrimitive<T> toPrimitive() {
+    default <T> DataModelPrimitive<T> toPrimitive() {
         if (!isPrimitive() || !(this instanceof DataModelPrimitive)) throw new RuntimeException("Value " + this + " is not a primitive!");
         return (DataModelPrimitive<T>)this;
     }
 
-    private final DataModelType type;
-
-    public static void setConverter(Function<Object, DataModelValue> newConverter) {
-        converter = newConverter;
+    static DataModelValue fromObject(Object ob) {
+        return DataModelConverter.convert(ob);
     }
-
-    public static DataModelValue fromObject(Object ob) {
-        return converter.apply(ob);
-    }
-
-    private static Function<Object, DataModelValue> converter = obj -> new DataModelPrimitive<Void>(null);
 }

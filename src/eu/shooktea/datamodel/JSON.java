@@ -30,7 +30,7 @@ public class JSON implements DataSupplier {
     public static JSON instance() {
         if (instance == null)
             instance = new JSON();
-        DataModelValue.setConverter(instance.converter());
+        DataModelConverter.setConverter(instance.converter());
         return instance;
     }
 

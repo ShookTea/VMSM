@@ -61,7 +61,7 @@ public class YAML implements DataSupplier {
     public static YAML instance() {
         if (instance == null)
             instance = new YAML();
-        DataModelValue.setConverter(instance.converter());
+        DataModelConverter.setConverter(instance.converter());
         return instance;
     }
 

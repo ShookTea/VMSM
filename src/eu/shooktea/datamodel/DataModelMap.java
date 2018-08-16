@@ -6,22 +6,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class DataModelMap extends DataModelValue implements Iterable<Map.Entry<String, DataModelValue>> {
+public class DataModelMap implements DataModelValue, Iterable<Map.Entry<String, DataModelValue>> {
 
     public DataModelMap(Map map) {
-        super(DataModelType.MAP);
         this.map = new LinkedHashMap<>();
         for (Object key : map.keySet()) {
             this.map.put(key.toString(), DataModelValue.fromObject(map.get(key)));
         }
     }
 
-    public DataModelMap(DataModelMap m) {
-        this(m.map);
-    }
-
     public DataModelMap() {
         this(new LinkedHashMap<>());
+    }
+
+    @Override
+    public DataModelType getType() {
+        return DataModelType.MAP;
     }
 
     @Override
