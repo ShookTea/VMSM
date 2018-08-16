@@ -13,7 +13,7 @@ abstract public class AbstractFormat {
         File config = getConfigFile();
         AbstractFormat format = getFormatForFile(config);
         if (format == null) throw new IOException("Unknown format for file " + config.toString());
-        format.load(config);
+        if (config.exists()) format.load(config);
     }
 
     public static void save() throws IOException {
@@ -45,7 +45,7 @@ abstract public class AbstractFormat {
             returnFile = new File(configDir, yamlFiles[0]);
         }
         else {
-            returnFile = new File("config.json");
+            returnFile = new File(configDir, "config.yaml");
         }
         final String returnFileName = returnFile.getName();
 
@@ -61,13 +61,17 @@ abstract public class AbstractFormat {
     }
 
     private static AbstractFormat getFormatForFile(File f) {
-        if (f.getName().endsWith(".json"))
+        if (f.getName().toLowerCase().endsWith(".json"))
             return new JsonFormat();
+        if (f.getName().toLowerCase().endsWith(".yml"))
+            return new YamlFormat();
+        if (f.getName().toLowerCase().endsWith(".yaml"))
+            return new YamlFormat();
         return null;
     }
 
     private static AbstractFormat getNewestSaveFormat() {
-        return new JsonFormat();
+        return new YamlFormat();
     }
 
     private static File getConfigRootDirectory() {

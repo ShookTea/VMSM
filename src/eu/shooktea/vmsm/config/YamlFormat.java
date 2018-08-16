@@ -1,6 +1,7 @@
 package eu.shooktea.vmsm.config;
 
 import eu.shooktea.datamodel.DataModelMap;
+import eu.shooktea.datamodel.DataModelPrimitive;
 import eu.shooktea.datamodel.YAML;
 
 import java.io.File;
@@ -14,7 +15,7 @@ public class YamlFormat extends AbstractFormat {
     protected void load(File file) {
         DataModelMap root = YAML.instance().load(file);
 
-        String version = root.getString("version");
+        String version = root.getOrDefault("version", new DataModelPrimitive<>("1.0")).<String>toPrimitive().getContent();
         YamlVersion yamlVersion = YamlVersion.by(version);
         yamlVersion.getYamlInterface().load(root);
     }
