@@ -36,7 +36,7 @@ public class ModuleLoader extends Task<ObservableList<MagentoModule>> {
         updateProgress(-1, -1);
 
         ObservableList<MagentoModule> list = FXCollections.observableArrayList();
-        String path = magento.getOldStringSetting(vm, "path");
+        String path = magento.getStringSetting(vm, "path");
         if (path == null) {
             updateProgress(1, 1);
             return list;
@@ -99,7 +99,7 @@ public class ModuleLoader extends Task<ObservableList<MagentoModule>> {
     }
 
     private File createRootFile(String codePool, String namespace, String name) {
-        String path = magento.getOldStringSetting(vm, "path");
+        String path = magento.getStringSetting(vm, "path");
         if (!path.endsWith(File.separator)) path = path + File.separator;
         path = path +
                 "app" + File.separator +

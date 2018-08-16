@@ -25,9 +25,9 @@ public class SshConfig implements StageController {
     private void initialize() {
         vm = VM.getOrThrow();
         ssh = SSH.getModuleByName("SSH");
-        String hostAddress = ssh.getOldStringSetting(vm, "host");
-        String userName = ssh.getOldStringSetting(vm, "user");
-        String password = ssh.getOldStringSetting(vm, "password");
+        String hostAddress = ssh.getStringSetting(vm, "host");
+        String userName = ssh.getStringSetting(vm, "user");
+        String password = ssh.getStringSetting(vm, "password");
         Boolean fingerprints = (Boolean)ssh.getOldSettings(vm, "auto_fingerprints");
         if (hostAddress == null) hostAddress = vm.getPageRoot().getHost();
 

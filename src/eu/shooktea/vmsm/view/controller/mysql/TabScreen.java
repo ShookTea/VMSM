@@ -48,7 +48,7 @@ public class TabScreen implements StageController {
         availableFieldsTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         MySQL sql = MySQL.getModuleByName("MySQL");
         connection = sql.createConnection();
-        String databaseName = sql.getOldStringSetting(VM.getOrThrow(), "database");
+        String databaseName = sql.getStringSetting(VM.getOrThrow(), "database");
         try {
             connection.open();
             String query =

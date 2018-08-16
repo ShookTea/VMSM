@@ -80,7 +80,7 @@ public class MagentoNewModule implements StageController {
 
     @FXML
     private void createAction() {
-        String path = magento.getOldStringSetting(vm, "path");
+        String path = magento.getStringSetting(vm, "path");
         if (path == null) {
             showError("You haven't configured Magento main directory!");
             return;

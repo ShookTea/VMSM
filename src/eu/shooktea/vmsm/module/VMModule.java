@@ -219,19 +219,6 @@ public abstract class VMModule {
      * @return value of setting or {@code null} if virtual machine doesn't contain setting with given name
      * @see #getOldSettings(VirtualMachine, String)
      */
-    public String getOldStringSetting(VirtualMachine vm, String key) {
-        Object ob = getOldSettings(vm, key);
-        if (ob == null) return null;
-        else return ob.toString();
-    }
-
-    /**
-     * Returns string from configuration.
-     * @param vm virtual machine that contains configuration
-     * @param key name of setting
-     * @return value of setting or {@code null} if virtual machine doesn't contain setting with given name
-     * @see #getOldSettings(VirtualMachine, String)
-     */
     public String getStringSetting(VirtualMachine vm, String key) {
         DataModelValue val = getSetting(vm, key);
         if (val == null || !val.isPrimitive()) return null;

@@ -61,11 +61,11 @@ public class MysqlConfig implements StageController {
     }
 
     private void loadMysqlSettings() {
-        String database = mysql.getOldStringSetting(vm, "database");
-        String username = mysql.getOldStringSetting(vm, "username");
-        String password = mysql.getOldStringSetting(vm, "password");
-        String host = mysql.getOldStringSetting(vm, "host");
-        String port = mysql.getOldStringSetting(vm, "port");
+        String database = mysql.getStringSetting(vm, "database");
+        String username = mysql.getStringSetting(vm, "username");
+        String password = mysql.getStringSetting(vm, "password");
+        String host = mysql.getStringSetting(vm, "host");
+        String port = mysql.getStringSetting(vm, "port");
 
         this.database.setText(database == null ? "" : database);
         this.username.setText(username == null ? "" : username);
@@ -83,13 +83,13 @@ public class MysqlConfig implements StageController {
         defaults.put("local_port", "3307");
 
         if (ssh.isInstalled(vm)) {
-            String defHost = ssh.getOldStringSetting(vm, "host");
+            String defHost = ssh.getStringSetting(vm, "host");
             if (defHost != null && !defHost.trim().isEmpty()) defaults.put("host", defHost);
 
-            String user = ssh.getOldStringSetting(vm, "user");
+            String user = ssh.getStringSetting(vm, "user");
             if (user != null && !user.trim().isEmpty()) defaults.put("username", user);
 
-            String pass = ssh.getOldStringSetting(vm, "password");
+            String pass = ssh.getStringSetting(vm, "password");
             if (pass != null && !pass.trim().isEmpty()) defaults.put("password", pass);
         }
 

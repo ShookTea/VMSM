@@ -61,7 +61,7 @@ public class Magento extends VMModule {
     @Override
     public void loopUpdate() {
         VirtualMachine vm = VM.getOrThrow();
-        String rootPath = getOldStringSetting(vm, "path");
+        String rootPath = getStringSetting(vm, "path");
         if (rootPath == null) return;
         File root = new File(rootPath);
         if (!root.exists()) return;
@@ -93,7 +93,7 @@ public class Magento extends VMModule {
     }
 
     private File getLocalXmlFile(VirtualMachine vm) throws IOException {
-        String rootPath = getOldStringSetting(vm, "path");
+        String rootPath = getStringSetting(vm, "path");
         if (rootPath == null) throw new IOException("rootPath == null");
         File rootFile = new File(rootPath);
         if (!rootFile.exists()) throw new IOException("rootFile " + rootFile.toString() + "doesn't exist");
@@ -112,7 +112,7 @@ public class Magento extends VMModule {
         ret.add(deleteCache);
 
         ImageView loginAsAdmin = Toolkit.createQuickGuiButton("user.png", "Open admin panel");
-        loginAsAdmin.setOnMouseClicked(e -> loginAsAdmin(vm, getOldStringSetting(vm, "adm_login")));
+        loginAsAdmin.setOnMouseClicked(e -> loginAsAdmin(vm, getStringSetting(vm, "adm_login")));
         ret.add(loginAsAdmin);
 
         return ret;
@@ -134,7 +134,7 @@ public class Magento extends VMModule {
         );
 
         MenuItem autologin = new MenuItem("Open administrator panel", Toolkit.createMenuImage("user.png"));
-        autologin.setOnAction(e -> loginAsAdmin(vm, getOldStringSetting(vm, "adm_login")));
+        autologin.setOnAction(e -> loginAsAdmin(vm, getStringSetting(vm, "adm_login")));
 
         MenuItem newAdmin = new MenuItem("Create new admin account...");
         newAdmin.setOnAction(CreateNewAdmin::openAdminCreationWindow);
@@ -183,7 +183,7 @@ public class Magento extends VMModule {
      * @param toDelete subdirectories in {@code /var} directory that should be cleaned.
      */
     public void deleteAllInVar(VirtualMachine vm, DeleteDir toDelete) {
-        String mainPath = getOldStringSetting(vm, "path");
+        String mainPath = getStringSetting(vm, "path");
         if (mainPath == null) return;
 
         File root = new File(mainPath);
@@ -238,7 +238,7 @@ public class Magento extends VMModule {
             return;
         }
         String fileName = "vmsm_autologin_" + System.currentTimeMillis() + ".php";
-        String mainPath = getOldStringSetting(vm, "path");
+        String mainPath = getStringSetting(vm, "path");
         if (mainPath == null) return;
 
         File root = new File(mainPath);
