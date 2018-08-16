@@ -52,7 +52,7 @@ public class Start extends Application {
 
     /**
      * Main method for VMSM, called during start of application. You shouldn't call it by your own.
-     * That method turns off checking SSL certificates, allows for using restricted HTTP headers, loads configuration
+     * That method turns off checking SSL certificates, allows using restricted HTTP headers, loads configuration
      * and displays VMSM window.
      * @param args command line arguments
      */
