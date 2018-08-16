@@ -35,7 +35,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.ImageView;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -62,29 +61,6 @@ public class VirtualMachine {
         this.pageRoot = new SimpleObjectProperty<>(pageRoot);
         this.type = new SimpleObjectProperty<>(type);
         this.modules = new SimpleListProperty<>(FXCollections.observableArrayList());
-    }
-
-    /**
-     * Converts virtual machine to JSON object. That JSON object is then stored in configuration file. During loading,
-     * virtual machine should be fully recoverable from that JSON.
-     * @return JSON representation of virtual machine
-     * @see #fromJSON(JSONObject)
-     */
-    public JSONObject toJSON() {
-        JSONObject obj = new JSONObject();
-        obj.put("name", name.get());
-        obj.put("path", mainPath.get().getAbsolutePath());
-        if (pageRoot.isNotNull().get()) obj.put("url", pageRoot.get().toString());
-        obj.put("type", type.get().getTypeName());
-
-        JSONObject modules = new JSONObject();
-        for (VMModule module : getModules()) {
-            JSONObject config = new JSONObject();
-            module.storeInJSON(config, this);
-            modules.put(module.getName(), config);
-        }
-        obj.put("modules", modules);
-        return obj;
     }
 
     /**
@@ -261,29 +237,6 @@ public class VirtualMachine {
     private ObjectProperty<VMType> type;
     private ListProperty<VMModule> modules;
     private ObjectProperty<Status> status = new SimpleObjectProperty<>(Status.UNDEFINED);
-
-    /**
-     * Loads virtual machine from its JSON representation.
-     * @param json JSON representation of virtual machine
-     * @return virtual machine loaded from JSON
-     * @throws MalformedURLException if JSON contains URL of virtual machine, but that URL is invalid
-     * @see #toJSON()
-     */
-    public static VirtualMachine fromJSON(JSONObject json) throws MalformedURLException {
-        String name = json.getString("name");
-        File path = new File(json.getString("path"));
-        URL url = json.has("url") ? new URL(json.getString("url")) : null;
-        VMType type = VMType.getByName(json.getString("type"));
-        VirtualMachine vm = new VirtualMachine(name, path, url, type);
-
-        JSONObject modules = json.has("modules") ? json.getJSONObject("modules") : new JSONObject();
-        for (String moduleName : modules.keySet()) {
-            VMModule module = VMModule.getModuleByName(moduleName);
-            module.loadFromJSON(modules.getJSONObject(module.getName()), vm);
-            vm.getModules().add(module);
-        }
-        return vm;
-    }
 
     /**
      * Loads virtual machine from its map representation.

@@ -5,14 +5,10 @@ import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
 import javafx.collections.ObservableList;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 

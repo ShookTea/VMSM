@@ -26,8 +26,6 @@ package eu.shooktea.vmsm;
 import eu.shooktea.vmsm.config.AbstractFormat;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -108,8 +106,8 @@ public class Storage {
     private static List<String> ignoredVagrantMachines = new ArrayList<>();
 
     /**
-     *Map used as configuration of VMSM. Values are stored in JSON under "config" label. These values can be of any
-     * correct JSON type, including {@link JSONObject} and {@link JSONArray}.
+     *Map used as configuration of VMSM. Values are stored in config fileunder "config" label. These values can be of any
+     * correct DataModel type.
      */
     public static Map<String, Object> config = new HashMap<>();
 }

@@ -14,7 +14,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
-import org.json.JSONObject;
 
 import java.util.*;
 
@@ -60,32 +59,12 @@ public abstract class VMModule {
     }
 
     /**
-     * Stores configuration of module for VM in JSON.
-     * @param obj JSON object that will hold configuration of module
-     * @param vm virtual machine that contains configuration of module
-     */
-    public void storeInJSON(JSONObject obj, VirtualMachine vm) {
-        oldSettings.getOrDefault(vm, new HashMap<>()).forEach(obj::put);
-    }
-
-    /**
      * Stores configuration of module for VM in map.
      * @param obj map that will hold configuration of module
      * @param vm virtual machine that contains configuration of module
      */
     public void storeInMap(DataModelMap obj, VirtualMachine vm) {
         settings.getOrDefault(vm, new DataModelMap()).forEach(obj::put);
-    }
-
-    /**
-     * Loads configuration of module for VM from JSON.
-     * @param obj JSON object that holds configuration of module
-     * @param vm virtual machine that will contain configuration of module
-     */
-    public void loadFromJSON(JSONObject obj, VirtualMachine vm) {
-        if (!oldSettings.containsKey(vm)) oldSettings.put(vm, new HashMap<>());
-        Map<String, Object> values = oldSettings.getOrDefault(vm, new HashMap<>());
-        obj.keySet().forEach(key -> values.put(key, obj.get(key)));
     }
 
     /**

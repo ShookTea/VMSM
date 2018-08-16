@@ -6,7 +6,6 @@ import com.jcraft.jsch.Session;
 import eu.shooktea.datamodel.DataModelMap;
 import eu.shooktea.vmsm.VirtualMachine;
 import eu.shooktea.vmsm.module.ssh.SSH;
-import org.json.JSONObject;
 
 import java.sql.*;
 
