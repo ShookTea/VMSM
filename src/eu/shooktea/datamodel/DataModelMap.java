@@ -8,7 +8,7 @@ public class DataModelMap extends AbstractMap<String, DataModelValue> implements
     public DataModelMap(Map map) {
         this.map = new LinkedHashMap<>();
         for (Object key : map.keySet()) {
-            this.map.put(key.toString(), DataModelValue.fromObject(map.get(key)));
+            this.map.put(key.toString(), DataModelConverter.convert(map.get(key)));
         }
     }
 
@@ -50,7 +50,7 @@ public class DataModelMap extends AbstractMap<String, DataModelValue> implements
     }
 
     public DataModelValue put(String key, Object ob) {
-        return put(key, DataModelValue.fromObject(ob));
+        return put(key, DataModelConverter.convert(ob));
     }
 
     public Stream<Entry<String, DataModelValue>> stream() {

@@ -7,7 +7,7 @@ public class DataModelList extends AbstractList<DataModelValue> implements DataM
     public DataModelList(List<?> objectList) {
         this.list = new ArrayList<>();
         for (Object ob : objectList) {
-            this.list.add(DataModelValue.fromObject(ob));
+            this.list.add(DataModelConverter.convert(ob));
         }
     }
 

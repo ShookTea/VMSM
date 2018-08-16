@@ -31,8 +31,4 @@ public interface DataModelValue {
         if (!isPrimitive() || !(this instanceof DataModelPrimitive)) throw new RuntimeException("Value " + this + " is not a primitive!");
         return (DataModelPrimitive<T>)this;
     }
-
-    static DataModelValue fromObject(Object ob) {
-        return DataModelConverter.convert(ob);
-    }
 }
