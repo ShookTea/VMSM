@@ -1,12 +1,9 @@
 package eu.shooktea.datamodel;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
-public class DataModelMap implements DataModelValue, Iterable<Map.Entry<String, DataModelValue>> {
+public class DataModelMap extends AbstractMap<String, DataModelValue> implements DataModelValue {
 
     public DataModelMap(Map map) {
         this.map = new LinkedHashMap<>();
@@ -35,6 +32,14 @@ public class DataModelMap implements DataModelValue, Iterable<Map.Entry<String, 
         return builder.append("}").toString();
     }
 
+    public void removeKeys(String... keys) {
+        for (String key : keys) remove(key);
+    }
+
+    public String getString(String key) {
+        return get(key).<String>toPrimitive().getContent();
+    }
+
     @Override
     public Object toStorageObject() {
         Map<String, Object> ret = new LinkedHashMap<>();
@@ -44,61 +49,26 @@ public class DataModelMap implements DataModelValue, Iterable<Map.Entry<String, 
         return ret;
     }
 
-    public void put(String key, Object val) {
-        map.put(key, DataModelValue.fromObject(val));
+    public DataModelValue put(String key, Object ob) {
+        return put(key, DataModelValue.fromObject(ob));
+    }
+
+    public Stream<Entry<String, DataModelValue>> stream() {
+        return entrySet().stream();
+    }
+
+    @Override
+    public DataModelValue put(String key, DataModelValue val) {
+        return map.put(key, val);
     }
 
     public void put(Map.Entry<String, DataModelValue> entry) {
         map.put(entry.getKey(), entry.getValue());
     }
 
-    public DataModelValue get(String key) {
-        return map.get(key);
-    }
-
-    public String getString(String key) {
-        return map.get(key).<String>toPrimitive().getContent();
-    }
-
-    public DataModelValue getOrDefault(String key, DataModelValue val) {
-        return map.getOrDefault(key, val);
-    }
-
-    public Set<String> keySet() {
-        return map.keySet();
-    }
-
-    public void remove(String key) {
-        map.remove(key);
-    }
-
-    public void removeKeys(String... keys) {
-        for (String key : keys) remove(key);
-    }
-
-    public void clear() {
-        map.clear();
-    }
-
-    public boolean containsKey(String key) {
-        return map.containsKey(key);
-    }
-
-    public boolean containsValue(DataModelValue value) {
-        return map.containsValue(value);
-    }
-
+    @Override
     public Set<Map.Entry<String, DataModelValue>> entrySet() {
         return map.entrySet();
-    }
-
-    @Override
-    public Iterator<Map.Entry<String, DataModelValue>> iterator() {
-        return entrySet().iterator();
-    }
-
-    public Stream<Map.Entry<String, DataModelValue>> stream() {
-        return entrySet().stream();
     }
 
     private final Map<String, DataModelValue> map;
