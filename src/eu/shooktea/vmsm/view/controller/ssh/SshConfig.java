@@ -1,5 +1,6 @@
 package eu.shooktea.vmsm.view.controller.ssh;
 
+import eu.shooktea.datamodel.DataModelPrimitive;
 import eu.shooktea.datamodel.DataModelValue;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
@@ -30,10 +31,8 @@ public class SshConfig implements StageController {
         String userName = ssh.getStringSetting(vm, "user");
         String password = ssh.getStringSetting(vm, "password");
 
-        Boolean fingerprints = true;
-        DataModelValue dmv = ssh.getSetting(vm, "auto_fingerprints");
-        if (dmv != null && dmv.isPrimitive() && dmv.toPrimitive().getContent() instanceof Boolean)
-            fingerprints = dmv.<Boolean>toPrimitive().getContent();
+        Boolean fingerprints = ssh.getSetting(vm, "auto_fingerprints", new DataModelPrimitive<>(true))
+                .<Boolean>toPrimitive().getContent();
         if (hostAddress == null) hostAddress = vm.getPageRoot().getHost();
 
         this.host.setText(hostAddress);
