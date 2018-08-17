@@ -70,7 +70,6 @@
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                 <RowConstraints minHeight="10.0" vgrow="NEVER" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
             </rowConstraints>
             <children>
                 <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Admin login" GridPane.columnIndex="0" GridPane.rowIndex="0">
@@ -79,11 +78,6 @@
                     </padding>
                 </Label>
                 <TextField fx:id="adminLogin" prefHeight="30.0" prefWidth="399.0" promptText="Login" GridPane.columnIndex="1" GridPane.rowIndex="0" HBox.hgrow="ALWAYS" />
-                <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Hold exception reports for" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                    <padding>
-                        <Insets right="5.0" />
-                    </padding>
-                </Label>
                 <Label alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="You can create admin account later, after configuring MySQL." textFill="BLUE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <padding>
                         <Insets right="5.0" />
@@ -92,7 +86,6 @@
                   <Insets bottom="5.0" top="2.0" />
                </GridPane.margin>
                 </Label>
-            <ChoiceBox fx:id="holdReports" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
             </children>
         </GridPane>
       <Separator opacity="0.0" orientation="VERTICAL" VBox.vgrow="ALWAYS" />
