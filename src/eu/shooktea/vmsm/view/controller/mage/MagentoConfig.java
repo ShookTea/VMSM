@@ -1,17 +1,13 @@
 package eu.shooktea.vmsm.view.controller.mage;
 
-import eu.shooktea.datamodel.DataModelPrimitive;
-import eu.shooktea.datamodel.DataModelValue;
 import eu.shooktea.vmsm.Storage;
 import eu.shooktea.vmsm.VM;
 import eu.shooktea.vmsm.VirtualMachine;
-import eu.shooktea.vmsm.module.mage.Magento;
-import eu.shooktea.vmsm.module.mage.Report;
 import eu.shooktea.vmsm.module.VMModule;
-import eu.shooktea.vmsm.view.View;
+import eu.shooktea.vmsm.module.mage.Magento;
 import eu.shooktea.vmsm.view.StageController;
+import eu.shooktea.vmsm.view.View;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -24,7 +20,6 @@ public class MagentoConfig implements StageController {
     @FXML private TextField magentoPath;
     @FXML private TextField adminLogin;
     @FXML private Label magentoInfo;
-    @FXML private ChoiceBox<Report.HoldTime> holdReports;
 
     private VirtualMachine vm;
     private Magento magento;
@@ -35,23 +30,6 @@ public class MagentoConfig implements StageController {
         magento = VMModule.getModuleByName("Magento");
         loadSetting(magento, vm, magentoPath, "path");
         loadSetting(magento, vm, adminLogin, "adm_login");
-
-        holdReports.setItems(Report.HoldTime.createList());
-        Long holdValue = null;
-        DataModelValue readHoldValue = magento.getSetting(vm, "report_keep_time");
-        if (readHoldValue == null) readHoldValue = new DataModelPrimitive<Void>(null);
-        if (readHoldValue.isPrimitive() && readHoldValue.toPrimitive().getContent() instanceof Long) {
-            holdValue = readHoldValue.<Long>toPrimitive().getContent();
-        }
-        else if (readHoldValue.isPrimitive() && readHoldValue.toPrimitive().getContent() instanceof Integer) {
-            holdValue = readHoldValue.<Long>toPrimitive().getContent();
-        }
-
-        if (holdValue == null) holdReports.setValue(Report.HoldTime.MONTH);
-        else {
-            Report.HoldTime time = Report.HoldTime.fromTime(holdValue);
-            holdReports.setValue(time == null ? Report.HoldTime.MONTH : time);
-        }
     }
 
     private void loadSetting(VMModule module, VirtualMachine vm, TextField field, String name) {
@@ -94,8 +72,6 @@ public class MagentoConfig implements StageController {
         }
 
         saveConf(adminLogin, "adm_login", magento, vm);
-
-        magento.setSetting(vm, "report_keep_time", holdReports.getValue().timeMillis);
 
         Storage.saveAll();
         stage.close();

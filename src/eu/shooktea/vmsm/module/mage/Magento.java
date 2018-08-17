@@ -58,18 +58,6 @@ public class Magento extends VMModule {
         return Optional.of(MagentoConfig::openMagentoConfig);
     }
 
-    @Override
-    public void loopUpdate() {
-        VirtualMachine vm = VM.getOrThrow();
-        String rootPath = getStringSetting(vm, "path");
-        if (rootPath == null) return;
-        File root = new File(rootPath);
-        if (!root.exists()) return;
-
-        File reports = new File(root, "var/report");
-        if (reports.exists()) Report.update(this, vm, reports);
-    }
-
     private String getAdminAddress(VirtualMachine vm) {
         try {
             File localXmlFile = getLocalXmlFile(vm);
