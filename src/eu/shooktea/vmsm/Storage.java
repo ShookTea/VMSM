@@ -110,6 +110,5 @@ public class Storage {
      *Map used as configuration of VMSM. Values are stored in config fileunder "config" label. These values can be of any
      * correct DataModel type.
      */
-    public static Map<String, Object> oldConfig = new HashMap<>();
-    public static DataModelMap nConfig;
+    public static final DataModelMap config = new DataModelMap();
 }

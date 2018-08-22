@@ -23,13 +23,8 @@ public class ScreenManager {
      * @return screen used to display VMSM content
      */
     public static Screen getCurrentScreen() {
-        Screen val = null;
-        Object ob = Storage.oldConfig.get("screen");
-        if (ob instanceof DataModelPrimitive && ((DataModelPrimitive)ob).getContent() instanceof String) {
-            DataModelPrimitive primitive = (DataModelPrimitive)Storage.oldConfig.get("screen");
-            String screenName = (String)primitive.getContent();
-            val = converter.fromString(screenName);
-        }
+        String screenName = Storage.config.getString("screen");
+        Screen val = converter.fromString(screenName);
         if (val == null) val = Screen.getPrimary();
         return val;
     }
@@ -40,7 +35,7 @@ public class ScreenManager {
      * @see #getCurrentScreen()
      */
     public static void setScreen(Screen screen) {
-        Storage.oldConfig.put("screen", converter.toString(screen));
+        Storage.config.put("screen", converter.toString(screen));
     }
 
     private static Rectangle2D getScreenBounds() {
