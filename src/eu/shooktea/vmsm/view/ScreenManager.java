@@ -1,5 +1,7 @@
 package eu.shooktea.vmsm.view;
 
+import eu.shooktea.datamodel.DataModelPrimitive;
+import eu.shooktea.datamodel.DataModelValue;
 import eu.shooktea.vmsm.Storage;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
@@ -22,7 +24,13 @@ public class ScreenManager {
      * @return screen used to display VMSM content
      */
     public static Screen getCurrentScreen() {
-        Screen val = converter.fromString((String) Storage.config.get("screen"));
+        Screen val = null;
+        Object ob = Storage.config.get("screen");
+        if (ob instanceof DataModelPrimitive && ((DataModelPrimitive)ob).getContent() instanceof String) {
+            DataModelPrimitive primitive = (DataModelPrimitive)Storage.config.get("screen");
+            String screenName = (String)primitive.getContent();
+            val = converter.fromString(screenName);
+        }
         if (val == null) val = Screen.getPrimary();
         return val;
     }
