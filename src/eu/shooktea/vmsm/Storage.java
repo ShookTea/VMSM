@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package eu.shooktea.vmsm;
 
+import eu.shooktea.datamodel.DataModelMap;
 import eu.shooktea.vmsm.config.AbstractFormat;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -109,5 +110,6 @@ public class Storage {
      *Map used as configuration of VMSM. Values are stored in config fileunder "config" label. These values can be of any
      * correct DataModel type.
      */
-    public static Map<String, Object> config = new HashMap<>();
+    public static Map<String, Object> oldConfig = new HashMap<>();
+    public static DataModelMap nConfig;
 }

@@ -41,7 +41,7 @@ public class Yaml_1_0 implements YamlVersionInterface {
     }
 
     protected void saveVmsmConfig(DataModelMap map) {
-        map.put("VMSM config", Storage.config);
+        map.put("VMSM config", Storage.oldConfig);
     }
 
     @Override
@@ -93,8 +93,8 @@ public class Yaml_1_0 implements YamlVersionInterface {
     }
 
     protected void loadVmsmConfig(DataModelMap map) {
-        Storage.config.clear();
-        Storage.config.putAll(
+        Storage.oldConfig.clear();
+        Storage.oldConfig.putAll(
                 map.getOrDefault("VMSM config", new DataModelMap()).toMap()
         );
     }

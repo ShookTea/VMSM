@@ -63,8 +63,8 @@ public class JsonFormat extends AbstractFormat {
     }
 
     private void loadVmsmConfig(DataModelMap map) {
-        Storage.config.clear();
-        Storage.config.putAll(
+        Storage.oldConfig.clear();
+        Storage.oldConfig.putAll(
                 map.getOrDefault("config", new DataModelMap()).toMap()
         );
     }
@@ -83,7 +83,7 @@ public class JsonFormat extends AbstractFormat {
         );
         VM.ifNotNull(vm -> root.put("current_vm", vm.getName()));
         root.put("ignored_vagrant_machines", Storage.getIgnoredVagrantMachines());
-        root.put("config", Storage.config);
+        root.put("config", Storage.oldConfig);
         JSON.instance().store(root, file);
     }
 

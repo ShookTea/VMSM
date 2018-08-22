@@ -1,7 +1,6 @@
 package eu.shooktea.vmsm.view;
 
 import eu.shooktea.datamodel.DataModelPrimitive;
-import eu.shooktea.datamodel.DataModelValue;
 import eu.shooktea.vmsm.Storage;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
@@ -25,9 +24,9 @@ public class ScreenManager {
      */
     public static Screen getCurrentScreen() {
         Screen val = null;
-        Object ob = Storage.config.get("screen");
+        Object ob = Storage.oldConfig.get("screen");
         if (ob instanceof DataModelPrimitive && ((DataModelPrimitive)ob).getContent() instanceof String) {
-            DataModelPrimitive primitive = (DataModelPrimitive)Storage.config.get("screen");
+            DataModelPrimitive primitive = (DataModelPrimitive)Storage.oldConfig.get("screen");
             String screenName = (String)primitive.getContent();
             val = converter.fromString(screenName);
         }
@@ -41,7 +40,7 @@ public class ScreenManager {
      * @see #getCurrentScreen()
      */
     public static void setScreen(Screen screen) {
-        Storage.config.put("screen", converter.toString(screen));
+        Storage.oldConfig.put("screen", converter.toString(screen));
     }
 
     private static Rectangle2D getScreenBounds() {
