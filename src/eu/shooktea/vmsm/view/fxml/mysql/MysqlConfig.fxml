@@ -86,7 +86,7 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <CheckBox fx:id="enableSsh" mnemonicParsing="false" text="SSH tunelling">
+      <CheckBox fx:id="enableSsh" mnemonicParsing="false" text="SSH tunnelling">
          <VBox.margin>
             <Insets bottom="5.0" top="5.0" />
          </VBox.margin></CheckBox>
